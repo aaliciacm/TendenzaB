@@ -1,0 +1,3135 @@
+/*!
+ * HelixChat JavaScript Library v0.0.1
+ */
+'use strict';
+
+/**
+ * Copyright Marc J. Schmidt. See the LICENSE file at the top-level
+ * directory of this distribution and at
+ * https://github.com/marcj/css-element-queries/blob/master/LICENSE.
+ */
+;
+( function( global, factory ) {
+  "use strict";
+  if ( typeof module === "object" && typeof module.exports === "object" ) { module.exports = global.document ? factory( global, true ) : function( w ) {if ( !w.document ) {throw new Error( "HelixChat requires a window with a document" );}return factory( w );};} else { factory( global );}
+
+// Pass this if window is not defined yet
+} )( typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
+
+    // Make sure it does not throw in a SSR (Server Side Rendering) situation
+    if (typeof window === "undefined") {
+        return null;
+    }
+    // Only used for the dirty checking, so the event callback count is limited to max 1 call per fps per sensor.
+    // In combination with the event based resize sensor this saves cpu time, because the sensor is too fast and
+    // would generate too many unnecessary events.
+    var requestAnimationFrame = window.requestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        function (fn) {
+            return window.setTimeout(fn, 20);
+        };
+
+    /**
+     * Iterate over each of the provided element(s).
+     *
+     * @param {HTMLElement|HTMLElement[]} elements
+     * @param {Function}                  callback
+     */
+    function forEachElement(elements, callback){
+        var elementsType = Object.prototype.toString.call(elements);
+        var isCollectionTyped = ('[object Array]' === elementsType
+            || ('[object NodeList]' === elementsType)
+            || ('[object HTMLCollection]' === elementsType)
+            || ('[object Object]' === elementsType)
+            || ('undefined' !== typeof jQuery && elements instanceof jQuery) //jquery
+            || ('undefined' !== typeof Elements && elements instanceof Elements) //mootools
+        );
+        var i = 0, j = elements.length;
+        if (isCollectionTyped) {
+            for (; i < j; i++) {
+                callback(elements[i]);
+            }
+        } else {
+            callback(elements);
+        }
+    }
+
+    /**
+     * Class for dimension change detection.
+     *
+     * @param {Element|Element[]|Elements|jQuery} element
+     * @param {Function} callback
+     *
+     * @constructor
+     */
+    var ResizeSensor = function(element, callback) {
+        /**
+         *
+         * @constructor
+         */
+        function EventQueue() {
+            var q = [];
+            this.add = function(ev) {
+                q.push(ev);
+            };
+
+            var i, j;
+            this.call = function() {
+                for (i = 0, j = q.length; i < j; i++) {
+                    q[i].call();
+                }
+            };
+
+            this.remove = function(ev) {
+                var newQueue = [];
+                for(i = 0, j = q.length; i < j; i++) {
+                    if(q[i] !== ev) newQueue.push(q[i]);
+                }
+                q = newQueue;
+            }
+
+            this.length = function() {
+                return q.length;
+            }
+        }
+
+        /**
+         *
+         * @param {HTMLElement} element
+         * @param {Function}    resized
+         */
+        function attachResizeEvent(element, resized) {
+            if (!element) return;
+            if (element.resizedAttached) {
+                element.resizedAttached.add(resized);
+                return;
+            }
+
+            element.resizedAttached = new EventQueue();
+            element.resizedAttached.add(resized);
+
+            element.resizeSensor = document.createElement('div');
+            element.resizeSensor.className = 'resize-sensor';
+            var style = 'position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: -1; visibility: hidden;';
+            var styleChild = 'position: absolute; left: 0; top: 0; transition: 0s;';
+
+            element.resizeSensor.style.cssText = style;
+            element.resizeSensor.innerHTML =
+                '<div class="resize-sensor-expand" style="' + style + '">' +
+                    '<div style="' + styleChild + '"></div>' +
+                '</div>' +
+                '<div class="resize-sensor-shrink" style="' + style + '">' +
+                    '<div style="' + styleChild + ' width: 200%; height: 200%"></div>' +
+                '</div>';
+            element.appendChild(element.resizeSensor);
+
+            if (element.resizeSensor.offsetParent !== element) {
+                element.style.position = 'relative';
+            }
+
+            var expand = element.resizeSensor.childNodes[0];
+            var expandChild = expand.childNodes[0];
+            var shrink = element.resizeSensor.childNodes[1];
+            var dirty, rafId, newWidth, newHeight;
+            var lastWidth = element.offsetWidth;
+            var lastHeight = element.offsetHeight;
+
+            var reset = function() {
+                expandChild.style.width = '100000px';
+                expandChild.style.height = '100000px';
+
+                expand.scrollLeft = 100000;
+                expand.scrollTop = 100000;
+
+                shrink.scrollLeft = 100000;
+                shrink.scrollTop = 100000;
+            };
+
+            reset();
+
+            var onResized = function() {
+                rafId = 0;
+
+                if (!dirty) return;
+
+                lastWidth = newWidth;
+                lastHeight = newHeight;
+
+                if (element.resizedAttached) {
+                    element.resizedAttached.call();
+                }
+            };
+
+            var onScroll = function() {
+                newWidth = element.offsetWidth;
+                newHeight = element.offsetHeight;
+                dirty = newWidth != lastWidth || newHeight != lastHeight;
+
+                if (dirty && !rafId) {
+                    rafId = requestAnimationFrame(onResized);
+                }
+
+                reset();
+            };
+
+            var addEvent = function(el, name, cb) {
+                if (el.attachEvent) {
+                    el.attachEvent('on' + name, cb);
+                } else {
+                    el.addEventListener(name, cb);
+                }
+            };
+
+            addEvent(expand, 'scroll', onScroll);
+            addEvent(shrink, 'scroll', onScroll);
+        }
+
+        forEachElement(element, function(elem){
+            attachResizeEvent(elem, callback);
+        });
+
+        this.detach = function(ev) {
+            ResizeSensor.detach(element, ev);
+        };
+    };
+
+    ResizeSensor.detach = function(element, ev) {
+        forEachElement(element, function(elem){
+            if (!elem) return
+            if(elem.resizedAttached && typeof ev == "function"){
+                elem.resizedAttached.remove(ev);
+                if(elem.resizedAttached.length()) return;
+            }
+            if (elem.resizeSensor) {
+                if (elem.contains(elem.resizeSensor)) {
+                    elem.removeChild(elem.resizeSensor);
+                }
+                delete elem.resizeSensor;
+                delete elem.resizedAttached;
+            }
+        });
+    };
+
+    if(!noGlobal){
+      window.ResizeSensor = ResizeSensor;
+    }
+
+    return ResizeSensor;
+});
+
+
+/**
+ * element.classList.prototype polyfill
+ */
+// Source: https://gist.github.com/k-gun/c2ea7c49edf7b757fe9561ba37cb19ca
+;(function() {
+    // helpers
+    var regExp = function(name) {
+        return new RegExp('(^| )'+ name +'( |$)');
+    };
+    var forEach = function(list, fn, scope) {
+        for (var i = 0; i < list.length; i++) {
+            fn.call(scope, list[i]);
+        }
+    };
+
+    // class list object with basic methods
+    function ClassList(element) {
+        this.element = element;
+    }
+
+    ClassList.prototype = {
+        add: function() {
+            forEach(arguments, function(name) {
+                if (!this.contains(name)) {
+                    this.element.className += ' '+ name + ' ';
+                }
+            }, this);
+        },
+        remove: function() {
+            forEach(arguments, function(name) {
+                this.element.className =
+                    this.element.className.replace(regExp(name), '');
+            }, this);
+        },
+        toggle: function(name) {
+            return this.contains(name)
+                ? (this.remove(name), false) : (this.add(name), true);
+        },
+        contains: function(name) {
+            return regExp(name).test(this.element.className);
+        },
+        // bonus..
+        replace: function(oldName, newName) {
+            this.remove(oldName), this.add(newName);
+        }
+    };
+
+    // IE8/9, Safari
+    if (!('classList' in Element.prototype)) {
+        Object.defineProperty(Element.prototype, 'classList', {
+            get: function() {
+                return new ClassList(this);
+            }
+        });
+    }
+
+    // replace() support for others
+    if (window.DOMTokenList && DOMTokenList.prototype.replace == null) {
+        DOMTokenList.prototype.replace = ClassList.prototype.replace;
+    }
+})();
+/**
+ * Promise polyfill
+ *
+ * https://raw.githubusercontent.com/taylorhakes/promise-polyfill/master/promise.min.js
+ */
+!function(e){function n(){}function t(e,n){return function(){e.apply(n,arguments)}}function o(e){if("object"!=typeof this)throw new TypeError("Promises must be constructed via new");if("function"!=typeof e)throw new TypeError("not a function");this._state=0,this._handled=!1,this._value=void 0,this._deferreds=[],s(e,this)}function i(e,n){for(;3===e._state;)e=e._value;return 0===e._state?void e._deferreds.push(n):(e._handled=!0,void o._immediateFn(function(){var t=1===e._state?n.onFulfilled:n.onRejected;if(null===t)return void(1===e._state?r:u)(n.promise,e._value);var o;try{o=t(e._value)}catch(i){return void u(n.promise,i)}r(n.promise,o)}))}function r(e,n){try{if(n===e)throw new TypeError("A promise cannot be resolved with itself.");if(n&&("object"==typeof n||"function"==typeof n)){var i=n.then;if(n instanceof o)return e._state=3,e._value=n,void f(e);if("function"==typeof i)return void s(t(i,n),e)}e._state=1,e._value=n,f(e)}catch(r){u(e,r)}}function u(e,n){e._state=2,e._value=n,f(e)}function f(e){2===e._state&&0===e._deferreds.length&&o._immediateFn(function(){e._handled||o._unhandledRejectionFn(e._value)});for(var n=0,t=e._deferreds.length;n<t;n++)i(e,e._deferreds[n]);e._deferreds=null}function c(e,n,t){this.onFulfilled="function"==typeof e?e:null,this.onRejected="function"==typeof n?n:null,this.promise=t}function s(e,n){var t=!1;try{e(function(e){t||(t=!0,r(n,e))},function(e){t||(t=!0,u(n,e))})}catch(o){if(t)return;t=!0,u(n,o)}}var a=setTimeout;o.prototype["catch"]=function(e){return this.then(null,e)},o.prototype.then=function(e,t){var o=new this.constructor(n);return i(this,new c(e,t,o)),o},o.all=function(e){var n=Array.prototype.slice.call(e);return new o(function(e,t){function o(r,u){try{if(u&&("object"==typeof u||"function"==typeof u)){var f=u.then;if("function"==typeof f)return void f.call(u,function(e){o(r,e)},t)}n[r]=u,0===--i&&e(n)}catch(c){t(c)}}if(0===n.length)return e([]);for(var i=n.length,r=0;r<n.length;r++)o(r,n[r])})},o.resolve=function(e){return e&&"object"==typeof e&&e.constructor===o?e:new o(function(n){n(e)})},o.reject=function(e){return new o(function(n,t){t(e)})},o.race=function(e){return new o(function(n,t){for(var o=0,i=e.length;o<i;o++)e[o].then(n,t)})},o._immediateFn="function"==typeof setImmediate&&function(e){setImmediate(e)}||function(e){a(e,0)},o._unhandledRejectionFn=function(e){"undefined"!=typeof console&&console&&console.warn("Possible Unhandled Promise Rejection:",e)},o._setImmediateFn=function(e){o._immediateFn=e},o._setUnhandledRejectionFn=function(e){o._unhandledRejectionFn=e},"undefined"!=typeof module&&module.exports?module.exports=o:e.Promise||(e.Promise=o)}(this);
+
+
+/**
+ * http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+ * http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+ *
+ * requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+ *
+ * MIT license
+ *
+ * Source:
+ * https://gist.github.com/paulirish/1579671
+ */
+
+
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame){
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+      }
+
+    if (!window.cancelAnimationFrame){
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+      }
+}());
+
+/*
+ * eventify
+ * author: Steven Kaspar
+ */
+var eventify = function(window_key){
+
+  var _event_subscribers = [];
+
+  var on = function(event_name, cb, scope){
+
+    if(!_event_subscribers[event_name]){
+      _event_subscribers[event_name] = [];
+    }
+    _event_subscribers[event_name].push({
+      cb: cb,
+      scope: scope || this,
+      once: false
+    });
+  }
+
+  var once = function(event_name, cb, scope){
+
+    on(event_name, cb, scope);
+
+    var last_index = _event_subscribers[event_name].length - 1;
+
+    _event_subscribers[event_name][last_index].once = true;
+
+  }
+
+  var off = function(event_name, cb){
+    if(!_event_subscribers[event_name]){
+      return;
+    }
+    var i = _event_subscribers[event_name].length;
+    while(i--){
+      if(_event_subscribers[event_name][i].cb === cb){
+        _event_subscribers[event_name].splice(i, 1);
+      }
+    }
+  }
+
+  var fire = function(event_name){
+    if(!_event_subscribers[event_name]){
+      return;
+    }
+    var args = Array.prototype.slice.call(arguments, 1);
+    for(var i = 0, l = _event_subscribers[event_name].length; i < l; i++){
+      var subscriber = _event_subscribers[event_name][i];
+      subscriber.cb.apply(subscriber.scope, args);
+      /**
+      * if once is set to true then we will call off on the event so that
+      * it will not be called again
+      */
+      if(subscriber.once){
+        off(event_name, subscriber.cb);
+      }
+    }
+  }
+  // initiate event bus
+  var obj;
+  if(typeof window_key === 'string'){
+    if(window[window_key] === undefined){
+      window[window_key] = {};
+    }
+    obj = window[window_key];
+  }
+  else if(typeof window_key === 'object'){
+    obj = window_key;
+  }
+
+  obj.on   = on;
+  obj.once = once;
+  obj.off  = off;
+  obj.fire = fire;
+}
+
+function inIframe () {
+  try {
+      return window.self !== window.top;
+  } catch (e) {
+      return true;
+  }
+}
+/**
+ * If we are in an iframe then we are operating as the HelixChatChild
+ */
+if(inIframe()){
+
+( function( global, factory ) {
+  "use strict";
+  if ( typeof module === "object" && typeof module.exports === "object" ) { module.exports = global.document ? factory( global, true ) : function( w ) {if ( !w.document ) {throw new Error( "HelixChat child requires a window with a document" );}return factory( w );};} else { factory( global );}
+
+// Pass this if window is not defined yet
+} )( typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
+  var _debug = false;
+  var _parent = window.top;
+  var _resize_elem;
+  var _init = function(){
+    addTextInputListeners();
+  }
+
+  var tellParent = function(evt, data){
+    _parent.postMessage(JSON.stringify({
+      source_url: window.location.href,
+      data: data,
+      event: evt
+    }), '*');
+  }
+
+  var HelixChatChild = {};
+
+  eventify(HelixChatChild);
+
+  // allows us to know when an input is focused in the iframe so we
+  // can apply needed css classes to parent DOM
+  var addTextInputListeners = function(){
+    // add input listeners
+    var text_inputs = document.querySelectorAll('input, textarea, [contenteditable]');
+    for(var i = 0, l = text_inputs.length; i < l; i++){
+      text_inputs[i].addEventListener('focus', function(e){
+        tellParent('input-has-focus');
+      })
+      text_inputs[i].addEventListener('blur', function(){
+        tellParent('input-lost-focus');
+      })
+    }
+  }
+
+  var addResizeListenerToElement = function(selector){
+    if(typeof selector === 'undefined'){
+      selector = 'body';
+    }
+    _resize_elem = document.querySelector(selector);
+
+    new ResizeSensor(_resize_elem, function() {
+      tellParentOfSize();
+    });
+    setInterval(tellParentOfSize, 100);
+  }
+  var last_size = null;
+  var tellParentOfSize = function(force){
+    var height = document.body.offsetHeight;
+    if(last_size !== height || force === true){
+      last_size = height;
+      tellParent('my-size-is', height);
+    }
+  }
+
+
+  HelixChatChild.tellParent                 = tellParent;
+  HelixChatChild.addResizeListenerToElement = addResizeListenerToElement;
+  HelixChatChild.tellParentOfSize           = tellParentOfSize;
+
+  if(!noGlobal){window.HelixChatChild = HelixChatChild;}
+
+
+  tellParent('location-href', window.location.href);
+  document.addEventListener('DOMContentLoaded', _init);
+
+
+  window.addEventListener('message', function(e){
+    if(typeof event.data !== 'string'){
+      return;
+    }
+    try {
+      var event_data = JSON.parse(event.data);
+      HelixChatChild.fire(event_data.event, event_data.data);
+    }
+    catch(e){
+      if(_debug) console.warn(e);
+    }
+  });
+
+  return HelixChatChild;
+})
+}
+
+
+/*
+*
+*
+*
+*
+* Below is the logic for the parent element ( HelixChat )
+*
+*
+*
+*
+*/
+
+else {
+
+( function( global, factory ) {
+  "use strict";
+  if ( typeof module === "object" && typeof module.exports === "object" ) { module.exports = global.document ? factory( global, true ) : function( w ) {if ( !w.document ) {throw new Error( "HelixChat requires a window with a document" );}return factory( w );};} else { factory( global );}
+
+// Pass this if window is not defined yet
+} )( typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
+
+  var default_css = '.helix-chat-iframe-container { display: none; } .helix-chat-iframe-container-showing { display: block; position: fixed; bottom: 0px; right: 10px;}';
+
+  var ChatModel = {
+    /* all the various operations an end user can perform. */
+    ChatEndUserAction: {
+      LOGON               : 'LOGON',
+      LOGOFF              : 'LOGOFF',
+      GETUPDATE           : 'GETUPDATE',
+      SEND_TEXT           : 'SEND_TEXT',
+      ACTIVITY_STATUS     : 'ACTIVITY_STATUS',
+      PROACTIVE_QUERY     : 'PROACTIVE_QUERY',
+      COBROWSE            : 'COBROWSE',
+      NOTIFY_FATTACH      : 'NOTIFY_FATTACH',
+      FATTACH_UPLOAD      : 'FATTACH_UPLOAD',
+      OUT_OF_BAND_DATA    : 'OUT_OF_BAND_DATA'
+    },
+    /* all the various states a Chat can possibly be in. */
+    ChatState: {
+      UNDEFINED    : 0,
+      SEARCHING    : 1,
+      CONNECTED    : 2,
+      REQUEUED     : 3,
+      CANCELLED    : 4,
+      DEQUEUED     : 5,
+      DISCONNECTED : 6,
+      RECONNECTING : 7
+      // POST CHAT: 8 // this is a custom state not native to OSC
+    },
+    PreChatStateIDs: [
+      0
+    ],
+    InChatStateIDs: [
+      1,
+      2,
+      3,
+      7
+    ],
+    PostChatStateIDs: [
+      4,
+      5,
+      6
+    ],
+    /* All the states of chat engagement */
+    ChatCreateEngagementResumeCode: {
+      NONE             : 'NONE',
+      RESUME           : 'RESUME',
+      DO_NOT_RESUME    : 'DO_NOT_RESUME'
+    },
+    /* State of chat activity */
+    ChatActivityState: {
+      LISTENING   : 'LISTENING',
+      RESPONDING  : 'RESPONDING',
+      ABSENT      : 'ABSENT'
+    },
+    /* State of chat participation */
+    ChatParticipantConnectionState: {
+      ABSENT          : 'ABSENT',
+      ACTIVE          : 'ACTIVE',
+      DISCONNECTED    : 'DISCONNECTED'
+    },
+    /* Reason that chat has concluded */
+    ChatConclusionReason: {
+      ENDED_USER_CANCEL       : 'ENDED_USER_CANCEL',
+      ENDED_USER_DEFLECTED    : 'ENDED_USER_DEFLECTED'
+    },
+    /* Reason that Chat has disconnected */
+    ChatDisconnectReason: {
+      AGENT_CONCLUDED         : 'AGENT_CONCLUDED',
+      END_USER_CONCLUDED      : 'END_USER_CONCLUDED',
+      QUEUE_TIMEOUT           : 'QUEUE_TIMEOUT',
+      IDLE_TIMEOUT            : 'IDLE_TIMEOUT',
+      EJECTED                 : 'EJECTED',
+      TRANSFERRED_TO_QUEUE    : 'TRANSFERRED_TO_QUEUE',
+      PARTICIPANT_LEFT        : 'PARTICIPANT_LEFT',
+      NO_AGENTS_AVAILABLE     : 'NO_AGENTS_AVAILABLE',
+      BROWSER_UNSUPPORTED     : 'BROWSER_UNSUPPORTED',
+      ENDED_USER_CANCEL       : 'ENDED_USER_CANCEL',
+      ENDED_USER_DEFLECTED    : 'ENDED_USER_DEFLECTED',
+      FAIL_NO_AGENTS_AVAIL    : 'FAIL_NO_AGENTS_AVAIL'
+    },
+    /* CoBrowse Types */
+    ChatCoBrowseType: {
+      SCREEN_POINTER      : 'SCREEN_POINTER',
+      SCREEN              : 'SCREEN',
+      MOUSE_NAVIGATION    : 'MOUSE_NAVIGATION',
+      DESKTOP_CONTROL     : 'DESKTOP_CONTROL'
+    },
+    /* All CoBrowse Status Codes */
+    ChatCoBrowseStatusCode: {
+      ACCEPTED    : 'ACCEPTED',
+      DECLINED    : 'DECLINED',
+      UNAVAILABLE : 'UNAVAILABLE',
+      TIMEOUT     : 'TIMEOUT',
+      STARTED     : 'STARTED',
+      STOPPED     : 'STOPPED',
+      ERROR       : 'ERROR'
+    },
+    /* Set of communication methods */
+    CommunicationMethod: {
+      AJAX_POST   : 'AJAX_POST',
+      YUI_GET     : 'YUI_GET',
+      RNW_REDIRECT: 'RNW_REDIRECT',
+      XDOMAIN_REQUEST : 'XDOMAIN_REQUEST'
+    }
+  };
+
+  /**
+   * This is labeled as Cookie, but is actually using localStorage, but should
+   * be easy enough to switch to using cookies if desired for some reason
+   */
+  var getCookieJSON = function(key){
+    var val = storage.get(key);
+    if(_debug) console.log('storage.get'+key+')\n->', val);
+    return(val);
+  }
+  var getCookie = function(key){
+    var val = storage.get(key);
+    if(_debug) console.log('storage.get('+key+')\n->', val);
+    return(val);
+  }
+  var setCookie = function(key, val){
+    if(_debug) console.log('storage.set('+key+')\n->', val);
+    storage.set(key, val);
+  }
+  var removeCookie = function(key){
+    if(_debug) console.log('Cookie.remove('+key+')');
+    storage.set(key, null);
+  }
+  /* end of Cookie middleware for debugging */
+
+
+  /**
+   * Sets the variable browser so we can check browser by using something
+   * like browser.ie to check for IE
+   *
+   * Example:
+   *
+   * if(browser.ie)
+   *   cry
+   *
+   * Source:
+   * https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser
+   */
+  var browser = (function(){
+        // Opera 8.0+
+    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+
+    // Firefox 1.0+
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+
+    // Safari 3.0+ "[object HTMLElementConstructor]"
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+
+    // Internet Explorer 6-11
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+    // Edge 20+
+    var isEdge = !isIE && !!window.StyleMedia;
+
+    // Chrome 1+
+    var isChrome = !!window.chrome && !!window.chrome.webstore;
+
+    // Blink engine detection
+    var isBlink = (isChrome || isOpera) && !!window.CSS;
+
+    return {
+      opera: isOpera,
+    // Firefox 1.0+
+      firefox: isFirefox,
+    // Safari 3.0+ "[object HTMLElementConstructor]"
+      safari: isSafari,
+    // Internet Explorer 6-11
+      ie: isIE,
+    // Edge 20+
+      edge: isEdge,
+    // Chrome 1+
+      chrome: isChrome
+    };
+  })();
+
+  var storage = {
+    set: function(key, value){
+      if(value === null){
+        localStorage.removeItem(key);
+        return;
+      }
+
+      var storing_value = null;
+      try {
+        storing_value = JSON.stringify(value);
+      }
+      catch(e){
+        storing_value = value;
+      }
+      localStorage.setItem(key, storing_value);
+    },
+    get: function(key){
+      var return_value = null;
+      try {
+        return_value = JSON.parse(localStorage.getItem(key));
+      }
+      catch(e){
+        return_value = localStorage.getItem(key);
+      }
+      return return_value;
+    }
+  };
+
+  /**
+   * checks to see if Storage is available
+   * used for determing whether a browser can support persistent chat
+   */
+  var _localStorageAvailable = function(){
+    try {
+      localStorage.setItem('___h___', 'test');
+      localStorage.removeItem('___h___');
+      return true;
+    }
+    catch(e){
+      if(_debug) console.warn(e.message);
+      return false
+    }
+  }
+
+  /**
+   * Checks to see if privacy browsing is enabled by checking certain browser
+   * features
+   *
+   * Modified Source:
+   * https://stackoverflow.com/questions/2860879/detecting-if-a-browser-is-using-private-browsing-mode
+   */
+  var _privacyBrowsingEnabled = function(){
+    return new Promise(function(resolve, reject){
+      if(browser.firefox){
+        try {
+          var db = indexedDB.open("test");
+          db.onerror   = function(){resolve(true);};
+          db.onsuccess = function(){resolve(false);};
+        }
+        catch(e){
+          resolve(true);
+        }
+      }
+      else if(browser.safari){
+        var storage = window.sessionStorage;
+        try {
+          storage.setItem("_._", "test");
+          storage.removeItem("_._");
+          resolve(false);
+        }
+        catch (e) {
+          if (e.code === DOMException.QUOTA_EXCEEDED_ERR && storage.length === 0) {
+            resolve(true);
+          }
+          else {
+            resolve(false);
+          }
+        }
+      }
+      else if(browser.ie || browser.edge){
+        if(!window.indexedDB && (window.PointerEvent || window.MSPointerEvent)){
+         resolve(true);
+        }
+        else {
+          resolve(false);
+        }
+      }
+      else if(browser.chrome){
+        var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+        if (!fs){
+          resolve(false);
+          return;
+        }
+
+        fs(window.TEMPORARY, 100, function (fs) {
+          resolve(false);
+        }, function (err) {
+          resolve(true);
+        });
+      }
+      else {
+        resolve(false);
+      }
+    })
+  }
+
+  var _browserSupportsPersistentChat = function(){
+    return new Promise(function(resolve, reject){
+      if(!_localStorageAvailable()){
+        reject('Storage Unavailable');
+      }
+      _privacyBrowsingEnabled().then(function(enabled){
+        if(enabled){
+          reject('Privacy Browsing Enabled')
+        }
+        else{
+          resolve();
+        }
+      }).catch(function(e){
+        reject(e);
+      })
+    })
+  }
+
+  /*********************************************************************************
+  * Engagement Engine
+  *********************************************************************************/
+
+  var _check_for_elements_interval_ms = 5;
+  var _watch_elements_interval_ms     = 1;
+  var _hiding_class                   = 'helix-chat-hide';
+  var _showing_class                  = 'helix-chat-show';
+
+  function _navigateIframeToUrlFromEE(url){
+    _setSourceOfIframe(url + '/?persist=true');
+  }
+
+  function _addChatDataParam(chat_string, key, value){
+    if(!value){
+      return chat_string;
+    }
+    if(chat_string.length !== 0){
+      chat_string += '&';
+    }
+    chat_string += key + '=' + value;
+
+    return chat_string;
+  }
+
+  function _findReactiveEELinkElem(id){
+    return document.querySelector('#' + id + ' a');
+  }
+
+  /**
+   * checks to see if at least one Reactive element is showing
+   */
+  function _reactiveElemIsShowing(){
+    for(var i = 0, l = _options.ee_reactive_link_ids.length; i < l; i++){
+      if(_findReactiveEELinkElem(_options.ee_reactive_link_ids[i].id)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // overrides the normal engagement engine functionality so we can open the chat
+  // window in the iframe
+  function _observeReactiveEELinkElem(id, hide_on_command){
+    /**
+     * The container can exist without the link so we will start an interval
+     * to check until we find it
+     */
+    var findLinkInterval = setInterval(function(){
+
+      var link = _findReactiveEELinkElem(id);
+      if(!link){
+        return;
+      }
+
+      // clear the interval to find the container
+      clearInterval(findLinkInterval);
+
+      var widget_var = eval(link.getAttributeNode('onclick').nodeValue.split('.')[0]);
+
+      link.href = '#';
+
+      link.onclick = _handleReactiveEEClick.bind(widget_var);
+
+
+      var watchLinkInterval = setInterval(function(){
+        /**
+         * set an interval to watch the element and check that EE hasn't removed it
+         */
+        if(link.parentNode === null){
+          if(_debug) console.log('ReactiveEELinkElem removed - observe again');
+          // clear this interval and start the observation again
+          clearInterval(watchLinkInterval);
+          _observeReactiveEELinkElem(id, hide_on_command);
+          return;
+        }
+        /**
+         * if the link does still exists, make sure it is behaving as we want
+         */
+        var node = link, tries = 0;
+        while(node.parentNode && node.parentNode !== document.body && tries < 10){
+          node = node.parentNode;
+          tries++;
+        }
+        if(hide_on_command){
+          if(_state.hide_ee_reactive_links){
+            node.classList.add(_hiding_class);
+            node.classList.remove(_showing_class);
+          }
+          else {
+            node.classList.add(_showing_class);
+            node.classList.remove(_hiding_class);
+          }
+        }
+
+      }, _watch_elements_interval_ms)
+
+    }, _check_for_elements_interval_ms)
+
+  }
+  function _handleReactiveEEClick(e){
+    // stop the # from being put in the URL and ultimately on the history stack
+    e.preventDefault();
+    /**
+     * check that we are not in a chat and should navigate to the URL defined
+     * by EE
+     */
+    if(_canEngagementEngineStartNewChat()){
+      _startChatFromReactiveEEClick.bind(this)(e);
+    }
+    _showIframe();
+  }
+
+  function _startChatFromReactiveEEClick(e){
+    HelixChat.fire('start-chat-from-reactive-click', e);
+    e.stopImmediatePropagation();
+    var path = this.attrs.chat_login_page + '/request_source/' + this.data.request_source;
+    var chatData = '';
+    if (!this.attrs.ignore_preroute) {
+      var surveyParms = "",
+      surveyData = this.surveyData;
+      if (surveyData) {
+        if (surveyData.send_id){
+          surveyParms += "/survey_send_id/" + surveyData.send_id + "/survey_send_delay/" + surveyData.send_delay + (surveyData.send_auth ? "/survey_send_auth/" + surveyData.send_auth : '');
+        }
+        if (surveyData.comp_id){
+          surveyParms += "/survey_comp_id/" + surveyData.comp_id + (surveyData.comp_auth ? "/survey_comp_auth/" + surveyData.comp_auth : '');
+        }
+        if (surveyData.term_id){
+          surveyParms += "/survey_term_id/" + surveyData.term_id + (surveyData.term_auth ? "/survey_term_auth/" + surveyData.term_auth : '');
+        }
+      }
+      path += surveyParms;
+      chatData = _addChatDataParam(chatData, 'q_id', this.queueId);
+    }
+    if (this.data.p) {
+      path += '/p/' + this.data.p;
+    }
+    if (this.data.c) {
+      path += '/c/' + this.data.c;
+    }
+    chatData = _addChatDataParam(chatData, 'referrerUrl', encodeURIComponent(window.location.href));
+    chatData = _addChatDataParam(chatData, 'v_id', this.attrs.visitor_id);
+    chatData = _addChatDataParam(chatData, 'ee_s_id', this.attrs.ee_session_id);
+    chatData = _addChatDataParam(chatData, 'ee_id', this.attrs.ee_id);
+    chatData = _addChatDataParam(chatData, 'es_id', this.attrs.estara_id);
+    chatData = _addChatDataParam(chatData, 'state', this.ruleState);
+    chatData = _addChatDataParam(chatData, 'escalation', this.escalation);
+    if (chatData.length !== 0){
+      path += '/chat_data/' + RightNow.Client.Text.Encoding.base64Encode(chatData);
+    }
+    if (this.data.common_fields_in_url){
+      path += this.data.common_fields_in_url;
+    }
+    if (this.data.custom_fields_in_url){
+      path += this.data.custom_fields_in_url;
+    }
+    if (RightNow.Client.Controller.session){
+      path += RightNow.Client.Controller.session;
+    }
+    if (this.eo.pta) {
+      if (path.match('/app/')){
+        path = path.substr(4);
+      }
+      path = this.data.base_url + '/ci/pta/login/redirect' + path + '/p_li/' + this.eo.pta;
+    } else {
+      path = this.data.base_url + path;
+    }
+    var callback = null;
+    // where we handle navigating the iframe
+    if (this.attrs.open_in_new_window) {
+
+      _navigateIframeToUrlFromEE(path);
+
+    } else {
+      this.navigateToUrl = path;
+      callback = function() {
+        var callback = function() {
+          window.location = this.navigateToUrl;
+        }
+        if (!this._chatLinkClicked && !this.attrs.test) {
+          RightNow.Client.ActionCapture.record('conditionalChatLink', 'click');
+          RightNow.Client.ActionCapture.flush(callback, this);
+          this._chatLinkClicked = true;
+        } else {
+          callback.apply(this);
+        }
+      }
+    }
+    if (!this._chatLinkClicked && !this.attrs.test) {
+      this.CT.submitClickAction(this.CT.DQA_WIDGET_STATS, {
+        w: this.attrs.type.toString(),
+        accepts: 1
+      }, callback, this);
+      if (!callback) {
+        RightNow.Client.ActionCapture.record('conditionalChatLink', 'click');
+        this._chatLinkClicked = true;
+      }
+    } else if (callback) {
+      callback.apply(this);
+    }
+    RightNow.Client.Event.evt_conditionalChatLinkClicked.fire(this.eo);
+  }
+  /**
+   * Proactive Elements
+   */
+
+
+  function _findProactiveEEElem(id){
+    return document.getElementById(id);
+  }
+
+  /**
+   * checks to see if at least one Reactive element is showing
+   */
+  function _proactiveElemIsShowing(){
+    for(var i = 0, l = _options.ee_proactive_ids.length; i < l; i++){
+      if(_findProactiveEEElem(_options.ee_proactive_ids[i])){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function _getWidgetVarFromHTML(proactive_container){
+    var div_with_id = proactive_container.querySelector('div.bd > div');
+    if(!div_with_id){
+      return null;
+    }
+    var widget_var = 'spac_' + div_with_id.id.split('spac_')[1];
+    return widget_var;
+  }
+
+  function _observeProactiveEELinkElem(id){
+    /**
+     * The container can exist without the buttons so we will start an interval
+     * to check until we find it
+     */
+    var findButtonsInterval = setInterval(function(){
+
+      var button_container = _findProactiveEEElem(id);
+      if(!button_container){
+        return;
+      }
+
+      var widget_var = eval( _getWidgetVarFromHTML(button_container) );
+      if(!widget_var){
+        return;
+      }
+
+      var buttons = button_container.querySelectorAll('button');
+      var accept_proactive_chat_btn = buttons[0];
+      var decline_proactive_chat_btn = buttons[1];
+
+      if(!accept_proactive_chat_btn){
+        return;
+      }
+
+      // clear the interval
+      clearInterval(findButtonsInterval);
+
+      accept_proactive_chat_btn.onclick = _handleProactiveEEClick.bind(widget_var);
+
+
+      var watchButtonInterval = setInterval(function(){
+        /**
+         * set an interval to watch the element and check that EE hasn't removed it
+         */
+        if(button_container.parentNode === null){
+          if(_debug) console.log('ProactiveEELinkElem removed');
+          // clear this interval and start the observation again
+          clearInterval(watchButtonInterval);
+          _observeProactiveEELinkElem(id);
+          return;
+        }
+        if(_state.hide_ee_reactive_links){
+          button_container.classList.add(_hiding_class);
+          button_container.classList.remove(_showing_class);
+        }
+        else {
+          // button_container.classList.add(_showing_class);
+          button_container.classList.remove(_hiding_class);
+        }
+
+      }, _watch_elements_interval_ms)
+
+    }, _check_for_elements_interval_ms)
+  }
+
+  function _handleProactiveEEClick(e){
+    e.stopImmediatePropagation();
+    if(_canEngagementEngineStartNewChat()){
+      _startChatFromProactiveEEClick.bind(this)(e);
+    }
+    _showIframe();
+  }
+
+  function _startChatFromProactiveEEClick(e){
+    HelixChat.fire('start-chat-from-proactive-click', e);
+    (function(context) {
+        if (!this.attrs.test) {
+            this.CT.submitClickAction(this.CT.DQA_WIDGET_STATS, {
+                w: this.attrs.type.toString(),
+                accepts: 1
+            });
+            RightNow.Client.ActionCapture.record('proactiveChat', 'accept');
+        }
+        RightNow.Client.Event.evt_beforeDataRequest.fire(this.eo);
+        var surveyParms = "",
+            surveyData = this.data.survey_data;
+        if (surveyData) {
+            if (surveyData.send_id){
+                surveyParms += "/survey_send_id/" + surveyData.send_id + "/survey_send_delay/" + surveyData.send_delay + (surveyData.send_auth ? "/survey_send_auth/" + surveyData.send_auth : '');
+              }
+            if (surveyData.comp_id) {
+                var compId = surveyData.comp_id; // TODO: I think this calculates probability.... -> determineShowSurvey(surveyData.comp_delay) ? surveyData.comp_id : 0;
+                if (compId){
+                    surveyParms += "/survey_comp_id/" + compId + (surveyData.comp_auth ? "/survey_comp_auth/" + surveyData.comp_auth : '');
+                  }
+            }
+            if (surveyData.term_id) {
+                var termId = surveyData.term_id; // TODO: I think this calculates probability.... -> determineShowSurvey(surveyData.term_delay) ? surveyData.term_id : 0;
+                if (termId){
+                    surveyParms += "/survey_term_id/" + termId + (surveyData.term_auth ? "/survey_term_auth/" + surveyData.term_auth : '');
+                  }
+            }
+        }
+        var path = this.attrs.chat_login_page + '/q_id/' + this.queueId + '/request_source/' + this.data.request_source + '/pac/1' + surveyParms;
+        var chatData = '';
+        if (this.data.p) {
+            path += '/p/' + this.data.p;
+        }
+        if (this.data.c) {
+            path += '/c/' + this.data.c;
+        }
+        chatData = _addChatDataParam(chatData, 'referrerUrl', encodeURIComponent(window.location.href));
+        chatData = _addChatDataParam(chatData, 'v_id', this.attrs.visitor_id);
+        chatData = _addChatDataParam(chatData, 'ee_s_id', this.attrs.ee_session_id);
+        chatData = _addChatDataParam(chatData, 'ee_id', this.attrs.ee_id);
+        chatData = _addChatDataParam(chatData, 'es_id', this.attrs.estara_id);
+        chatData = _addChatDataParam(chatData, 'state', this.data.ruleState);
+        chatData = _addChatDataParam(chatData, 'escalation', this.data.escalation);
+        chatData = _addChatDataParam(chatData, 'q_id', this.queueId);
+        if (chatData.length !== 0) {
+            path += '/chat_data/' + RightNow.Client.Text.Encoding.base64Encode(chatData);
+        }
+        if (this.data.common_fields_in_url){
+            path += this.data.common_fields_in_url;
+          }
+        if (this.data.custom_fields_in_url){
+            path += this.data.custom_fields_in_url;
+          }
+        if (RightNow.Client.Controller.session){
+            path += RightNow.Client.Controller.session;
+          }
+        if (this.eo.pta) {
+            if (path.match('/app/')){
+                path = path.substr(4);
+              }
+            path = this.uri + 'ci/pta/login/redirect' + path + '/p_li/' + this.eo.pta;
+        } else {
+            path = this.data.base_url + path;
+        }
+        if (this.attrs.open_in_new_window){
+
+            _navigateIframeToUrlFromEE(path);
+          }
+        else{
+            window.location = path;
+          }
+        RightNow.Client.Event.evt_chatAccepted.fire(this.eo);
+    }).bind(this)();
+  }
+  /*********************************************************************************
+  * end of Engagement Engine
+  *********************************************************************************/
+
+  /* window message event logic */
+
+  var _receiveMessage = function(event) {
+    if(typeof event.data !== 'string'){
+      return;
+    }
+    try{
+      var event_data = JSON.parse(event.data);
+      var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
+      _windowEvent(event_data.event, event_data.data);
+    }
+    catch(e){
+      if(_debug) console.warn(e);
+    }
+  }
+  window.addEventListener("message", _receiveMessage, false);
+
+  /* sending message to _iframe */
+  var _tellIframe = function(evt, data){
+    _iframe.contentWindow.postMessage(JSON.stringify({
+      source_url: window.location.href,
+      data: data,
+      event: evt
+    }), '*');
+  }
+
+  /* config */
+  var _cookie_key = 'helix_chat_state'
+  var _debug      = false; // set to false to turn of logging
+
+  /**
+   * @typedef Options
+   * @type {object}
+   * @property {string} container_selector - an ID.
+   * @property {boolean} show_url_via_osc_chat - your name.
+   * @property {string} launch_url
+   * @property {string} landing_url
+   * @property {string} post_chat_url
+   * @property {boolean} go_to_post_chat_url_on_disconnect
+   * @property {object} styles  style.iframe_container = {classList: string, showingClassList: string}
+   * @property {array} ee_reactive_link_ids  array of Engagement Engine Reactive chat link ID strings to watch and control from here
+   * @property {array} ee_proactive_ids  array of Engagement Engine Proactive element ID strings to watch and control from here
+   */
+
+   /**
+    * @typedef State
+    * @type {object}
+    * @property {(string | null)} url
+    * @property {boolean} showing
+    * @property {integer} notification_count
+    * @property {integer} chat_state.currentState   ChatModel.ChatState
+    * @property {integer | undefined} chat_state.previousState  ChatModel.ChatState
+    * @property {string | null} chat_state.reason
+    * @property {boolean} show_url_via_osc_chat
+    * @property {boolean} hide_ee_reactive_links
+    * @property {boolean} hide_ee_proactive_buttons
+    * @property {boolean} force_https
+    */
+
+  /**
+   * default _options value that can be overwritten by setOptions
+   * @type {Options}
+   */
+  var _options = {
+    /*
+    * if _options.container_selector is set then we will query for that
+    * DOM element to append the iframe to
+    */
+    container_selector: null,
+    inner_container_selector: null,
+    /**
+     * show_url_via_osc_chat - when a chat is ended|cancelled|disconnected
+     * osc might try and show a post chat survey url
+     * we are firing the event chat-will-show-url from the RightNow.Chat
+     * @type {boolean}
+     */
+    show_url_via_osc_chat:             false,
+    launch_url:                        null,
+    landing_url:                       null,
+    post_chat_url:                     null,
+    /**
+     * set this to true to navigate to the post_chat_url
+     * immediately on a disconnect. If false, it will only go there
+     * on a page navigation
+     * @type {boolean}
+     */
+    go_to_post_chat_url_on_disconnect: false,
+    styles: {
+      iframe_container: {
+        /*
+        * classList is the default (assumed) non-showing classList
+        *  this will default to helix-chat-iframe-container if not given
+        */
+        classList: null,
+        /*
+        * showingClassList is the default (assumed) showing classList
+        *  this will default to helix-chat-iframe-container-showing if not given
+        */
+        showingClassList: null
+      }
+    },
+    ee_reactive_link_ids: [],
+    ee_proactive_ids: [],
+    force_https: true,
+    header_size: null
+  };
+
+
+  /**
+   * returns an empty/default state
+   * @return {State}
+   */
+  var _emptyState = function(){
+    return {
+      url:                null,
+      showing:            false,
+      notification_count: 0,
+      chat_state: {
+        /* will be one of the ChatModel.ChatState values */
+        currentState:  ChatModel.ChatState.UNDEFINED,
+        previousState: undefined,
+        reason:   null
+      },
+      show_url_via_osc_chat: false,
+      /*
+       * If `true`, all EE Ids in `ee_reactive_link_ids` will
+       * be hidden.
+       *
+       * **No matter what other conditions are!**
+       *
+       * _NOTE: not sure if this is the best place to put this_
+       */
+      hide_ee_reactive_links: false,
+      // same as above but for proactive buttons
+      hide_ee_proactive_buttons: false
+    }
+  }
+  /**
+   * State of the chat retrieved on navigation from cookies
+   * @type {State}
+   */
+  var _state = _emptyState();
+
+
+  var _emptyWindowState = function(){
+    return {
+      ee_reactive_elem_showing: null,
+      ee_proactive_elem_showing: null,
+      iframe_loading: null
+    }
+  }
+  /**
+   * state for keeping track of non persistent information
+   * such as whether EE links are showing
+   */
+  var _window_state = _emptyWindowState();
+
+  var init_called = false;
+  var _init = function(source, cb){
+    if(init_called){
+      console.warn('_init already called. Source: ' + source);
+      return;
+    }
+    init_called = true;
+
+    /**
+     * Check that the browser supports the features needed for persistent chat
+     *
+     * If it doesn't, we will not take over EE and therefore chat would
+     * continue like a normal EE chat
+     */
+    _browserSupportsPersistentChat().then(function(){
+      if(_debug) console.log('_init');
+
+      // add default_styling
+      _createAndAppendDefaultCSS();
+
+      // create iframe
+      _createAndAppendIframe();
+
+      // initialize EE overrides
+      // setTimeout(_initializeEngagementEngineOverrides, 500);
+      _initializeEngagementEngineOverrides();
+
+      // get cookie data
+      var cookie_state = getCookieJSON(_cookie_key);
+
+      if(cookie_state !== undefined){
+        _setState(getCookieJSON(_cookie_key));
+      }
+
+      // set the src attr of the _iframe based on the _state
+      _setIframeSourceFromState();
+
+      // optional callback
+      if(typeof cb === 'function'){
+        cb(null);
+      }
+
+      window.requestAnimationFrame(_updateLoop);
+
+    }).catch(function(e){
+      console.warn('Browser does not support persistent chat', e);
+      cb('Browser does not support persistent chat');
+    });
+
+  }
+
+  /**
+   * Runs on an interval to keep track of non-event-trackable
+   * things
+   */
+  var _updateLoop = function(){
+    var fire_window_state_update = false;
+
+    /** check and see if there is an EE Reactive link showing */
+    var ee_reactive_elem_showing = _reactiveElemIsShowing();
+    if(ee_reactive_elem_showing !== _window_state.ee_reactive_elem_showing){
+      fire_window_state_update = true;
+    }
+    _window_state.ee_reactive_elem_showing = ee_reactive_elem_showing;
+
+    /** check and see if there is an EE Proactive button showing */
+    var ee_proactive_elem_showing = _proactiveElemIsShowing();
+    if(ee_proactive_elem_showing !== _window_state.ee_proactive_elem_showing){
+      fire_window_state_update = true;
+    }
+    _window_state.ee_proactive_elem_showing = ee_proactive_elem_showing;
+
+    // only fire if there was a change
+    if(fire_window_state_update){
+      if(_debug) console.log('fire window-state', _window_state);
+      HelixChat.fire('window-state', _window_state);
+    }
+
+    window.requestAnimationFrame(_updateLoop);
+  }
+
+  /**
+   * sets the iframe.src based on _state.url or the current_state
+   */
+  var _setIframeSourceFromState = function(){
+
+    var current_state = _state.chat_state.currentState;
+    // to prevent from extra sessions we will check this option
+    // the only time we want to always load the page is if it is the chat_landing
+    // page
+    if(!_state.showing && _options.dont_load_until_show_event_urls.test(_state.url)){
+      if(_debug) console.log('dont load until show');
+      return;
+    }
+    if(_state.url){
+      _setSourceOfIframe(_state.url);
+    }
+    else if(ChatModel.PreChatStateIDs.indexOf(current_state) > -1){
+      _setSourceOfIframe(_options.launch_url);
+    }
+    else if(ChatModel.PostChatStateIDs.indexOf(current_state) > -1){
+      _setSourceOfIframe(_options.post_chat_url);
+    }
+    else {
+      console.warn('UNRECOGNIZED CHAT STATE');
+    }
+  }
+
+  /**
+   * Allows for overwriting of the _options object
+   * @method setOptions
+   * @public
+   * @memberof HelixChat
+   * @param  {Options} options _options object
+   * @example
+   * HelixChat.setOptions({
+   *   container_selector: '#HelixChatIframeContainer',
+   *   launch_url:         'https://interface.custhelp.com/app/chat/chat_launch_persist',
+   *   landing_url:        'https://interface.custhelp.com/app/chat/chat_landing_persist',
+   *   post_chat_url:      'https://interface.custhelp.com/app/chat/chat_landing_persist_post_chat',
+   *   styles: {
+   *     iframe_container: {
+   *       classList: 'chat-default',
+   *       showingClassList: 'chat-default-showing'
+   *     }
+   *   }
+   * })
+   *
+   */
+  var setOptions = function(options){
+    if(_debug) console.log('setOptions\n->', options);
+
+    for(var k in options){
+      _options[k] = options[k];
+    }
+
+    if(_debug) console.log('options set to\n->', _options);
+  }
+
+  /**
+   * set the _state with optionally setting the cookies as well
+   *  the cookie_key cookie should be a copy of the _state object
+   *  to continue back where we were on page navigations
+   * @memberof HelixChat
+   * @private
+   * @param  {Object} state              new state object. only updates included properties
+   * @param  {boolean} set_cookies        defaults to false. use true to update the cookies
+   * @param  {boolean} dont_run_post_hook defaults to false. use true to not call _handleSetStateTriggers()
+   *
+   */
+  var _setState = function(state, set_cookies, dont_run_post_hook, dont_fire_state){
+
+    for(var k in state){
+      _state[k] = state[k];
+    }
+
+    if(set_cookies){
+      setCookie(_cookie_key, _state);
+    }
+
+    if(!dont_run_post_hook){
+      _handleSetStateTriggers();
+    }
+
+    /*
+    * fire out the _state so that any listeners can stay updated
+    */
+    if(!dont_fire_state){
+      if(_debug) console.log('fire state', _state);
+      HelixChat.fire('state', _state);
+    }
+
+  }
+
+  /*
+  * move any logic needed on _setState but not part of setting the _state
+  *  into here for more separated code
+  * Could be thought of as a post _setState hook
+  */
+  var _handleSetStateTriggers = function(){
+    if(_state.showing){
+      _clearNotificationCount();
+    }
+  }
+
+  var _clearState = function(){
+    if(_debug) console.log('_clearState');
+    _setState(_emptyState(), true);
+  }
+
+  var _clearStorage = function(){
+    if(_debug) console.log('_clearStorage');
+
+    var storage_items = [
+      'messages',
+      'logon_success',
+      'osc_chat_end_url'
+    ];
+
+    for(var i = 0, l = storage_items.length; i < l; i++){
+      storage.set(storage_items[i], null);
+    }
+  }
+  /**
+   * Pass a window_state with properties that should be updated
+   * this will only overwrite props passed in
+   * @param {object} window_state - window state with new/updated props
+   */
+  var _setWindowState = function(window_state){
+    for(var k in window_state){
+      // note the _ before the one
+      _window_state[k] = window_state[k];
+    }
+    if(_debug) console.log('fire window-state', _window_state);
+    HelixChat.fire('window-state', _window_state);
+  }
+
+  /**
+   * gets the data stored in localStorage, which includes messages and the
+   * osc_chat_end_url which is the post chat survey url
+   * @return {object} object.messages and object.osc_chat_end_url
+   */
+  var _getChatStorage = function(){
+    return {
+      messages:         storage.get('messages'),
+      osc_chat_end_url: storage.get('osc_chat_end_url'),
+    }
+  }
+  /**
+   * removes the cookie defined by _cookie_key
+   *
+   */
+  var _clearCookies = function(){
+    if(_debug) console.log('_clearCookies');
+    removeCookie(_cookie_key);
+  }
+  /**
+  * Notifications
+  */
+  /**
+   * add 1 to the _state.notification_count and _setState
+   *
+   */
+  var _addToNotificationCount = function(){
+    if(!_state.showing){
+      // this is repetitive but is more in line with process
+      var current_count = _state.notification_count;
+      current_count++;
+
+      _setState({
+        notification_count: current_count
+      }, true)
+    }
+  }
+  /**
+   * sets the _state.notification_count 0
+   *
+   */
+  var _clearNotificationCount = function(){
+    _setState({
+      notification_count: 0
+    }, true, true)
+  }
+
+  /**
+  * Engagement Engine initializing
+  */
+  /**
+   * Go through the _options.ee_reactive_link_ids array and call
+   * _observeReactiveEELinkElem or _observeProactiveEELinkElem for each ID
+   *
+   */
+  var _initializeEngagementEngineOverrides = function(){
+    // for Engagement Engine Reactive Chat
+    if(_options.ee_reactive_link_ids){
+      for(var i = 0, l = _options.ee_reactive_link_ids.length; i < l; i++){
+        _observeReactiveEELinkElem(_options.ee_reactive_link_ids[i].id, _options.ee_reactive_link_ids[i].hide_on_command);
+      }
+    }
+    // for Engagement Engine Proactive Chat
+    if(_options.ee_proactive_ids){
+      for(var i = 0, l = _options.ee_proactive_ids.length; i < l; i++){
+        _observeProactiveEELinkElem(_options.ee_proactive_ids[i]);
+      }
+    }
+  }
+  /**
+  * Used by the Engagement Engine logic to determine whether or not it
+  *  should continue to create a URL and set the URL of the iframe
+  */
+  var _canEngagementEngineStartNewChat = function(){
+  // for now only allow EE to open chat if we are in a PreChatStateIDs currentState
+    var in_non_pre_chat_state = (ChatModel.PreChatStateIDs.indexOf(_state.chat_state.currentState) > -1);
+
+    return in_non_pre_chat_state;
+  }
+  /**
+   * Creates a DOM <style> tag with the styling defined in default_css and
+   * appends it to the document.body
+   *
+   */
+  var _createAndAppendDefaultCSS = function(){
+    var style = document.createElement('style');
+    style.innerHTML = default_css;
+    document.body.appendChild(style);
+  }
+
+  /**
+  * Iframe management
+  */
+  var _iframe_container, _iframe_inner_container, _iframe;
+  // public variables by using on/fire
+  var iframe_has_loaded_once = false;
+
+  /**
+   * Wrapper function to create/get our _iframe_container and _iframe
+   * and add listeners to the _iframe
+   *
+   */
+  var _createAndAppendIframe = function(){
+    if(_debug) console.log('_createAndAppendIframe');
+
+    _createIframeContainer();
+    _createIframe();
+    _appendIframeToIframeContainer();
+    _appendIframeContainer();
+    _addListenersToIframe();
+
+  }
+
+  /**
+   * Uses _options.container_selector to document.querySelector(...) for or
+   * if no _options.container_selector is set then it will create a div
+   * and append that to the document.body
+   *
+   */
+  var _createIframeContainer = function(){
+    // create or query for element
+    if(_options.container_selector !== null){
+      _iframe_container = document.querySelector(_options.container_selector);
+      if(_options.inner_container_selector !== null){
+        _iframe_inner_container = document.querySelector(_options.inner_container_selector);
+      }
+    }
+    else {
+      _iframe_container = document.createElement('div');
+    }
+
+    if(!_iframe_container){
+      throw 'Iframe container was not found. Make sure that options.container_selector is on the DOM or remove container_selector to use a new created DOM element';
+    }
+
+    // append classList
+    if(_options.styles && _options.styles.iframe_container && _options.styles.iframe_container.classList){
+      _iframe_container.classList.add(_options.styles.iframe_container.classList);
+    }
+    else {
+      _iframe_container.classList.add('helix-chat-iframe-container');
+    }
+  }
+  /**
+   * creates the iframe DOM element
+   *
+   */
+  var _createIframe = function(){
+    _iframe         = document.createElement('iframe');
+    _iframe.sandbox = 'allow-same-origin allow-scripts allow-popups allow-forms';
+    _iframe.title   = 'Live Agent Chat Window';
+  }
+  /**
+   * Put any _iframe event listeners needed in here
+   *
+   */
+  var _addListenersToIframe = function(){
+    _iframe.addEventListener('load', _handleIframeLoadEvent);
+  }
+  /**
+   * Appends the _iframe to the _iframe_container
+   *
+   */
+  var _appendIframeToIframeContainer = function(){
+    var append_elem = _iframe_inner_container ? _iframe_inner_container : _iframe_container;
+    append_elem.appendChild(_iframe);
+  }
+  /**
+   * Appends the _iframe_container to the document.body
+   *
+   */
+  var _appendIframeContainer = function(){
+    document.body.appendChild(_iframe_container);
+  }
+  /**
+   * Removes the _iframe from the _iframe_container but maintains the
+   * _iframe object
+   *
+   */
+  var _detachIframeFromContainer = function(){
+    _iframe.parentNode.removeChild(_iframe);
+  }
+  /**
+   * sets the attrs.src of the _iframe
+   * @memberof HelixChat
+   * @private
+   * @param  {string} source            url to set the iframe src to
+   * @param  {boolean} dont_detach_first pass true to not remove the _iframe from the DOM before setting the src. We remove it from the DOM so that the src navigation is not pushed onto the browsers window.history stack
+   *
+   */
+  var _setSourceOfIframe = function(source, dont_detach_first){
+    if(_debug) console.log('_setSourceOfIframe\n->', source);
+
+    var iframe_will_be_loading = true;
+
+    if(source === null){
+      source = 'about:blank';
+      iframe_will_be_loading = false;
+    }
+
+    if(_options.force_https){
+      source = source.replace(/^http:\/\//i, 'https://');;
+    }
+
+    if(_iframe.src === source){
+      if(_debug) console.log('same source');
+      return;
+    }
+
+    if(dont_detach_first){
+      _iframe.src = source;
+    }
+    else {
+      /**
+      * Detaching the _iframe before setting the src keeps it from going onto
+      *  the browser history
+      */
+      _detachIframeFromContainer();
+      _iframe.src = source;
+      _appendIframeToIframeContainer();
+    }
+
+    // update the _state and cookie values as well
+    _setState({
+      url: source
+    }, true);
+
+    _setWindowState({
+      iframe_loading: iframe_will_be_loading
+    })
+
+  }
+  /**
+   * Event handler for the iframe onload event. Handles the initial showing
+   * of the iframe if _state.showing is true
+   * @memberof HelixChat
+   * @private
+   * @param  {Event} e onload event of iframe
+   *
+   */
+  var _handleIframeLoadEvent = function(e){
+    HelixChat.fire('iframe-loaded');
+
+    /**
+    * if this is the first load of the iframe and _state.showing
+    *  then we want to _showIframe
+    */
+    if(!iframe_has_loaded_once && _state.showing){
+      _showIframe();
+    }
+
+    iframe_has_loaded_once = true;
+
+    _setWindowState({
+      iframe_loading: false
+    })
+
+    if(_debug) console.log('_handleIframeLoadEvent', e);
+  }
+
+
+  /**
+   * @typedef parentWindow-EventNames
+   * @description HelixChat adds a message event listener to the window.
+   * We can communicate whatever we need from the iframe doc to the parent window
+   * using this postMessage method<br/>
+   * <br/>
+   * Possible Events:
+   * <pre>
+   * 'launch-chat'
+   * 'set-my-url'
+   * 'location-href'
+   * 'evt_chatPostResponse'
+   * 'evt_chatEngagementParticipantAdded'
+   * 'evt_chatEngagementParticipantRemovedResponse'
+   * 'evt_chatEngagementConcludedResponse'
+   * 'evt_chatStateChangeResponse'
+   * 'chat-will-show-url'
+   * 'evt_OnLogonSuccessCalled'
+   * 'request-chat-data'
+   * </pre>
+   * @example
+   * // from the iframe to the parent
+   * // tell the parent to navigate the iframe so that we avoid the history push
+   * parent.postMessage(JSON.stringify({
+   *   source_url: window.location.href,
+   *   data: 'https://customer.custhelp.com/app/chat/chat_landing_persist',
+   *   event: 'set-my-url'
+   * }), '*');
+   */
+
+  /**
+   * Routing of postMessage events on this window
+   * @memberof HelixChat
+   * @private
+   * @param  {string} event_name event name posted to the window
+   * @param  {any} data       data to be passed
+   *
+   */
+  var _windowEvent = function(event_name, data){
+    if(_debug) console.log('_windowEvent', event_name, data);
+
+    if(event_name === 'launch-chat'){
+      _handleLaunchChat(data);
+    }
+    else if(event_name === 'set-my-url'){
+      if(_debug) console.log('set-my-url', data);
+      _setSourceOfIframe(data);
+    }
+    else if(event_name === 'location-href'){
+      if(_debug) console.log(data);
+      _setState({
+        url: data
+      }, true);
+    }
+    else if(event_name === 'input-has-focus'){
+      if(_debug) console.log(data);
+      document.documentElement.classList.add('suspend-scroll-override');
+    }
+    else if(event_name === 'input-lost-focus'){
+      if(_debug) console.log(data);
+      document.documentElement.classList.remove('suspend-scroll-override');
+    }
+    else if(event_name === 'my-size-is'){
+      if(_debug) console.log(data);
+      _iframe_container.style.height =  (data + _options.header_size + 1) + 'px';
+    }
+    // messages
+    else if(event_name === 'evt_chatPostResponse'){
+      data[0].data.event = 'evt_chatPostResponse';
+      _handleChatPostResponse(data[0].data);
+    }
+
+    else if(event_name === 'evt_chatEngagementParticipantAdded'){
+      data[0].data.event = 'evt_chatEngagementParticipantAddedResponse';
+      _handleChatEngagementParticipantAdded(data[0].data);
+    }
+
+    else if(event_name === 'evt_chatEngagementParticipantRemovedResponse'){
+      data[0].data.event = 'evt_chatEngagementParticipantRemovedResponse';
+      _handleChatEngagementParticipantRemovedResponse(data[0].data);
+    }
+    else if(event_name === 'evt_chatEngagementConcludedResponse'){
+      data[0].data.event = 'evt_chatEngagementConcludedResponse';
+      _handleChatEngagementConcludedResponse(data[0].data);
+    }
+    // chat status
+    else if(event_name === 'evt_chatStateChangeResponse'){
+      _handleChatStateChangeResponse(data[0].data);
+    }
+    // will showUrl
+    else if(event_name === 'chat-will-show-url'){
+      _handleChatWillShowUrl(data[0]);
+    }
+    // will showUrl
+    else if(event_name === 'chat-completed-with-no-survey'){
+      _handleChatCompletedWithNoSurvey();
+    }
+    // logon success
+    else if(event_name === 'evt_OnLogonSuccessCalled'){
+      _handleOnLogonSuccessCalled(data[0]);
+    }
+    else if(event_name === 'request-chat-data'){
+      if(_debug) console.log('request-chat-data');
+      var storage = _getChatStorage();
+      console.log(storage);
+      _tellIframe('chat-data-response', storage);
+    }
+
+  }
+  /**
+   * Builds out a URL string from validated_fields and sets the source of the
+   * iframe to the URL
+   * @memberof HelixChat
+   * @private
+   * @param  {Array} validated_fields array of validated_fields from an OSC FormSubmit
+   *
+   */
+  var _handleLaunchChat = function(validated_fields){
+    var iframe_landing_url = _options.landing_url;
+    var params_string = '';
+
+    for(var i = 0, l = validated_fields.length; i < l; i++){
+      if(validated_fields[i].value === null){
+        continue;
+      }
+      else if(typeof validated_fields[i].value === 'string' && validated_fields[i].value.length === 0){
+        continue;
+      }
+      else if(validated_fields[i].value === true){
+        validated_fields[i].value = 1;
+      }
+      else if(validated_fields[i].value === false){
+        validated_fields[i].value = 0;
+      }
+      params_string += '/'+validated_fields[i].name+'/'+encodeURIComponent(validated_fields[i].value);
+    }
+
+    iframe_landing_url += params_string + '/?persist=true';
+
+    _setSourceOfIframe(iframe_landing_url);
+  }
+
+
+  /**
+  * We need to keep the login success event because OSC will cancel things
+  * like surveys on page navigation so we keep up with that for them here
+  */
+  var _handleOnLogonSuccessCalled = function(new_logon_success){
+    if(_debug) console.log('_handleOnLogonSuccessCalled', new_logon_success);
+    var stored_logon_success = storage.get('logon_success');
+
+    if(stored_logon_success === null || new_logon_success.responses[0].sessionId !== stored_logon_success.responses[0].sessionId){
+      if(_debug) console.log('New chat sessionId', new_logon_success.responses[0].sessionId);
+      storage.set('logon_success', new_logon_success);
+    }
+    else {
+      /**
+      * If the sessionIds match then we want to use the original logon result
+      *  because it has the right survey IDs and things
+      */
+      if(_debug) console.log('Same chat sessionId', new_logon_success.responses[0].sessionId);
+      _tellIframe('helixChatEvt_UpdateLogonSuccessData', stored_logon_success);
+    }
+  }
+
+  /**
+  * For now we know that this will be a chat survey URL that is trying to be navigated to
+  *  we can either show the url immediately or hold onto it for next reload
+  */
+  var _handleChatWillShowUrl = function(url){
+    if(_debug) console.log(url);
+
+    // check _options or _state (_state can be dynamic)
+    if(_options.show_url_via_osc_chat || _state.show_url_via_osc_chat){
+
+
+      _setState({
+        chat_state: {
+          currentState: 8 // survey
+        }
+      }, true);
+
+      _setSourceOfIframe(url);
+
+    }
+
+    storage.set('osc_chat_end_url', url);
+
+  }
+
+  var _handleChatCompletedWithNoSurvey = function(){
+    if(_debug) console.log('_handleChatCompletedWithNoSurvey');
+
+    _setState({
+      chat_state: {
+        currentState: 8
+      }
+    }, true);
+
+    _setSourceOfIframe( _options.post_chat_url );
+  }
+
+
+  /** handle state changes from **/
+  var _handleChatStateChangeResponse = function(data){
+
+    if(_debug) console.log('_handleChatStateChangeResponse', data);
+
+    _setState({
+      chat_state: data
+    }, true);
+
+    if(ChatModel.PostChatStateIDs.indexOf(data.currentState) > -1){
+
+      _addToNotificationCount();
+
+      if(_options.go_to_post_chat_url_on_disconnect && _state.url !== _options.post_chat_url){
+        _setSourceOfIframe(_options.post_chat_url)
+      }
+
+      else {
+        if(_debug) console.log('next reload will go to post_chat_url');
+        // the URL here will be used on the next frame load
+        // this could also be acheived by setting to null
+        // and then we would use _options.post_chat_url by default
+        //   -- may be better method that way --
+        _setState({
+          url: _options.post_chat_url
+        }, true);
+
+      }
+
+    }
+
+  }
+
+  /** handle messages that will be show to end-user **/
+  var _messages_seen_this_load = [];
+
+  var _handleChatEngagementParticipantAdded;
+  var _handleChatEngagementParticipantRemovedResponse;
+  var _handleChatEngagementConcludedResponse;
+
+  /**
+   * Using the same process for all ChatTranscript messages
+   */
+  var _handleChatPostResponse
+    = _handleChatEngagementParticipantAdded
+    = _handleChatEngagementParticipantRemovedResponse
+    = _handleChatEngagementConcludedResponse = function(data){
+    if(_debug) console.log('new message\n', data);
+    _messages_seen_this_load.push(data);
+    // check if message exists in the cookies
+    // if it does not then we need to save it
+    var stored_messages = storage.get('messages');
+
+    if(stored_messages === null){
+      stored_messages = [];
+    }
+
+    // message not in stored_messages then push and save
+    if(_messages_seen_this_load.length > stored_messages.length){
+
+      _addToNotificationCount();
+
+      stored_messages.push(data);
+
+    }
+
+    storage.set('messages', stored_messages);
+
+  }
+
+  /**
+  * Events that can be called by external scripts
+  * to interact with this one
+  */
+  var _handleEventClearLocalStorageMessages = function(){
+    storage.set('messages', []);
+  }
+  var _handleEventGetLocalStorageMessages = function(cb){
+    var messages = storage.get('messages');
+    if(_debug) console.log(messages);
+
+    if(typeof cb === 'function'){
+      cb(messages);
+    }
+  }
+
+
+
+  /** externally available event handlers **/
+
+  /**
+  * functions for hiding and showing iframe
+  *  can be condensed but doing like this for now for clarity
+  */
+  var _showIframe = function(){
+
+    // if the iframe has not loaded yet, then we want to call _setSourceOfIframe
+    // because we might not have set the src yet because of the check of
+    // _options.dont_load_until_show_event_urls in _setIframeSourceFromState
+    if(!iframe_has_loaded_once){
+      _setSourceOfIframe(_state.url);
+    }
+
+    if(_options.styles && _options.styles.iframe_container && _options.styles.iframe_container.showingClassList){
+      _iframe_container.classList.add(_options.styles.iframe_container.showingClassList);
+    }
+    else {
+      _iframe_container.classList.add('helix-chat-iframe-container-showing');
+    }
+
+
+    document.documentElement.classList.add('helix-chat-showing');
+
+    _setState({
+      showing: true
+    }, true);
+  }
+  var _hideIframe = function(){
+
+    if(_options.styles && _options.styles.iframe_container && _options.styles.iframe_container.showingClassList){
+      _iframe_container.classList.remove(_options.styles.iframe_container.showingClassList);
+    }
+    else {
+      _iframe_container.classList.remove('helix-chat-iframe-container-showing');
+    }
+
+
+    document.documentElement.classList.remove('helix-chat-showing');
+
+    _setState({
+      showing: false
+    }, true);
+  }
+  /**
+   * Formats an event into a helpful warning messages
+   * @memberof HelixChat
+   * @private
+   * @param  {string} event_name event name for WARNING
+   *
+   */
+  var _warnCallbackExpected = function(event_name){
+    console.warn("HelixChat.fire('"+event_name+"') expects a callback function\n\nFor example:\nHelixChat.fire('"+event_name+"', function(argument){...})");
+  }
+  /**
+   * Executes the cb function passing _state as the argument
+   * @memberof HelixChat
+   * @private
+   * @param  {Function} cb callback function which will receive _state as the first argument
+   *
+   */
+  var _handleGetState = function(cb){
+    if(typeof cb !== 'function'){
+      _warnCallbackExpected('get-state');
+      return;
+    }
+    cb(_state);
+  }
+
+  /**
+   * Executes the cb function passing _window_state as the argument
+   * @memberof HelixChat
+   * @private
+   * @param  {Function} cb callback function which will receive _window_state as the first argument
+   *
+   */
+  var _handleGetWindowState = function(cb){
+    if(typeof cb !== 'function'){
+      _warnCallbackExpected('get-window-state');
+      return;
+    }
+    cb(_window_state);
+  }
+
+  /**
+   * Executes the cb function passing iframe_has_loaded_once as the argument
+   * @memberof HelixChat
+   * @private
+   * @param  {Function} cb callback function which will receive iframe_has_loaded_once as the first argument
+   *
+   */
+  var _handleGetIframeHasLoadedOnce = function(cb){
+    if(typeof cb !== 'function'){
+      _warnCallbackExpected('get-iframe-has-loaded-once');
+      return;
+    }
+    cb(iframe_has_loaded_once);
+  }
+
+  var _handleDisconnect = function(){
+    if(_debug) console.log('_handleDisconnect');
+
+    _tellIframe('helixChatEvt_ChatCloseClickRequest');
+  }
+
+  var _handleCancel = function(){
+    if(_debug) console.log('_handleCancel');
+
+    _tellIframe('helixChatEvt_ChatHangupRequest');
+  }
+
+  /**
+   * setState(_emptyState(), true) with showing value carrying over
+   *
+   */
+  var _handleClear = function(){
+    if(_debug) console.log('_handleClear');
+
+    _tellIframe('helixChatEvt_ChatHangupRequest');
+
+    /**
+    * instead of wiping the _state completely
+    *  get an empty state and keep the showing value
+    * we don't want to lose the showing state
+    */
+    var new_state = _emptyState();
+    new_state.showing = _state.showing;
+
+    _setState(new_state, true);
+
+    _clearStorage();
+
+  }
+  /**
+   * calls _handleClear() and then sets the _iframe.src to the launch_url
+   *
+   */
+  var _handleReset = function(){
+    if(_debug) console.log('_handleReset');
+
+    _handleClear();
+
+    _setSourceOfIframe(_options.launch_url);
+
+  }
+
+  /**
+   * If true, EE Reactive links will not be shown
+   * @param {boolean} yes_no - force hide or no
+   */
+  var _handleHideEEReactive = function(yes_no){
+    _setState({
+      hide_ee_reactive_links: yes_no
+    }, true, true, true);
+
+    // go through all elems passed in options and hide them
+    for(var i = 0, l = _options.ee_reactive_link_ids.length; i < l; i++){
+      var elem = document.getElementById(_options.ee_reactive_link_ids[i].id);
+      if(elem && _options.ee_reactive_link_ids[i].hide_on_command){
+        elem.parentNode.classList.add('helix-chat-hide');
+      }
+    }
+  }
+
+  /**
+   * If true, EE Proactive buttons will not be shown
+   * @param {boolean} yes_no - force hide or no
+   */
+  var _handleHideEEProactive = function(yes_no){
+    _setState({
+      hide_ee_proactive_buttons: yes_no
+    }, true, true, true);
+
+    // go through all elems passed in options and hide them
+    for(var i = 0, l = _options.ee_proactive_ids.length; i < l; i++){
+      var elem = document.getElementById(_options.ee_proactive_ids[i]);
+      if(elem){
+        // notice different that reactive
+        // proactive's parentNode is the body. so don't hide that
+        elem.classList.add('helix-chat-hide');
+      }
+    }
+  }
+
+  var _handleSetCurrentStateId = function(state_id){
+    _setState({
+      chat_state: {
+        currentState: state_id
+      }
+    }, true);
+  }
+
+  var _handleSetStateShowUrlViaOscChat = function(yes_no){
+    _setState({
+      show_url_via_osc_chat: yes_no
+    }, true);
+  }
+  var _handleGoToShowUrlViaOscChat = function(yes_no){
+    var url = storage.get('osc_chat_end_url');
+    if(url){
+      _setSourceOfIframe(url);
+    }
+    else {
+      HelixChat.fire('hide');
+      HelixChat.fire('reset');
+    }
+  }
+
+
+
+  /**
+   * HelixChat object
+   * @global
+   * @namespace
+   */
+  var HelixChat = {};
+
+
+  eventify(HelixChat);
+
+  /**
+   * @typedef HelixChat-EventNames
+   * @example
+   *
+   * HelixChat.fire('show')
+   *
+   * HelixChat.fire('get-state', function(state){
+   *   // do something with state
+   * })
+   *
+   * // force hide all EE elems defined by _options.ee_reactive_link_ids
+   * HelixChat.fire('hide-ee-reactive', true)
+   *
+   * // dont force hide all EE elems defined by _options.ee_reactive_link_ids
+   * HelixChat.fire('hide-ee-reactive', false)
+   * @type {
+   * 'show'|'hide'|'reset'|'get-state'|'get-window-state'|'get-iframe-has-loaded-once'|'clear'|'hide-ee-reactive'|'hide-ee-proactive'
+   * }
+   */
+  /*****************************************************************/
+  /*  add any events that need to be exposed to other sources here */
+  /*****************************************************************/
+  /**
+   * show the iframe container (add _options.styles.iframe_container.showingClassList)
+   */
+  HelixChat.on('show',                       _showIframe, this);
+  /**
+   * hide the iframe container (remove _options.styles.iframe_container.showingClassList)
+   */
+  HelixChat.on('hide',                       _hideIframe, this);
+  /**
+   * clear chat data and set iframe.src to _options.launch_url
+   */
+  HelixChat.on('reset',                      _handleReset, this);
+  /**
+   * execute callback with _state passed as first argument
+   */
+  HelixChat.on('get-state',                  _handleGetState, this);
+  /**
+   * execute callback with _window_state passed as first argument
+   */
+  HelixChat.on('get-window-state',           _handleGetWindowState, this);
+  /**
+   * get whether the iframe has loaded a src yet
+   */
+  HelixChat.on('get-iframe-has-loaded-once', _handleGetIframeHasLoadedOnce, this);
+  /**
+   * _tellIframe('helixChatEvt_ChatCloseClickRequest')
+   */
+  HelixChat.on('disconnect',                 _handleDisconnect, this);
+  /**
+   * _tellIframe('helixChatEvt_ChatHangupRequest')
+   */
+  HelixChat.on('cancel',                 _handleCancel, this);
+  /**
+   * clears chat data (doesn't change iframe.src - probably not needed)
+   */
+  HelixChat.on('clear',                      _handleClear, this); // not sure this needs to be a public event
+  /**
+   * Pass true/false to force hide Reactive Elems defined by _options.ee_reactive_link_ids
+   */
+  HelixChat.on('hide-ee-reactive',           _handleHideEEReactive, this);
+  /**
+   * Pass true/false to force hide Proactive Elems defined by _options.ee_proactive_ids
+   */
+  HelixChat.on('hide-ee-proactive',          _handleHideEEProactive, this);
+  /**
+   * Pass a Chat state integer (probably not in the RightNow chat state array)
+   */
+  HelixChat.on('set-current-state-id',       _handleSetCurrentStateId, this);
+  /**
+   * set the state to true to allow navigation immediately after disconnect
+   */
+  HelixChat.on('set-state-show-url-via-osc-chat',       _handleSetStateShowUrlViaOscChat, this);
+  /**
+   * Go to storage.get('osc_chat_end_url')
+   */
+  HelixChat.on('go-to-show-url-via-osc-chat',       _handleGoToShowUrlViaOscChat, this);
+
+  if(_debug){
+    // HelixChat.fire('clear-local-storage-messages') - for development
+    HelixChat.on('clear-local-storage-messages', _handleEventClearLocalStorageMessages, this);
+    // HelixChat.fire('get-local-storage-messages')   - for development
+    HelixChat.on('get-local-storage-messages',   _handleEventGetLocalStorageMessages, this);
+    // HelixChat.fire('osc-will-show-url') - fired internally
+    HelixChat.on('osc-will-show-url', function(a){
+      if(_debug) console.log(a);
+    }, this)
+    // HelixChat.fire('window-state') - fired internally
+    HelixChat.on('window-state', function(state){
+      if(_debug) console.log(state);
+    }, this)
+  }
+
+  // set state from storage immediately
+  _setState(getCookieJSON(_cookie_key), false, true, true);
+
+  /*****************************************************************/
+  /*  anything that needs to be exposed on the HelixChat object    */
+  /*  outside of event stuff should go here                        */
+  /*****************************************************************/
+  HelixChat._init      = _init;
+  HelixChat.setOptions = setOptions;
+  HelixChat.browser    = browser;
+  // showEE is available for engagement engine to check. It is not necessary but
+  // will make for better experience
+  HelixChat.showEE     = function(){
+    var show_ee = !(_state.hide_ee_reactive_links || _state.hide_ee_proactive_buttons);
+    if(show_ee){
+      if(_debug) console.log('show ee');
+    }
+    return show_ee;
+  };
+
+  // expose HelixChat globaly if not being required/defined or something
+  if(!noGlobal){
+    window.HelixChat = HelixChat;
+  }
+
+
+  // wait until pageshow because Safari will try and
+  // use cookies/storage from the last page state, and with
+  // pageshow we can check event.persisted to see if we are navigating
+  // usign back/forward buttons and we can reload
+  window.addEventListener('pageshow', function(){
+    if(_debug) console.warn('pageshow');
+    _init('pageshow');
+  });
+  // window.addEventListener('onload', _init);
+  // document.addEventListener('DOMContentLoaded', _init);
+
+  return HelixChat;
+} );
+
+}
+
+
+
+
+if(!inIframe()){
+  (function(){
+    /**
+     * Only a problem so far in IE, but when proactive is clicked
+     * it doesn't go away and is blocking clicking on the iframe.
+     * Adding z-index didn't solve it..
+     */
+    function _handleStartChatFromProactiveClick(event){
+      HelixChat.fire('hide-ee-proactive', true);
+
+      for(var i = 0, l = ee_proactive_ids.length; i < l; i++){
+        var elem = document.getElementById(ee_proactive_ids[i]);
+        if(elem){
+          elem.style.display = 'none';
+        }
+      }
+
+    }
+
+    HelixChat.on('start-chat-from-proactive-click', _handleStartChatFromProactiveClick);
+
+    function getSiteFromSrc(src){
+      var start = /https:\/\//i.test(src) ? 8 : 7; // https:// or http://
+      var end   = src.indexOf('.custhelp');
+      return src.substring(start, end);
+    }
+    function getBrandFromSrc(src){
+      var default_brand = 'af';
+      var script_brand_matches = src.match(/HelixChat(-(HCO))?.js/i);
+      if(script_brand_matches !== null && script_brand_matches[1]){
+        return script_brand_matches[2].toLowerCase();
+      }
+
+      var base_url_matches = src.match(/hollisterco/i);
+      if(base_url_matches !== null){
+        return 'hco';
+      }
+
+      return default_brand;
+    }
+    function getEEProactiveIdsFromBrand(brand){
+      if(brand === 'af'){
+        return [
+          'rnowPAChat_AF1'
+        ];
+      }
+      else {
+        return [
+          'rnowPAChat_HCO1'
+        ];
+      }
+    }
+    function getEEReactiveIdsFromBrand(brand){
+      if(brand === 'af'){
+        return [
+          {
+            id: 'rnowChatLink_type1',
+            hide_on_command: true
+          }
+          ,{
+            id: 'rnowChatLink_type2',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_type3',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_type4',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_type5',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_reactiveHCO',
+            hide_on_command: true
+          }
+          ,{
+            id: 'rnowMobileCondChatButtonLink',
+            hide_on_command: false
+          }
+        ];
+      }
+      else {
+        return [
+          {
+            id: 'rnowChatLink_type1',
+            hide_on_command: true
+          }
+          ,{
+            id: 'rnowChatLink_type2',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_type3',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_type4',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_type5',
+            hide_on_command: false
+          }
+          ,{
+            id: 'rnowChatLink_reactiveHCO',
+            hide_on_command: true
+          }
+          ,{
+            id: 'rnowMobileCondChatButtonLink',
+            hide_on_command: false
+          }
+        ];
+      }
+    }
+    // go through script tags and get the HelixChat one
+    var scripts = document.querySelectorAll('script');
+    var script_src = null;
+    for(var i = 0, l = scripts.length; i < l; i++){
+      var matches = scripts[i].src.match(/HelixChat(-HCO)?.js/i);
+      if(matches !== null){
+        script_src = scripts[i].src;
+        break;
+      }
+    }
+    // get site and brand from script src
+    var site             = getSiteFromSrc(script_src);
+    var brand            = getBrandFromSrc(script_src);
+
+    // get other config values based on brand
+    var ee_proactive_ids = getEEProactiveIdsFromBrand(brand);
+    var ee_reactive_ids  = getEEReactiveIdsFromBrand(brand);
+
+    var header_height = 50;
+
+    console.log('HelixChat || ' + '--site=' + site + ' --brand=' + brand);
+
+    ///////
+    // initial config
+    HelixChat.setOptions({
+      container_selector:       '#HelixChatIframeContainer',
+      inner_container_selector: '#HelixChatIframeContainer > div',
+      launch_url:               null,
+      landing_url:              'https://'+site+'.custhelp.com/app/chat/chat_landing_persist',
+      post_chat_url:            'https://'+site+'.custhelp.com/app/chat/chat_landing_persist_post_chat',
+      dont_load_until_show_event_urls: /(\/app\/chat\/chat_launch\/?|\/app\/chat\/chat_landing_persist_post_chat|\/ci\/documents|\/app\/chat\/post_chat_no_survey_confirm|\/app\/chat\/post_chat_survey_confirm)/i,
+      styles: {
+        iframe_container: {
+          classList: 'chat-default',
+          showingClassList: 'chat-default-showing'
+        }
+      },
+      ee_reactive_link_ids: ee_reactive_ids,
+      ee_proactive_ids:     ee_proactive_ids,
+      header_size:          header_height
+    });
+    ///////
+
+    // append HelixChatIframeContainer
+
+    var chat_label = (function(){
+      var lang = document.documentElement.getAttribute('lang');
+      var href_matches = window.location.href.match(/(hollisterco|abercrombie)(\.[a-z]+)+/i);
+      if(href_matches === null || href_matches.length < 3){
+        return 'Chat';
+      }
+      var domain = href_matches[2];
+      console.log(lang, domain);
+      if(domain === '.com'){
+        var chat_lang_mapping = {
+          'en-us': 'Chat',
+          'en': 'Chat',
+          'cn-simp': '在线客服',
+          'cn-trad': '線上客服',
+          'ja': 'チャット',
+          'pt': 'Bate-papo',
+          'it': 'Chat',
+          'es': 'Chat',
+          'de': 'Chat',
+          'fr': 'Discuter en ligne',
+          'nl': 'Chat',
+          'en-ca': 'Chat',
+        };
+        return chat_lang_mapping[lang] ? chat_lang_mapping[lang] : 'Chat';
+      }
+      else {
+        if(domain === '.cn'){
+          return document.documentElement.classList.contains('en_cn') ? 'Chat' : '在线客服';
+        }
+        else if(domain === '.hk'){
+          return document.documentElement.classList.contains('en_hk') ? 'Chat' : '線上客服';
+        }
+        else if(domain === '.jp'){
+          return document.documentElement.classList.contains('en_jp') ? 'Chat' : 'チャット';
+        }
+        else if(domain === '.sg'){
+          return document.documentElement.classList.contains('en_sg') ? 'Chat' : '在线客服';
+        }
+        else if(domain === '.tw'){
+          return document.documentElement.classList.contains('en_tw') ? 'Chat' : '線上客服';
+        }
+        else if(domain === '.ca'){
+          if(lang === 'en-ca'){
+            return 'Chat';
+          }
+          else if(lang === 'fr'){
+            return 'Discuter en ligne';
+          }
+        }
+      }
+      return 'Chat';
+    })();
+
+    var iframe_container = document.createElement('div');
+    iframe_container.id = 'HelixChatIframeContainer';
+    iframe_container.classList.add('chat-default');
+
+    var iframe_inner_container = document.createElement('div');
+    iframe_inner_container.classList.add('chat-container-inner');
+
+    iframe_inner_container.innerHTML = '<div class="chat-iframe-header"><div class="chat-iframe-header-container"><span><img src="//'+site+'.custhelp.com/euf/assets/images/persistent-chat/'+brand+'/chat-icon.svg" class="chat-icon-left">'+chat_label+'</span><div class="right"><button class="hide-chat-btn"><img src="//'+site+'.custhelp.com/euf/assets/images/persistent-chat/'+brand+'/chat-dash.svg"></button><button class="x-btn"><img src="//'+site+'.custhelp.com/euf/assets/images/persistent-chat/'+brand+'/chat-x.svg"></button></div></div></div><div class="iframe-loading-indicator"><span class="iframe-loading-loading-text "><img class="helix-chat-spin" src="//'+site+'.custhelp.com/euf/assets/images/persistent-chat/'+brand+'/chat-loading.png"></span></div>';
+
+    // inn chat notification and counter
+    var in_chat_div = document.createElement('div');
+    in_chat_div.classList.add('in-chat-elem');
+    in_chat_div.classList.add('in-chat-indicator-container');
+    in_chat_div.style.display = 'none';
+
+    in_chat_div.innerHTML = "<div><button class='show-chat-btn'><img src='https://"+site+".widget.custhelp.com/euf/assets/images/chat/anf_hco_chat_icon.svg'/></button><span class='chat-notification-count'></span><div>";
+
+    document.addEventListener('DOMContentLoaded', function(){
+      iframe_container.appendChild(iframe_inner_container);
+      document.body.appendChild(iframe_container);
+      document.body.appendChild(in_chat_div);
+      HelixChat._init('DOMContentLoaded', _initCallback);
+      setTimeout(_init, 0);
+    });
+
+
+
+    /**
+     * We are loading the in chat button with display: none
+     * Here we remove that
+     */
+    var _initCallback = function(err){
+      if(err !== null){
+        return;
+      }
+      // in_chat_div.style.display = '';
+    }
+
+    var _init = function(){
+
+      var showing_elems            = document.querySelectorAll('.chat-showing-status');
+      var notification_count_elems = document.querySelectorAll('.chat-notification-count');
+      var show_btns                = document.querySelectorAll('.show-chat-btn');
+      var hide_btns                = document.querySelectorAll('.hide-chat-btn');
+      var x_btns                   = document.querySelectorAll('.x-btn');
+
+      var in_chat_elems        = document.querySelectorAll('.in-chat-elem');
+      var iframe_loading_elems = document.querySelectorAll('.iframe-loading-indicator');
+
+      var state = {}, window_state = {};
+
+      var last_width = -1;
+      var breakpoint = 468;
+      var shouldResetIframeContainerHeight = function(){
+        var width = window.innerWidth;
+        if(width > breakpoint && last_width <= breakpoint){
+          iframe_container.style.height = '';
+        }
+        else if(width <= breakpoint && last_width > breakpoint){
+          iframe_container.style.height = '';
+        }
+
+        last_width = width;
+      }
+      window.addEventListener('resize', shouldResetIframeContainerHeight, false);
+
+      var handleXBtnClick = function(){
+        if([1,3].indexOf(state.chat_state.currentState) > -1){
+          HelixChat.fire('set-state-show-url-via-osc-chat', true);
+          HelixChat.fire('cancel');
+        }
+        else if([2].indexOf(state.chat_state.currentState) > -1){
+          HelixChat.fire('set-state-show-url-via-osc-chat', true);
+          HelixChat.fire('disconnect');
+        }
+        else if([4,5,6,7].indexOf(state.chat_state.currentState) > -1){
+          HelixChat.fire('set-current-state-id', 8);
+          HelixChat.fire('go-to-show-url-via-osc-chat');
+        }
+        else {
+          HelixChat.fire('reset');
+          HelixChat.fire('hide');
+        }
+      }
+
+      var getStateLanguageFromUrl = function(url){
+        var matches = url.match(/(abercrombie|hollisterco)(-([a-z]+(-[a-z]+)?))/i);
+        if(matches === null){
+          return 'en';
+        }
+
+        if(matches.length > 3){
+          return matches[3];
+        }
+
+        return 'en';
+      }
+
+      var getSiteLanguageFromHTML = function(){
+        return document.documentElement.getAttribute('lang');
+      }
+      /**
+       * checks to see if the state.url is a different language than what is
+       * currently indicated by html[lang]
+       * If it is different and we are not in a chat yet and we are showing
+       * then we want to reset and hide the chat launch window
+       */
+      document.addEventListener('DOMContentLoaded', function(){
+        HelixChat.fire('get-state', function(new_state){
+
+          var state_lang    = getStateLanguageFromUrl(new_state.url);
+          var current_lang  = getSiteLanguageFromHTML(new_state.url);
+          var current_state_id = new_state.chat_state.currentState;
+
+          if(new_state.showing && [0].indexOf(current_state_id) > -1 && current_lang !== state_lang){
+            HelixChat.fire('reset');
+            HelixChat.fire('hide');
+          }
+        })
+      })
+
+      var handleStateOrWindowStateChange = function(){
+        /**
+         * avoids a race condition where state might not be set
+         */
+        if(state.chat_state === undefined){
+          HelixChat.fire('get-state', function(new_state){
+            state = new_state;
+          })
+        }
+        if(window_state.ee_reactive_elem_showing === undefined){
+          HelixChat.fire('get-window-state', function(new_window_state){
+            window_state = new_window_state;
+          })
+        }
+        // we are guaranteed to have the state and window_state now we can continue
+        for(var i = 0, l = showing_elems.length; i < l; i++){
+          showing_elems[i].innerHTML = state.showing;
+        }
+        for(var i = 0, l = notification_count_elems.length; i < l; i++){
+          notification_count_elems[i].innerHTML = state.notification_count;
+
+          notification_count_elems[i].style.display = (state.notification_count < 1) ? 'none' : 'block';
+        }
+        /**
+         * keep in mind this is specific to this implementation
+         * but this checks if an EE reactive element link is not available to click and we are
+         * in a chat state where the user might want to see
+         * the chat box (in chat, survey, etc..)
+         *
+         * --- Chat States ---
+         * UNDEFINED    : 0
+         * SEARCHING    : 1
+         * CONNECTED    : 2
+         * REQUEUED     : 3
+         * CANCELLED    : 4
+         * DEQUEUED     : 5
+         * DISCONNECTED : 6
+         * RECONNECTING : 7
+         * - Custom (non-RN) States -
+         * IN SURVEY : 8
+         */
+        if([1,2,3,4,5,6,7,8].indexOf(state.chat_state.currentState) > -1){
+          // if we are in a chat state then hide ee
+          HelixChat.fire('hide-ee-reactive',  true);
+          HelixChat.fire('hide-ee-proactive', true);
+          // ee not showing but we are in a chat so we need to have a way to open chat
+          for(var i = 0, l = in_chat_elems.length; i < l; i++){
+            in_chat_elems[i].style.display = '';
+          }
+        }
+        else {
+          for(var i = 0, l = in_chat_elems.length; i < l; i++){
+            in_chat_elems[i].style.display = 'none';
+          }
+        }
+
+        // show 'x' button
+        // if([0,1,2,3,4,5,6,7].indexOf(state.chat_state.currentState) > -1){
+          for(var i = 0, l = x_btns.length; i < l; i++){
+            x_btns[i].style.display = '';
+            x_btns[i].onclick = handleXBtnClick;
+          }
+        // }
+
+        // hide or show loading spinning indicator
+        if(window_state.iframe_loading){
+          for(var i = 0, l = iframe_loading_elems.length; i < l; i++){
+            iframe_loading_elems[i].style.display = 'block';
+          }
+        }
+        else {
+          for(var i = 0, l = iframe_loading_elems.length; i < l; i++){
+            iframe_loading_elems[i].style.display = '';
+          }
+        }
+
+        // add chat state css class to iframe container
+        var class_names = [
+          {
+            iframe: 'iframe-container-pre-chat', // 0
+            body: 'body-pre-chat', // 0
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 1
+            body: 'body-in-chat', // 1
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 2
+            body: 'body-in-chat', // 2
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 3
+            body: 'body-in-chat', // 3
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 4
+            body: 'body-in-chat', // 4
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 5
+            body: 'body-in-chat', // 5
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 6
+            body: 'body-in-chat', // 6
+          },
+          {
+            iframe: 'iframe-container-in-chat', // 7
+            body: 'body-in-chat', // 7
+          },
+          {
+            iframe: 'iframe-container-post-chat', // 8
+            body: 'body-post-chat', // 8
+          },
+        ];
+        var class_to_add_index = -1;
+        for(var i = 0; i < class_names.length; i++){
+          if(i === state.chat_state.currentState){
+            class_to_add_index = i;
+          }
+          else {
+            iframe_container.classList.remove(class_names[i].iframe);
+            document.body.classList.remove(class_names[i].body);
+          }
+        }
+        if(class_to_add_index > -1){
+          iframe_container.classList.add( class_names[class_to_add_index].iframe );
+          document.body.classList.add( class_names[class_to_add_index].body );
+        }
+        //--- add chat state css class to iframe container
+
+        // add css class to body if showing or not showing chat
+        if(state.showing){
+          document.body.classList.add('body-chat-showing');
+        }
+        else {
+          document.body.classList.remove('body-chat-showing');
+        }
+        //--- add css class to body if showing or not showing chat
+      }
+
+
+
+      // initialize buttons
+      for(var i = 0, l = show_btns.length; i < l; i++){
+        show_btns[i].onclick = function(){
+          HelixChat.fire('show');
+        }
+      }
+      for(var i = 0, l = hide_btns.length; i < l; i++){
+        hide_btns[i].onclick = function(){
+          HelixChat.fire('hide');
+        }
+      }
+
+      var setStateAndCallChange = function(new_state){
+        state = new_state;
+        handleStateOrWindowStateChange();
+      };
+
+      var setWindowStateAndCallChange = function(new_window_state){
+        window_state = new_window_state;
+        handleStateOrWindowStateChange();
+      }
+
+      HelixChat.on('state', setStateAndCallChange, this);
+
+      HelixChat.on('window-state', setWindowStateAndCallChange, this);
+
+      HelixChat.on('iframe-loaded', function(){
+        // clear the hardset height on the _iframe_container
+        if(/\/chat\/post_chat_survey_confirm/.test(state.url)){
+          return;
+        }
+
+        iframe_container.style.height = '';
+      })
+
+      HelixChat.on('reset', function(){
+        // clear the hardset height on the _iframe_container
+        iframe_container.style.height = '';
+      })
+
+      // to avoid race condition fire these events to get the state and window state
+      HelixChat.fire('get-state', setStateAndCallChange);
+      HelixChat.fire('get-window-state', setWindowStateAndCallChange);
+    }
+
+    var style = document.createElement('style');
+
+    if(brand === 'af'){
+      var inner_border_radius = 0;
+      var chat_bg          = 'white';
+      var header_bg        = 'black';
+      var header_text      = 'white';
+      var base_font_fam    = "'Trade Gothic Bold','Arial',sans-serif";
+      var in_chat_btn_bg   = "black";
+      var in_chat_btn_text = "white";
+      var in_chat_btn_border_radius = '0px';
+      var in_chat_btn_size = '40px';
+      var in_chat_notification_count_bg = '#D00000';
+      var in_chat_notification_count_size = 20;
+      var in_chat_notification_font_size = '10px';
+    }
+    else if(brand === 'hco'){
+      var inner_border_radius = 3;
+      var chat_bg          = '#FFFFF8';
+      var header_bg        = '#292A33';
+      var header_text      = '#FFFFF8';
+      var base_font_fam    = '"pfdin-semibold","Arial Black",sans-serif';
+      var in_chat_btn_bg   = header_bg;
+      var in_chat_btn_text = header_text;
+      var in_chat_btn_border_radius = '3px';
+      var in_chat_btn_size = '40px';
+      var in_chat_notification_count_bg = '#9D1B23';
+      var in_chat_notification_count_size = 20;
+      var in_chat_notification_font_size = '10px';
+    }
+
+    var showing_z_index = '100002';
+
+    style.innerHTML =  "/*\nVARIABLES\n   \nvar chat_bg          = 'white';\nvar header_bg        = 'black';\nvar header_text      = 'white';\nvar base_font_fam    = 'Trade Gothic Bold','Arial',sans-serif;\nvar in_chat_btn_bg   = black;\nvar in_chat_btn_text = white;\n*/\n\n";
+    style.innerHTML +=  ".chat-default {position: fixed; bottom: 10px; left: -100000px; z-index: -1; border-radius: "+inner_border_radius+"px}";
+    style.innerHTML += " .chat-default-showing { left: 10px; z-index: "+showing_z_index+"}";
+    style.innerHTML += " .chat-default {box-shadow: 0 0 35px #a5a5a5;width: 350px;background: "+chat_bg+";}";
+    style.innerHTML += " .chat-default iframe {border: none;width: 100%; height: calc(100% - "+(header_height+1)+"px);overflow-y: auto;}";
+    style.innerHTML += " .chat-iframe-header {height: "+header_height+"px;background: "+header_bg+";color: "+header_text+";line-height: "+header_height+"px;font-family: "+base_font_fam+";}";
+    style.innerHTML += " .chat-iframe-header .chat-iframe-header-container {padding: 0px 20px; font-size: 16px; display: flex; justify-content: space-between; align-items: center; height: 100%;}";
+    style.innerHTML += ".hol .chat-iframe-header .chat-iframe-header-container {text-transform: uppercase;}";
+    style.innerHTML += " .chat-iframe-header .chat-iframe-header-container img {display: inline-block; vertical-align: middle;}";
+    style.innerHTML += " .chat-iframe-header .chat-iframe-header-container > * { flex: 50%; display: flex; align-items: center; line-height: 14px; }";
+    style.innerHTML += " .chat-iframe-header .chat-iframe-header-container img.chat-icon-left {padding-right: 10px;}";
+    style.innerHTML += " .chat-iframe-header .right { display: flex; justify-content: flex-end;}";
+    style.innerHTML += " .chat-iframe-header button {color: white;background: transparent;border: none;outline: none; margin: 0px 8px; padding: 0px; cursor: pointer;}";
+    style.innerHTML += " .chat-iframe-header .right button:last-child {margin-right: 0px;}";
+    style.innerHTML += " .iframe-loading-indicator {display: none; background: white; position: absolute; top: "+header_height+"px; right: 0; bottom: 0; left: 0; } ";
+    style.innerHTML += " .iframe-loading-indicator .iframe-loading-loading-text {position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);}";
+    style.innerHTML += " @media screen and (max-width: 468px){";
+    style.innerHTML += "  .chat-default {position: fixed;right: 0px;left: 0px;height: auto;width: auto;} ";
+    style.innerHTML += "  .chat-default {top: 100%;bottom: -100%;}";
+    style.innerHTML += "  .chat-default-showing {top: 0px; bottom: 0px;}";
+    style.innerHTML += " }";
+
+    // in chat indicator button and count
+    style.innerHTML += " .in-chat-indicator-container {position: fixed;bottom: 10px;left: 10px; z-index: 1;}";
+    style.innerHTML += " .in-chat-indicator-container > div {position: relative;}";
+    style.innerHTML += " .in-chat-indicator-container > div .show-chat-btn {border: none;background: "+in_chat_btn_bg+";color: "+in_chat_btn_text+";padding: 8px; border-radius: "+in_chat_btn_border_radius+"; height: "+in_chat_btn_size+"; width: "+in_chat_btn_size+"; outline: none;}";
+    style.innerHTML += " .in-chat-indicator-container > div .show-chat-btn img {display: inline;    vertical-align: middle;}";
+    style.innerHTML += " .in-chat-indicator-container > div .chat-notification-count {position: absolute;display: none;top: -"+(in_chat_notification_count_size / 2)+"px;right: -"+(in_chat_notification_count_size / 2)+"px;background: "+in_chat_notification_count_bg+";color: white;width: "+in_chat_notification_count_size+"px;height: "+in_chat_notification_count_size+"px;font-size: "+in_chat_notification_font_size+";line-height: "+in_chat_notification_count_size+"px;text-align: center;border-radius: 50%;}";
+
+    // @media in chat indicator button and count
+    style.innerHTML += " @media screen and (max-width: 468px){";
+    style.innerHTML += " .in-chat-indicator-container {left: auto; right: 10px;}";
+    // sticky-atb-button is when there is a fixed button like checkout at the bottom
+    style.innerHTML += " .sticky-atb-button .in-chat-indicator-container, .sticky-atb-visible  .in-chat-indicator-container {bottom: 70px;}";
+    style.innerHTML += " .in-chat-indicator-container > div .chat-notification-count {right: inherit; left: -"+(in_chat_notification_count_size / 2)+"px;}";
+    style.innerHTML += " }";
+
+    style.innerHTML += " .helix-chat-show {display: block !important;}";
+    style.innerHTML += " .helix-chat-hide {display: none !important;}";
+
+    // iframe height
+    // some languages have long consent language so we have 2 different sections
+    style.innerHTML += " #HelixChatIframeContainer  { transition: height .150s linear; }";
+    style.innerHTML += " #HelixChatIframeContainer.iframe-container-pre-chat  { height: 400px; }";
+    style.innerHTML += " #HelixChatIframeContainer.iframe-container-in-chat   { height: 400px; }";
+    style.innerHTML += " #HelixChatIframeContainer.iframe-container-post-chat { height: 450px; }";
+
+    // iframe inner height
+    style.innerHTML += " .chat-container-inner { height: 100%; min-height: 100%; overflow: auto; position: relative; top: 0; left: 0; display: flex; flex-direction: column; border-radius: "+inner_border_radius+"px}";
+
+    // touch mobile
+    style.innerHTML += "  html[lang].touch #HelixChatIframeContainer.iframe-container-pre-chat, html[lang='en-us'].touch #HelixChatIframeContainer.iframe-container-pre-chat, html[lang].touch #HelixChatIframeContainer.iframe-container-in-chat, html[lang='en-us'].touch #HelixChatIframeContainer.iframe-container-in-chat, html[lang].touch #HelixChatIframeContainer.iframe-container-post-chat, html[lang='en-us'].touch #HelixChatIframeContainer.iframe-container-post-chat { -webkit-overflow-scrolling: auto !important } ";
+
+    // iframe height -> media query rules
+    style.innerHTML += " @media screen and (max-width: 468px){ ";
+    style.innerHTML += "  html[lang] #HelixChatIframeContainer.iframe-container-pre-chat.chat-default-showing, html[lang='en-us'] #HelixChatIframeContainer.iframe-container-pre-chat.chat-default-showing, html[lang] #HelixChatIframeContainer.iframe-container-in-chat.chat-default-showing, html[lang='en-us'] #HelixChatIframeContainer.iframe-container-in-chat.chat-default-showing, html[lang] #HelixChatIframeContainer.iframe-container-post-chat.chat-default-showing, html[lang='en-us'] #HelixChatIframeContainer.iframe-container-post-chat.chat-default-showing { position: fixed; overflow-y: scroll; top: 0; left: 0; height: 100% !important; max-height: 100%; width: 100%; bottom: auto; } ";
+
+    // mobile overlay same as has-overlay
+    style.innerHTML += "  .helix-chat-showing        { height: auto; overflow: hidden; } ";
+    style.innerHTML += "  .helix-chat-showing > body { height: 100vh; overflow: hidden; } ";
+
+    style.innerHTML += " .chat-default { border-radius: 0px}";
+    style.innerHTML += " .chat-container-inner { border-radius: 0px}";
+
+    style.innerHTML += "  .body-chat-showing.body-pre-chat, .body-chat-showing.body-in-chat, .body-chat-showing.body-post-chat { overflow-y: hidden; } ";
+    style.innerHTML += " }";
+
+    // spin animation
+    style.innerHTML += "@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } } @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }";
+    style.innerHTML += ".helix-chat-spin { -webkit-animation:spin 4s linear infinite; -moz-animation:spin 4s linear infinite; animation:spin 4s linear infinite;}";
+
+    // append css styling for HelixChatIframeContainer and its wrapper - we don't have to wait for DOMContentLoaded
+    document.head.appendChild(style);
+
+  })();
+
+
+
+
+}

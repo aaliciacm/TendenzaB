@@ -1,0 +1,148 @@
+
+// JS Files Used for EE
+function mapSiteLanguage() {
+	//xxxconsole.logxxx('-- mapSiteLanguage ---')
+	var passedIn = oracleChat.site.siteLanguage;
+	passedIn = passedIn.toLowerCase();
+	
+	//xxxconsole.logxxx('-- mapSiteLanguage, passedIn= ' + passedIn + ' ---')
+	if(isNaN(oracleChat.site.siteLanguage)){
+		switch(passedIn) {
+			case "english":
+				oracleChat.site.siteLanguage = 70;
+				break;
+			default:
+				oracleChat.site.siteLanguage = 59;
+				break;
+		}
+	}
+	//xxxconsole.logxxx('-- siteLanguage= ' + oracleChat.site.siteLanguage + ' ---')
+	return true;
+}
+function elementExists(elemName)
+{
+	//xxxconsole.logxxx('-- checking ElementExists ---');
+	if (document.getElementById(elemName))
+	{
+		//xxxconsole.logxxx('-- '+ elemName + ' exists ---');
+		return true;
+	}
+	else
+	{
+		//xxxconsole.logxxx('-- '+ elemName + ' does NOT exist ---');
+		return false;
+	}
+}
+// JS Files Used for EE
+function ElementDoesNotExist(elemName)
+{
+	//xxxconsole.logxxx('-- checking ElementDoesNotExist ---');
+	if (document.getElementById(elemName))
+	{
+		//xxxconsole.logxxx('-- '+ elemName + ' exists ---');
+		return false;
+	}
+	else
+	{
+		//xxxconsole.logxxx('-- '+ elemName + ' does NOT exist ---');
+		return true;
+	}
+}
+function isErrorPage()
+{
+	//xxxconsole.logxxx('---- inside isErrorPage ---');
+	var x = document.getElementsByClassName("error").length;
+	
+	if(x>0) { 
+		//xxxconsole.logxxx('is error page');
+		return true;
+	}
+	else {
+		//xxxconsole.logxxx('is not error page');
+		return false;
+	}
+}
+// Function to determine if a cookie with the passed in name exists in the source of the page
+// If it does exist, return true, else false.
+function getCookieRN(name) {
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
+    }
+    else
+    {
+        begin += 2;
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+        end = dc.length;
+        }
+    }
+    return unescape(dc.substring(begin + prefix.length, end));
+} 
+// -------------------------------------------------------------------------------------
+// Function to determine if a cookie with the passed in name has a value = 1
+// If it does not exist, return true, else false.
+function checkChatDeclinedCookie(name) {
+    var myCookie = getCookieRN(name);
+
+	//xxxconsole.logxxx('--'+ myCookie+'---');
+    if (myCookie == null) {
+	    //xxxconsole.logxxx('-- '+ name + ' does not exist, show offer ---');
+        return true;  //cookie does not exist, always US
+    }
+    else {
+        if(myCookie == 1) {
+	        //xxxconsole.logxxx('-- '+ name + ' equals 1, do not show offer ---');
+	        return false; //cookie is not true
+        }
+        else {
+	        //xxxconsole.logxxx('-- '+ name + ' does not equal 1, show offer ---');
+	        return true;  //cookie is true (have declined within last hour);
+        }
+    }
+}
+
+// -------------------------------------------------------------------------------------
+// Function used to capture custom fields not used in routing, but necessary for pass-thru
+// to an agent when a chat is requested.
+deferredOfferDataCapture = function()
+{
+    var map = 
+	{
+       17:  'incidents.c$language',
+       39:  'incidents.c$site',
+       84:  'incidents.c$brand',
+       124: 'incidents.c$chat_type',
+       125: 'incidents.c$chat_campaign_channel',
+       126: 'incidents.c$visitor_id',
+       127: 'incidents.c$line_of_business',
+       128: 'incidents.c$chat_page_name',
+       129: 'incidents.c$search_term',
+       131: 'incidents.c$currency_code',
+       133: 'incidents.c$chat_channel',
+       137: 'incidents.c$cust_browser_lang',
+       138: 'incidents.c$web_store_id',
+	   144: 'incidents.c$chat_dept_id',
+	   145: 'incidents.c$chat_page_type',
+	   146: 'incidents.c$web_test_vars',
+	   147: 'incidents.c$chat_location'
+    };
+
+	var sccl = eval(_vsq._widgets[0]);
+	var df = _vsq._dataFields;
+	var subUrl = '';
+	for (var key in df)
+	{
+		if(df[key] && df[key].length > 0)
+		{
+			subUrl += '/' + map[key] + '/' + encodeURIComponent(df[key]);
+		}
+	}
+    if (typeof(sccl) != 'undefined' && typeof(sccl.data) != 'undefined' && sccl.data != null)
+	{
+    	sccl.data.custom_fields_in_url += subUrl;
+    }
+}

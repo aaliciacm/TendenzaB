@@ -1,0 +1,1145 @@
+
+
+var ANF = ANF || {};
+
+
+var HOL = HOL || {};
+
+
+var ANF_helper = {};
+
+ANF.account = ANF.account || {};
+ANF.accountsection = ANF.accountsection || {};
+ANF.catalog = ANF.catalog || {};
+ANF.checkout = ANF.checkout || {};
+ANF.storelocator = ANF.storelocator || {};
+ANF.casting = ANF.casting || {};
+ANF.unsubscribe = ANF.unsubscribe || {};
+ANF.customerservice = ANF.customerservice || {};
+ANF.gclookup = ANF.gclookup || {};
+ANF.global = ANF.global || {};
+ANF.contactus = ANF.contactus || {};
+ANF.home = ANF.home || {};
+ANF.help = ANF.help || {};
+ANF.content = ANF.content || {};
+ANF.marketing = ANF.marketing || {};
+ANF.analytics = ANF.analytics || {};
+ANF.email = ANF.email || {};
+ANF.modularHelp = ANF.modularHelp || {};
+
+ANF.params = {
+	urls : {"SCENE7URL":"//anf.scene7.com/is/image/","SECURE_SCENE7URL":"https://anf.scene7.com/is/image/anf","ANF_VIDEO_THUMBNAIL":"//anf.scene7.com/is/image/anf/ANF_Video_Thumbnail","HCO_VIDEO_THUMBNAIL":"//anf.scene7.com/is/image/anf/HCO_Video_Thumbnail","STATIC_DIR":"hol","VERSIONPATH":"hol/d7a50e3","SELECT_SIZE":"Seleccionar talla","SUBSCRIBE":"/webapp/wcs/stores/servlet/Subscribe?storeId=19158&catalogId=11558&langId=-5","FOOTER_SUBSCRIBE":"/webapp/wcs/stores/servlet/SubscribeView?storeId=19158&catalogId=11558&langId=-5","login":"/webapp/wcs/stores/servlet/AccountRouterView?storeId=19158&isUserLogin=true&catalogId=11558&langId=-5","ajax":{"orderItemUpdate":"/webapp/wcs/stores/servlet/OrderItemUpdate?storeId=19158&catalogId=11558&langId=-5","eGCAddUrl":"/webapp/wcs/stores/servlet/EGCAdd?storeId=19158&catalogId=11558&langId=-5","interestItemDelete":"/webapp/wcs/stores/servlet/InterestItemDelete?storeId=19158&catalogId=11558&langId=-5","interestItemDisplay":"/webapp/wcs/stores/servlet/InterestItemDisplay?storeId=19158&catalogId=11558&langId=-5","getProductHTML":"/webapp/wcs/stores/servlet/ProductQuickView?storeId=19158&catalogId=11558&langId=-5","help":"/webapp/wcs/stores/servlet/HelpAJAX?storeId=19158&catalogId=11558&langId=-5","getUtilityNavUrl":"","getMiniCartUrl":"","quickview":"/webapp/wcs/stores/servlet/QuickView?storeId=19158&catalogId=11558&langId=-5","getColorJSON":"/webapp/wcs/stores/servlet/GetColorJSON?storeId=19158&catalogId=11558&langId=-5","marketingSpotView":"/webapp/wcs/stores/servlet/MarketingSpotView?storeId=19158&catalogId=11558&langId=-5","eMarketingSpotJSONUrl":"/webapp/wcs/stores/servlet/GetEMarketingSpotJSON?storeId=19158&catalogId=11558&langId=-5","getProductListJSON":"/webapp/wcs/stores/servlet/GetProductListJSON?storeId=19158&catalogId=11558&langId=-5","getProductRecommendations":"/webapp/wcs/stores/servlet/GetProductRecommendations?storeId=19158&catalogId=11558&langId=-5","AutoPromoResponseJSON":"/webapp/wcs/stores/servlet/AutoPromoResponseJSON?storeId=19158&catalogId=11558&langId=-5","productQuickView":"/webapp/wcs/stores/servlet/ProductQuickView?storeId=19158&catalogId=11558&langId=-5","bazaarvoiceApi":"//hollister.ugc.bazaarvoice.com/static/17450-en_us/bvapi.js","login":"/api/ecomm/h-eu-es/session/?cookieAuth=true&rememberMe=true","logOff":"/api/ecomm/h-eu-es/session/?cookieAuth=true","user":"/api/ecomm/h-eu-es/user","session":"/api/ecomm/h-eu-es/session","exists":"/api/ecomm/h-eu-es/user/exists?","remembered":"/api/ecomm/h-eu-es/user/remembered","subscription":"/api/ecomm/h-eu-es/subscription/","HCOQuickView":"/webapp/wcs/stores/servlet/ProductQuickView","forgotPasswordSend":"/api/ecomm/h-eu-es/session/forgot/send"},"help":{"returnsandexchanges":"","faq":"","sizechart":"","helpwithorder":"","shippingandhandling":"","contactus":"","giftcardandmerchandisecredit":"","rewardslegal":"/hol/media/legalText/seeDetails_loyalty_hol_eu.html"},"checkout":{"shippingForm":"/webapp/wcs/stores/servlet/AddressFieldsDisplayView?storeId=19158&catalogId=11558&langId=-5","cartURL":"/webapp/wcs/stores/servlet/ShoppingBag?storeId=19158&orderStatus=P&catalogId=11558&langId=-5"},"thirdParty":{"googlePlaces":"https://maps.googleapis.com/maps/api/js?&client=gme-abercrombie","pxp":{"timeout":"1000","tokens":"https://sut-eu1.pxp-solutions.net/SingleUseTokenService/api/v5/tokens","transactions":"https://api-eu1.pxp-solutions.net/TransactionService/api/v5/transactions"}},"loyalty":{"pointsHistory":"/webapp/wcs/stores/servlet/PointsHistoryDisplayView?storeId=19158&selected=rewardHistory&catalogId=11558&langId=-5","rewardsCenter":"/webapp/wcs/stores/servlet/RewardsCenterDisplayView?storeId=19158&selected=rewardDash&tabSelected=1&catalogId=11558&langId=-5","offerLegal":"/hol/media/legalText/seeDetails_promoOffer_hol_eu.html"}},
+	monthNames: [
+		
+			{
+				"textKey": "GLB_JANUARY",
+				"name": "January",
+				"number": 1
+			},
+		
+			{
+				"textKey": "GLB_FEBRUARY",
+				"name": "February",
+				"number": 2
+			},
+		
+			{
+				"textKey": "GLB_MARCH",
+				"name": "March",
+				"number": 3
+			},
+		
+			{
+				"textKey": "GLB_APRIL",
+				"name": "April",
+				"number": 4
+			},
+		
+			{
+				"textKey": "GLB_MAY",
+				"name": "May",
+				"number": 5
+			},
+		
+			{
+				"textKey": "GLB_JUNE",
+				"name": "June",
+				"number": 6
+			},
+		
+			{
+				"textKey": "GLB_JULY",
+				"name": "July",
+				"number": 7
+			},
+		
+			{
+				"textKey": "GLB_AUGUST",
+				"name": "August",
+				"number": 8
+			},
+		
+			{
+				"textKey": "GLB_SEPTEMBER",
+				"name": "September",
+				"number": 9
+			},
+		
+			{
+				"textKey": "GLB_OCTOBER",
+				"name": "October",
+				"number": 10
+			},
+		
+			{
+				"textKey": "GLB_NOVEMBER",
+				"name": "November",
+				"number": 11
+			},
+		
+			{
+				"textKey": "GLB_DECEMBER",
+				"name": "December",
+				"number": 12
+			}
+		
+	],
+	dayNames: [
+		
+			{
+				"textKey": "GLB_SUNDAY",
+				"name": "Sunday",
+				"number": 0
+			},
+		
+			{
+				"textKey": "GLB_MONDAY",
+				"name": "Monday",
+				"number": 1
+			},
+		
+			{
+				"textKey": "GLB_TUESDAY",
+				"name": "Tuesday",
+				"number": 2
+			},
+		
+			{
+				"textKey": "GLB_WEDNESDAY",
+				"name": "Wednesday",
+				"number": 3
+			},
+		
+			{
+				"textKey": "GLB_THURSDAY",
+				"name": "Thursday",
+				"number": 4
+			},
+		
+			{
+				"textKey": "GLB_FRIDAY",
+				"name": "Friday",
+				"number": 5
+			},
+		
+			{
+				"textKey": "GLB_SATURDAY",
+				"name": "Saturday",
+				"number": 6
+			}
+		
+	],
+	storeAttributes : {
+		"newInitMethod" : false,
+		"hasModalImageABTest" : "false",
+		"certonaAppId" : "HollisterEU",
+		"lazyLoadWaypointTrigger" : "200%",
+		"infinityScrollWaypointTrigger" : "0.75",
+		"accountCreationDefaultTickSubscribe" : false,
+		"country" : "EU",
+		"currency" : "EUR",
+		"countryFromIP" : "ES",
+		"availablePaymentTypes": "001,002,003",
+		"lang" : "es",
+		"QUERY_STR" : "storeId=19158&catalogId=11558&langId=-5",
+		"hasMetric" : "1",
+		"HasSubscribeSubmitBlurb" : "0",
+		"HasGridOptionTopRated" : "null",
+		"hasActAsBrokerMsg" : true,
+		"hasAgeVerification" : "0",
+		"storeLocatorBrandCode" : "HOL",
+		"paginationPageLimitDesktop" : "11",
+		"paginationPageLimitMobile" : "5",
+		"facebookLikeUrl" : "http://www.facebook.com/hollister?ref=ts",
+		"promoCodeCountryWhitelist": "AT,FI,FR,BE,BG,CZ,DK,EE,IE,DE,GR,HU,IT,LV,LU,LT,NL,NO,PL,SE,CH,GB,PT,RO,SK,SI,ES,MC,CY,MT,HR".split(","),
+		"hasFindInStoreSurvey" : false,
+		"hasGeolocation" : true,
+		"hasFilterMultiSelect" : false,
+		"hasCheckoutGenderBadging" : false,
+		"categoryPaginationTypes" : "pager",
+		"apiURLRoot" : "/api/ecomm/h-eu-es",
+		"storeContext" : "h-eu-es",
+		"showDesktopSizeRecommendation" : false,
+		"showMobileSizeRecommendation" : false,
+		"enableOFPImage" : true,
+		"hasSameHostname" : true,
+		"hasProductVideos" : true,
+		"lazyLoadImgFadeInSpeed" : 750,
+		"timeToSendEGC" : "07:00:00",
+		"googleAPIKey" : "gme-abercrombie",
+		"googleAPIClientIDString" : "&client=gme-abercrombie",
+		"hasGridModalQuickView" : true,
+		"pasId" : "10352",
+		"enableFreeShippingMessaging": false,
+		"freeShippingMsgRange": 15,
+		"hasPayPalEnabled": "1",
+		"hasPayPalExpress": true,
+		"hasVisaCheckoutEnabled": "0",
+		"enableFirstLookToaster": "true",
+		"hasGwp": true,
+		"loginModelEnabled": true,
+		"enableLoginModal": "2",
+		"hasMobileModalTakeover": true,
+		"enabledFilterMultiSelect": false,
+		"pasList" : {
+			"anfPasId" : "10302",
+			"kidsPasId" : "18107",
+			"holPasId" : "10352"
+		},
+		"idList" : {
+			"storeId" : 19158,
+			"catalogId" : "11558",
+			"langId" : "-5",
+			"defaultBrandCategoryId" : 10007
+		},
+		"siteList" : {
+			"isUSSite" : false,
+			"isEUSite" : true,
+			"isUKSite" : false,
+			"isCASite" : false,
+			"isWDSite" : false
+		},
+		"applePay": {
+			"canUseApplePayFunctionality": (window.ApplePaySession && false) ? true : false,
+			"merchantIdentifier": "merchant.com.anfcorp.hollisterap.prod",
+			"applePayVersion": 1
+		},
+		api : {
+			notifications : {
+				callTimeThreshold : "30000"
+			}
+		},
+		"search" : {
+			"minSearchTermLength" : 1,
+			"searchPageMaxProducts" : 132,
+			"categoryPageMaxProducts" : 132,
+			"searchFilterFacetListJSON" : "{ 'facets' : [   { 'facetName' : 'Body_Type', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'categoryId', 'containerClass' : 'filter-narrow', 'optionClass' : 'one-col' } , { 'facetName' : 'colorFamily', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'Details', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'Fabric', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'Fit', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'Fit_Type', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'Pattern', 'containerClass' : 'filter-wide', 'optionClass' : 'two-col' } , { 'facetName' : 'sizeFamily', 'containerClass' : 'filter-narrow', 'optionClass' : 'three-col' } , { 'facetName' : 'Sleeve_Length', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'SuperWash', 'containerClass' : 'filter-narrow', 'optionClass' : 'two-col' } , { 'facetName' : 'Theme', 'containerClass' : 'filter-wide', 'optionClass' : 'two-col' } , { 'facetName' : 'Wash', 'containerClass' : 'filter-narrow', 'optionClass' : 'one-col' } ] }",
+			"enableSolrFilteredURL": "true",
+			"typeAheadCharDelay" : 3,
+			"typeAheadDisplay" : 7
+		},
+		"account" : {
+			"marketingPreferencesRetryLimit" : 3,
+			"marketingPreferencesDelay" : 1000,
+			"enableBirthYear" : true,
+			"enableWelcomeOffer" : true,
+			"enableCAM": 2,
+			"enableFastEnroll": false
+		},
+		"checkout" : {
+			"hasMultiCreditCardPayment" : true,
+			"hasCreditCardAutoDetect" : true,
+			"hasKlarna" : false,
+			"hasAddressAutocomplete" : false,
+			"hasTransferToPXE" : "false",
+			"orderConfirmationUrl": "/webapp/wcs/stores/servlet/OrderReceiptDisplayView?storeId=19158&catalogId=11558&langId=-5",
+			"submitOrderRetryAttempts": "8",
+			"paymentStatusDelay": "4000",
+			"gcSubmitCountry": "EU"
+		},
+		"saves" : {
+			"hasMySaves" : true,
+			"useStickyHearts" : true,
+			"useStickyHeartsLocal" : true,
+			"stickyHeartsTimeDelay" : 5,
+			"hasMySavesANF" : false,
+			"useStickyHeartsANF" : false,
+			"stickyHeartsTimeDelayANF" : 5
+		},
+		"loyalty" : {
+			"rewardPointsThreshold": 12500,
+			"enabled" : true,
+			"webRegistrationEnabled": true,
+			"numRecordsPointsHistory" : 20,
+			"initialNumRecordsPointsHistory" : 5,
+			"onboardingEnabled": true,
+			"hasBadgingEnabled": true,
+			"vipEnabled": false,
+			"currency": "€",
+			"points": {
+				"initial": "500",
+				"gender": "100",
+				"birthday": "100",
+				"phone": "300"
+			}
+		},
+		"webReturns": {
+			"enabled": true,
+			"detailsPollingIntervals": [5000, 5000, 5000]
+		},
+		"DMX" : {
+			"hasDisplayDMXMetricData" : false,
+			"hasDMXInventorySelectDisplay" : false
+		},
+		"stickyCheckoutContainer": {
+			"enabled": true,
+			"override": false
+		},
+		"bagPromo": {
+			"REMOVE_SUCCESS": {
+				"key": "BAG_REMOVE_PROMO_SUCCESS",
+				"value": "your promotion code has been removed, and your merchandise item totals have been changed back to their original price. "
+			},
+			"REMOVE_ERROR": {
+				"key": "BAG_REMOVE_PROMO_ERROR",
+				"value": "We can’t remove the promotion at this time, please try again later"
+			}
+		},
+		"helpGiftCardPage": {
+			"hasGiftCardBalanceRecaptcha": true
+		},
+		"enableFreeGiftPromoLogic": true,
+		"hasClickToChat" : true,
+		"hasMarketingModal" : true,
+		
+			"ukBannerCookieValue" : "0513",
+			"euBannerCookieValue" : "1017",
+			"hasRecommendationsDesktop" : true,
+			"userId" 	: "877775844",
+			"hasProductSlideShow" : true,
+			"dmxToolMode": "NotUsed",
+			"changeSortLabel" : true,
+			"hasStickyAddToBag" : false,
+		
+		"hasScrollToTopDesktop" : true,
+		"bagConfirmation" : {
+			"enabled" : true,
+			"recommendation" : {
+				enabled: false, 
+				categoryEnabled : false,
+				categoryOverride : false,
+				timeout : 4000,
+				altRecsLinkOne : "/shop/eu-es/chicos-novedades",
+				altRecsLinkTwo : "/shop/eu-es/chicas-novedades",
+				altRecsEnabled : false
+			},
+			"isUSOrCAOrMXSite" : false,
+			"isEUOrUKSite" : true,
+			"isHKSite" : false
+		},
+		"imageScrub" : {
+			"enabled" : true, 
+			"override" : false  
+		},
+		"catalog": {
+			"gridToggle" : {
+				"enabled": false
+			}
+		},
+		"loyaltyCheckoutFeatures" : {
+			"loyaltyReceiptSectionEnabled" : false,
+			"loyaltyEstimatedRewardsPointsEnabled" : true,
+			"loyaltyRewardsSectionEnabled" : true
+		},
+		"userPreference" : {
+			"enabled" : false,
+			"isSFSFeatureEnabled": true,
+			"countries" :{
+				"enabled" : false,
+				"map" : {"AT" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "AT",
+									"key" : "GLB_AUSTRIA",
+									"name" : "Austria",
+									"seq" : 5,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"BE" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "BE",
+									"key" : "GLB_BELGIUM",
+									"name" : "Bélgica",
+									"seq" : 10,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"BG" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "BG",
+									"key" : "GLB_BULGARIA",
+									"name" : "Bulgaria",
+									"seq" : 18,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"HR" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "HR",
+									"key" : "GLB_CROATIA",
+									"name" : "Croacia",
+									"seq" : 27,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"CY" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "CY",
+									"key" : "GLB_CYPRUS",
+									"name" : "Chipre",
+									"seq" : 28,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"CZ" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "CZ",
+									"key" : "GLB_CZECHREPUBLIC",
+									"name" : "República Checa",
+									"seq" : 29,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"DK" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "DK",
+									"key" : "GLB_DENMARK",
+									"name" : "Dinamarca",
+									"seq" : 30,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"EE" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "EE",
+									"key" : "GLB_ESTONIA",
+									"name" : "Estonia",
+									"seq" : 36,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"FI" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "FI",
+									"key" : "GLB_FINLAND",
+									"name" : "Finlandia",
+									"seq" : 37,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"FR" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "FR",
+									"key" : "GLB_FRANCE",
+									"name" : "Francia",
+									"seq" : 38,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"DE" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "DE",
+									"key" : "GLB_GERMANY",
+									"name" : "Alemania",
+									"seq" : 40,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"GR" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "GR",
+									"key" : "GLB_GREECE",
+									"name" : "Grecia",
+									"seq" : 41,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"HU" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "HU",
+									"key" : "GLB_HUNGARY",
+									"name" : "Hungría",
+									"seq" : 48,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"IE" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "IE",
+									"key" : "GLB_IRELAND",
+									"name" : "Irlanda",
+									"seq" : 51,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"IT" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "IT",
+									"key" : "GLB_ITALY",
+									"name" : "Italia",
+									"seq" : 53,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"LV" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "LV",
+									"key" : "GLB_LATVIA",
+									"name" : "Letonia",
+									"seq" : 56,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"LT" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "LT",
+									"key" : "GLB_LITHUANIA",
+									"name" : "Lituania",
+									"seq" : 58,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"LU" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "LU",
+									"key" : "GLB_LUXEMBOURG",
+									"name" : "Luxemburgo",
+									"seq" : 59,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"MT" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "MT",
+									"key" : "GLB_MALTA",
+									"name" : "Malta",
+									"seq" : 62,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"MC" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "MC",
+									"key" : "GLB_MONACO",
+									"name" : "Mónaco",
+									"seq" : 68,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"NL" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "NL",
+									"key" : "GLB_NETHERLANDS",
+									"name" : "Países Bajos",
+									"seq" : 69,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"NO" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "NO",
+									"key" : "GLB_NORWAY",
+									"name" : "Noruega",
+									"seq" : 73,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"PL" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "PL",
+									"key" : "GLB_POLAND",
+									"name" : "Polonia",
+									"seq" : 81,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"PT" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "PT",
+									"key" : "GLB_PORTUGAL",
+									"name" : "Portugal",
+									"seq" : 82,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"RO" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "RO",
+									"key" : "GLB_ROMANIA",
+									"name" : "Rumanía",
+									"seq" : 85,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"SK" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "SK",
+									"key" : "GLB_SLOVAKIA",
+									"name" : "Eslovaquia",
+									"seq" : 90,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"SI" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "SI",
+									"key" : "GLB_SLOVENIA",
+									"name" : "Eslovenia",
+									"seq" : 91,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"ES" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "ES",
+									"key" : "GLB_SPAIN",
+									"name" : "España",
+									"seq" : 94,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"SE" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "SE",
+									"key" : "GLB_SWEDEN",
+									"name" : "Suecia",
+									"seq" : 96,
+									"storeLocator" : true,
+									"region": "EU"
+								},
+								"CH" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "CH",
+									"key" : "GLB_SWITZERLAND",
+									"name" : "Suiza",
+									"seq" : 97,
+									"storeLocator" : false,
+									"region": "EU"
+								},
+								"GB" : {
+									"currency" : {
+										"def" : "EUR",
+										"supported" : ["EUR"]
+									},
+									"iso" : "GB",
+									"key" : "GLB_UNITEDKINGDOM",
+									"name" : "Reino Unido",
+									"seq" : 104,
+									"storeLocator" : true,
+									"region": "UK"
+								}}
+			},
+			"currency" : {
+				"enabled" : false,
+				"map" : {}
+			},
+			"language" : {
+				"enabled" : false,
+				"map" : {}
+			},
+			"paymentTypes" : {
+				"map": {"001" : {
+								"iso" : "001",
+								"name" : "Visa",
+								"seq" : 0,
+								"supportedCurrency" : []
+							},
+							"002" : {
+								"iso" : "002",
+								"name" : "MasterCard",
+								"seq" : 1,
+								"supportedCurrency" : []
+							},
+							"003" : {
+								"iso" : "003",
+								"name" : "American Express",
+								"seq" : 2,
+								"supportedCurrency" : []
+							},
+							"ppl" : {
+								"iso" : "ppl",
+								"name" : "Paypal",
+								"seq" : 3,
+								"supportedCurrency" : []
+							},
+							"klarnaaccount" : {
+								"iso" : "klarnaaccount",
+								"name" : "KlarnaAccount",
+								"seq" : 4,
+								"supportedCurrency" : []
+							},
+							"klarnainvoice" : {
+								"iso" : "klarnainvoice",
+								"name" : "KlarnaInvoice",
+								"seq" : 5,
+								"supportedCurrency" : []
+							},
+							"alipay" : {
+								"iso" : "alipay",
+								"name" : "AliPay",
+								"seq" : 6,
+								"supportedCurrency" : []
+							},
+							"eps" : {
+								"iso" : "eps",
+								"name" : "EPS",
+								"seq" : 7,
+								"supportedCurrency" : []
+							},
+							"euteller" : {
+								"iso" : "euteller",
+								"name" : "EUTeller",
+								"seq" : 8,
+								"supportedCurrency" : []
+							},
+							"ideal" : {
+								"iso" : "ideal",
+								"name" : "iDeal",
+								"seq" : 9,
+								"supportedCurrency" : []
+							},
+							"mistercash" : {
+								"iso" : "mistercash",
+								"name" : "MisterCash",
+								"seq" : 10,
+								"supportedCurrency" : []
+							},
+							"poli" : {
+								"iso" : "poli",
+								"name" : "Poli",
+								"seq" : 11,
+								"supportedCurrency" : []
+							},
+							"polinz" : {
+								"iso" : "polinz",
+								"name" : "Poli",
+								"seq" : 12,
+								"supportedCurrency" : []
+							},
+							"przelewy24" : {
+								"iso" : "przelewy24",
+								"name" : "Przelewy24",
+								"seq" : 13,
+								"supportedCurrency" : []
+							},
+							"qiwi" : {
+								"iso" : "qiwi",
+								"name" : "Qiwi",
+								"seq" : 14,
+								"supportedCurrency" : []
+							},
+							"safetypay" : {
+								"iso" : "safetypay",
+								"name" : "SafetyPay",
+								"seq" : 15,
+								"supportedCurrency" : []
+							},
+							"sofortuberweisung" : {
+								"iso" : "sofortuberweisung",
+								"name" : "Sofort",
+								"seq" : 16,
+								"supportedCurrency" : []
+							},
+							"webmoney" : {
+								"iso" : "webmoney",
+								"name" : "Webmoney",
+								"seq" : 17,
+								"supportedCurrency" : []
+							},
+							"yandex" : {
+								"iso" : "yandex",
+								"name" : "Yandex",
+								"seq" : 18,
+								"supportedCurrency" : []
+							}}
+			}
+		},
+		"accessPoint" : {
+			"dspid" : "DEMO_DSP",
+			"limiter" : null
+			
+		},
+		"pudos" : {
+			"pudosETLAPIKey" : "jMRWIAGbp6kzOzAS8qqCDQI3geDhjrz8",
+			"ETL_API_URL": "https://www.hollisterco.com/shop/eu-es/sdabercrombie-prod/dapigee/"
+		},
+		"paymentTypes": {
+			"hasKlarna": "false"
+		},
+		"google" : {
+			"clientId" : "gme-abercrombie",
+			"apiKey" : ""
+		},
+		"hasPopinsRIS" : false,
+		"hasPopinsFIS" : true,
+		"hasGeolocationAutopopulate" : false,
+		"hasHelpText" : false,
+		"hasClickAndCollect" : true,
+		"hasRISWidget" : false,
+		"hasRISOrderHistory" : false,
+		"hasRISModal" : false,
+		"risOrderStatusDelay" : 1000,
+		"risOrderStatusMaxCallCount" : 6,
+		"risOrderStatusCallInterval" : 1000,
+		"forceMarketingLocationFilter" : false,
+		"hasLoginBasedPromos": false,
+		"payPalEnvironment": "production",
+		"payPalMerchantId": "9WT32U6X3SSRS",
+		"searchableTopLevelCategories" : "10201_12551;10201_12552;11558_85264;11558_85265",
+		"hasGridOnDivisionPages" : false,
+		"hasGlobalProductRecommendations": "true"
+		
+	},
+	env : {
+		"isMobile" : "false",
+		"isHollister" : true,
+		"name" : "PROD"
+	}
+};
+
+ANF.params.storeAttributes.globalV2 = {
+	"enabled" : true,
+	"header" : {
+		"enabled": true,
+		"cartReminder" : {
+			"enabled" : false,
+			"hasLowInventoryEnabled": true
+		}
+	}
+};
+
+
+	ANF.params.storeAttributes.directToDesk = {
+		"enabled": true,
+		"addressToMatch": "6301 Fitch Path",
+		"cityToMatch": "New Albany",
+		"zipToMatch": "43054"
+	};
+
+
+ANF.s7 = {
+	imgPresets : {
+		"suffix" : "hol$",
+		"suffixTall" : "hol-tall$",
+		
+				"product" : "$productMain-",
+				"productOFP" : "$productMainOFP-",
+				"productAdaptiveANF" : "$mainImage-r-",
+				"productTall" : "$productMainOFP-hol-tall",
+				"model" : "$productMainOFP-",
+				"modelBottoms" : "$productMainBottoms-",
+				"thumbnail" : "$productThumbnail-",
+				"modelThumbnail" : "$productThumbnailOFP-",
+				"modelBottomThumbnail" : "$productThumbnailBottoms-",
+				"thumbnailPersonalCare" : "$productThumbnailPersonalCare-",
+				"productZoom" : "$productS7Zoom-",
+				"modelZoom" : "$productS7ZoomOFP-",
+				"modelBottomZoom" : "$productS7ZoomBottoms-",
+				"personalCareZoom" : "$productS7ZoomPersonalCare-",
+				"sneakPeekZoom" : "$productS7ZoomSneakPeek-",
+				"recommendationOFP" : "$recommendation-ofp-hol-v1$",
+				"recentlyViewedOFP" : "$recentlyViewed-ofp-hol-v1$"
+			
+	},
+	FourByFivePhotographyImgPresets : {
+		"s7GridPrefix" : "$product-hol-v1$&$category-",
+		"s7GridPrefixMobile" : "$product-hol-v1$&$category-",
+		"s7GridPrefix2" : "$product-hol-v1$&$category-",
+		"s7GridPrefix2Desktop" : "$product-hol-v1$&$category-",
+		"s7GridPrefix2Mobile" : "$product-hol-v1$&$category-",
+		"s7GridPersonalCarePrefix" : "$product-hol-v1$&$category-",
+		"s7GridPersonalCarePrefixMobile" : "$product-hol-v1$&$category-",
+		"s7GridBottomsPrefix" : "$product-hol-v1$&$category-",
+		"s7GridOFPPrefix" : "$product-ofp-hol-v1$&$category-ofp-",
+		"s7GridOFPPrefixMobile" : "$product-ofp-hol-v1$&$category-ofp-",
+		"s7GridOFPPrefix2Desktop" : "$product-ofp-hol-v1$&$category-ofp-",
+		"s7GridOFPPrefix2Mobile" : "$product-ofp-hol-v1$&$category-ofp-",
+		"s7SearchTemplate" : "$product-hol-v1$&$category-",
+		"s7GridSuffix" : "hol-v1$",
+		"s7GridSuffixLarge" : "hol-v1$",
+		"s7GridSwatchPrefix" : "$product-hol-v1$&$category-",
+		"s7GridSwatchOFPPrefix" : "",
+		"s7GridSwatchSuffix" : "hol-v1$",
+		"s7Main" : "$product-hol-v1$",
+		"s7MainOFP" : "$product-ofp-hol-v1$",
+		"s7MainMagnify" : "$product-hol-v1$&$product-magnify-hol-v1$",
+		"s7Thumbnail" : "$product-hol-v1$&$product-thumbnail-hol-v1$",
+		"s7ThumbnailOFP" : "$product-ofp-hol-v1$&$product-thumbnail-ofp-hol-v1$",
+		"s7ThumbnailVideo" : "$product-video-hol-v1$&$product-thumbnail-hol-v1$",
+		"s7JustYourStyleOFP" : "$product-hol-v1$",
+		"s7EnsembleCarousel" : "$product-hol-v1$&$product-thumbnail-hol-v1$",
+		"s7MainZoom" : "$product-hol-v1$&$product-zoom-hol-v1$",
+		"s7MainZoomOFP" : "$product-ofp-hol-v1$&$product-zoom-hol-v1$"
+	},
+	presetsNewProductPage : {
+		
+			"product" : "ProductImage500$",
+			"model" : "ProductImageMod500$"
+		
+	},
+	presets : {
+		"product" : "Product$",
+		"model" : "ProductMod$"
+		
+			,"modelBottoms" : "ProductModBottom$"
+		
+	}
+};
+
+ANF.messaging = {"applePay":{"SETUP_APPLEPAY":"Configurar con","PAYMENT_DECLINED":"Inténtalo de nuevo o selecciona una nueva opción de pago","UNABLE_TO_TAKE_PAYMENT":"Lo sentimos, en este momento no podemos realizar el cargo de tu pago ","ABERCROMBIE":"Abercrombie","HOLLISTER":"Hollister","SUBTOTAL":"Subtotal","PROMO_DISCOUNTS":"Descuentos por promociones","SHIPPING_AND_HANDLING":"Manejo y envío","ESTIMATED_TAX":"Impuestos estimados"},"account":{"WISHLISTSENT":"Tu lista de deseos se ha enviado.","ACCOUNTGREETING":"Hola {0}","WELCOMEBACK":"¡Bienvenido de nuevo!","ACT_WELCOME_BACK_USER":"Bienvenido/a de nuevo, {0}","PROCESSING_LOGIN_EMAIL":"??????","CREATEACCOUNT":"Únete al Club Cali","EDIT_MY_INFO":"Editar mi información","PLEASE_TRY_AGAIN":"Por favor, inténtalo de nuevo","WELCOME_COMMA":"Bienvenido/a, {0}","ADD_ADDRESS":"AÑADIR DIRECCIÓN","EDIT_ADDRESS":"EDITAR DIRECCIÓN","ADD_PAYMENT":"Añadir pago","EDIT_PAYMENT":"Editar información de pago","INVALID_AGE":"Tienes que tener al menos 16 años para introducir esta información de cumpleaños","INVALID_MEMBER_AGE":"Introduce una fecha de cumpleaños válida. Tienes que tener 16 años para poder ser miembro del Club Cali","ACT_UNSUBSCRIBE_ALL_EMAILS":"Unsubscribe from all A&F and Kids marketing emails","checkout_recipt":{"CHK_ACT_CREATEACCOUNT_GENERICERROR":"Se ha producido un error al intentar crear tu cuenta.","CHK_ACT_CREATEACCOUNT_PROCESSING":"Procesando","CHK_ACT_CREATEACCOUNT_CREATEDWITHERRORS":"??????"},"returns":{"reasonCodes":[{"id":"30","name":"REASONCODE_ARRIVED_LATE","text":"El artículo llegó demasiado tarde","type":"textbox","label":"REASONCODE_ARRIVED_LATE_DETAIL","labelText":"Comentarios adicionales."},{"id":"35","name":"REASONCODE_CHANGE_MIND","text":"He cambiado de opinión","type":"textbox","label":"REASONCODE_CHANGE_MIND_DETAIL","labelText":"¿Por qué cambiaste de opinión?"},{"id":"40","name":"REASONCODE_DAMAGED","text":"El artículo llegó dañado o fallado","type":"textbox","label":"REASONCODE_DAMAGED_DETAIL","labelText":"Describe por qué no quedaste satisfecho con el artículo."},{"id":"45","name":"REASONCODE_FIT_LARGE","text":"El artículo era más grande/largo de lo esperado","type":"textbox","label":"REASONCODE_FIT_LARGE_DETAIL","labelText":"¿Qué parte del producto era más grande/larga?"},{"id":"50","name":"REASONCODE_FIT_SMALL","text":"El artículo era más pequeño/corto de lo esperado","type":"textbox","label":"REASONCODE_FIT_SMALL_DETAIL","labelText":"¿Qué parte del producto era más pequeña/corta?"},{"id":"56","name":"REASONCODE_QUALITY","text":"La calidad no era la esperada","type":"textbox","label":"REASONCODE_QUALITY_DETAIL","labelText":"¿La calidad cumplía con tus expectativas?"},{"id":"60","name":"REASONCODE_WRONG_ITEM","text":"Recibí el artículo incorrecto","type":"options","label":"REASONCODE_WRONG_ITEM_DETAIL","labelText":"Describe tu problema.","details":[{"id":"01","name":"REASONCODE_WRONG_ITEM_OPTION1","text":"Received a duplicate of this item","type":""},{"id":"02","name":"REASONCODE_WRONG_ITEM_OPTION2","text":"Item is different size or color than ordered","type":""},{"id":"03","name":"REASONCODE_WRONG_ITEM_OPTION3","text":"Other problem","type":"textbox"}]},{"id":"65","name":"REASONCODE_OTHER","text":"Otro","type":"textbox","label":"REASONCODE_OTHER_DETAIL","labelText":"Describe tu problema."}],"CANCEL_REASON_CODE":"USER_CANCEL"}},"rating":{"POOR":"Pobre","FAIR":"Justo","AVERAGE":"Media","GOOD":"Bueno","EXCELLENT":"Excelente"},"loyalty":{"LOYALTY_PEPE_EARN_SUCCESS":"??????","UNABLE_TO_LOAD":"No se puede cargar. Por favor, inténtalo de nuevo más tarde.","LOYALTY_PEPE_EARN_POINTS":"¡Gana 100 puntos!","guestSignUp":"Suscríbete hoy y benefíciate de $ 10 menos en tu primera compra de $ 25 o más. ¡También recibirás una recompensa de $ 5 por cada 12.500 puntos obtenidos!","userSignIn":"¡Hola, nos hemos dado cuenta de que tienes una cuenta desde {0}! Puedes recibir puntos por esta compra si inicias sesión e introduces la información de tu pedido en la pestaña \"Historial\". La próxima vez, sólo tienes que conectarte antes de pasar por caja para conseguir puntos de manera automática, ¡sin líos!","LOYALTY_RECOMMENDATIONSHEADER":"NUESTRO #SOCALSTYLIST RECOMIENDA","LOYALTY_OB_TOOLTIP_HEADER_GENDER":"¿Por qué el género?","LOYALTY_OB_TOOLTIP_CONTENT_GENDER":"Queremos seleccionar cuidadosamente estilos que te encantarán y hacer que tu experiencia Club sea lo más VIP posible.","LOYALTY_OB_TOOLTIP_HEADER_BIRTHDAY":"¡Sí, cumpleaños!","LOYALTY_OB_TOOLTIP_CONTENT_BIRTHDAY":"Nos encantan los cumpleaños, te encantan los cumpleaños. Queremos celebrar el tuyo contigo. Estamos pensando en sorpresas de cumpleaños y ofertas exclusivas. ¿Te apuntas?","LOYALTY_OB_FULL_BIRTHDAY_ERROR":"Introduce un mes, día y año.","LOYALTY_NOTIFY_CONGRATS":"¡Enhorabuena!","LOYALTY_NOTIFY_SCORED":"¡Acabas de ganar $ {0} en efectivo*!","LOYALTY_NOTIFY_EXPIRATION":"Caducidad: {0}","LOYALTY_NOTIFY_CASH_POINTS":"Hemos descontado {0} puntos de tu cuenta","LOYALTY_NOTIFY_KEEP_EARNING":"Sigue ganando puntos para conseguir más cali cash","LOYALTY_NOTIFY_CTA":"¡Ya está!","LOYALTY_NEXTREWARDEXPIRESON":"La siguiente recompensa caduca el {0} ","LOYALTY_EXPIRES":"Caducidad: {0}","LOYALTY_YOUVE_GOT":"Tienes","LOYALTY_AMOUNTREWARDSCASH":"{0} Cali Cash","LOYALTY_NEXTREWARD_ONE":"Punto hasta la siguiente recompensa de $ 5","LOYALTY_NEXTREWARD":"Puntos hasta la siguiente recompensa de € 5","LOYALTY_POINTS":"Puntos","LOYALTY_ONE_POINT":"Punto","LOYALTY_APPLYATBAGORCHECKOUTORINSTORE":"Aplicar a la bolsa, al tramitar el pedido o en tienda","LOYALTY_SEE_DETAILS":"Ver detalles*","LOYALTY_EVENT_PROFILE_ADD_SHOPGEND":"Preferencia de sexo añadida","LOYALTY_EVENT_PROFILE_ADD_STORE":"Tienda preferida añadida","LOYALTY_EVENT_PROFILE_ADD_BDAY_2":"Cumpleaños añadido","LOYALTY_EVENT_ENROLLMENT":"Se ha unido al club","LOYALTY_EVENT_APPEASEMENT":"Ajuste de puntos","LOYALTY_EVENT_PROFILE_ADD_ADDRESS":"Dirección añadida","LOYALTY_EVENT_PROFILE_ADD_BIRTHDAY":"Cumpleaños añadido","LOYALTY_EVENT_PROFILE_ADD_CATEGORY":"Categorías preferidas añadidas","LOYALTY_EVENT_PROFILE_ADD_GENDER":"Sexo añadido","LOYALTY_EVENT_POINT_MODIFICATION":"Modificación de puntos","LOYALTY_EVENT_GIFT":"Puntos de regalo","LOYALTY_EVENT_REF_ENROLL_USER":"¡Tu amigo se ha registrado!","LOYALTY_EVENT_APP_DOWNLOAD_SIGN_IN":"Ha descargado e iniciado sesión en la aplicación","LOYALTY_EVENT_SMS_OPT_IN":"Suscrito para recibir {0} mensajes de texto","LOYALTY_EVENT_DOWNGRADE_TIER":"??????","LOYALTY_EVENT_PROFILE_ADD_PHONE":"Teléfono añadido","LOYALTY_EVENT_TIER":"Has ganado un nivel VIP","LOYALTY_EVENT_REWARD":"Recompensa {0} CALI CASH","LOYALTY_EVENT_COUPON":"Cupón: {0}","LOYALTY_EVENT_ONLINE_PURCHASE":"Compra online ({0}).","LOYALTY_EVENT_ONLINE_RETURN":"Devolución online ({0}).","LOYALTY_EVENT_IN_STORE_PURCHASE":"Compra en tienda ({0}).","LOYALTY_EVENT_IN_STORE_RETURN":"Devolución en tienda ({0}).","LOYALTY_EVENT_TRANSACTION":"ID de la transacción {0}","LOYALTY_EVENT_EXPIRE":"Tus puntos han caducado debido a la falta de actividad","LOYALTY_EVENT_REWARD_REFUND":"Reembolso en Cali Cash","LOYALTY_EVENT_REWARD_REFUND_SECONDARY":"Tus puntos se te han devuelto después de la devolución.","LOYALTY_EVENT_CAMPAIGN":"??????","LOYALTY_EVENT_CAMPAIGN_SPRING_2018":"Participó en el Juego de Hollister","GLB_OF":"De","LOYALTY_EVENT_CAMPAIGN_HSN_SP_2018":"Vive la Vida Carpe en HSN '18","LOYALTY_EVENT_CAMPAIGN_VIDCON_2018":"Celebración del inicio del verano en VidCon '18","PROMO_DOLLAROFF":"{0} menos por {1}*","PROMO_PERCENTOFF":"{0} menos por {1}*"},"orderdetail":{"GLB_YOURCONFIRMATIONEMAILSENT":"Se ha enviado tu email de confirmación","GLB_ESTDELIVERY":"Entrega estimada para los artículos en stock:","ACT_YOURERECEIPTHASBEENSENT":"¡Te hemos enviado el recibo electrónico!","ACT_CONFIRMATIONEMAILRESENDFAILURE":"No se ha enviado con éxito tu email de confirmación","NOPURCHASESFOUND":"No se ha encontrado ninguna compra."},"status":{"HIDE":"Ocultar","HIDE_DETAILS":"Ocultar detalles","PROMO_APPLIED":"Se ha aplicado la siguiente promoción a tu pedido","CONTINUE":"Continuar","SHOP":"COMPRAR","WEARESORRY":"¡Lo sentimos!","GLB_SAVES_LIMIT":"Has alcanzado el límite de 50 guardados. ¡Elimina algunos de tus artículos guardados antiguos para dejar sitio a los nuevos! <a href=https://www.hollisterco.com/webapp/wcs/stores/servlet/MySaves?storeId=19158&catalogId=11558&langId=-5>Ir a mis guardados</a>.","PROCESSING":"Tramitando...","EMAIL_BANNER_GET_DEMO":"¡Gracias! Hemos añadido tu email a nuestra lista. Por favor, cuéntanos más sobre ti (opcional)","SEE_DETAILS":"Ver detalles","SAVE":"Guardar","SAVED":"Guardado","CANCELLING":"Cancelando...","SUCCESS":"¡Proceso exitoso!","GLB_SETTINGSSAVED":"Se ha guardado tu configuración"},"portablebag":{"modalMessage":{"key":"PORTABLEBAG_MODAL_MESSAGE","value":"¡Copia el enlace para compartir tu bolsa de compras!"},"modalHeader":{"key":"PORTABLEBAG_MODAL_HEADER","value":"Compartir bolso"},"copy":{"key":"GLB_COPY","value":"Copiar"},"copied":{"key":"GLB_COPIED","value":"Copiado"},"continueShopping":{"key":"GLB_CONTINUESHOPPING","value":"Continuar comprando"},"signedInAndCopyLinkToShare":{"key":"GLB_SIGNED_IN_AND_COPY_LINK_TO_SHAR","value":"Hola, {0} ¡Copia el enlace para compartir!"},"shareToWinCampaignMessage":{"key":"GLB_SHARE_TO_WIN_CAMPAIGN_MESSAGE","value":"¡Y participarás automáticamente para ganar tu bolsa de compras!"}},"payment":{"STEP_4":"Continuar al Paso 4","PAYPAL":"Proceder a PayPal","paymentStatus":{"PREPARING":"Preparando pedido...","PREPARING_WAIT":"Preparando el pedido, espera por favor...","SUBMITTED":"Pedido enviado...","VERIFYING":"Verificando estado del pedido...","errors":{"SUBMITTED":"¡Error al enviar el pedido!","TRY_LATER":"Error al enviar el pedido. Por favor, inténtalo de nuevo más tarde o llama a atención al cliente.","TRY_AGAIN":"Ha habido un problema al procesar el pedido. Haz clic en el botón \"Realizar pedido\" de nuevo para enviar el pedido."}}},"mysaves":{"save":"Guardar","saved":"Guardado","recentlyViewed":"Visto recientemente"},"required_errors":{},"bagConfirmation":{"itemAdded":{"prop":"CHK_BAGCONF_ITEMADDED","val":"Artículo añadido"},"bagTotal":{"prop":"CHK_BAGCONF_BAGTOTAL","val":"Total de la bolsa"},"discount":{"prop":"CHK_BAGCONF_DISCOUNT","val":"Descuento"},"subtotal":{"prop":"GLB_SUBTOTAL","val":"Subtotal"},"addingItem":{"prop":"CHK_BAGCONF_ADDINGITEM","val":"Añadiendo artículo..."},"startCheckout":{"prop":"CHK_BAGCONF_CHECKOUTBTN","val":"Iniciar la tramitación de pedido"},"viewCart":{"prop":"CHK_BAGCONF_VIEWCART","val":"Ver bolsa"},"keepShopping":{"prop":"CHK_BAGCONF_KEEPSHOPPING","val":"Seguir comprando"},"moreToSee":{"prop":"REC_BAGCONFIRMATION_TITLE","val":"Solo para ti"},"altOne":{"prop":"GLB_SHOPMENS","val":"Comprar chicos"},"altTwo":{"prop":"GLB_SHOPWOMENS","val":"Comprar chicas"},"includesVAT":{"prop":"GLB_INCLUDESVAT","val":"Incluye IVA, no incluye los gastos de manejo y envío"},"excludesSH":{"prop":"GLB_ATB_EXCLUDES","val":"No incluye los gastos de manejo y envío"},"excludesTaxSH":{"prop":"GLB_ATB_EXCLUDESTAX","val":"No incluye el impuesto de ventas ni los gatos de manejo y envío"}},"storelocator":{"SL_ERROR01":"Lo sentimos. No se han encontrado ubicaciones.","SL_ERROR02":"Lo sentimos. No se ha podido completar tu búsqueda en este momento.","SL_ERROR03":"Por favor, escoge una ubicación válida","SL_STORES_NEAR_YOU":"Tiendas más cercanas a ti","SL_FOUND_WITHIN":"Tiendas más cercanas encontradas en {0} de {1}","SL_FOUND_WITHIN_KM":"Tiendas más cercanas encontradas en {0} de {1}","SL_FOUND_IN":"Tiendas encontradas en {0}","CARVEOUT_ADULTS":"TIENDA ABERCROMBIE KIDS TAMBIÉN EN ESTA UBICACIÓN","CARVEOUT_KIDS":"ubicada en la tienda Abercrombie & Fitch","default_radius":"50","your_location":"Tu ubicación"},"popins":{"FIND_A_STORE":"Buscar una tienda","SELECT_A_STORE":"Selecciona una tienda","NEAR_ME":"Cerca de mí","SUBMIT":"Enviar","TOWN_POSTCODE":"Ciudad o código postal","CHECK_STORE_AVAILABILITY":"Comprobar disponibilidad en tienda","WE_FOUND_STORES":"Hemos encontrado {storesReturned} tiendas en un radio de {radius} kilómetros de ti","SELECT_A_SIZE":"Seleccionar talla para ver disponibilidad","AVAILABLE_FOR_COLLECTION":"Fecha estimada para la recogida del artículo:","ORDER_AVAILABLE_BY":"Fecha estimada para la recogida del pedido:","FIS_NOT_AVAILABLE":"No disponible en tienda","FIS_AVAILABLE":"Disponible en tienda","RESERVE_TODAY_BUTTON":"<button type=\"button\" class=\"product__actions--reserve-in-store\"><span class=\"preferred-store-module__content--link\"> Reservar en tienda</span> hoy mismo</button>","RESERVE_TODAY":"Reservar en tienda hoy mismo","RESERVE_TOMORROW":"Reservar en tienda mañana","RESERVE_AS_SOON_AS":"Reservar en tienda","RESERVE_NOT_AVAILABLE":"Reserva en tienda no disponible","POPINS_FREE_TODAY":"Opción Click & Collect gratis hoy mismo","POPINS_FREE_TOMORROW":"Opción Click & Collect gratis mañana mismo","POPINS_FREE_AS_SOON_AS":"Opción Click & Collect gratis en cuanto","POPINS_NOT_AVAILABLE":"Opción Click & Collect gratis no disponible","POPINS_SELECT_LOCATION":"Por favor, selecciona una tienda","GLB_POPINS_OFFERED":"Recogida gratis en tienda","GLB_ENTIREORDER":"Fecha estimada para la recogida del pedido:","CHK_CLICKCOLLECT_INELIGIBLEGIFTBOX_MESSAGE":"Tu pedido contiene cajas de regalo que no pueden recogerse en tienda. Por favor, elimina las cajas de regalo o elige otro método de entrega.","GLB_CLICKCOLLECT_OUTOFSTOCK":"Pedido no disponible para su recogida en esta ubicación","GLB_CLICKCOLLECT_NOTAVAILABLE":"La recogida en tienda no está disponible en esta ubicación","GLB_CLICKCOLLECT_SHOPPING_BAG_INELIGIBLE_MESSAGE":"Con este artículo no se puede elegir la opción de recogida en tienda","GLB_CLICKCOLLECT_INELIGIBLEITEM_HEADER":"??????","GLB_CLICKCOLLECT_INELIGIBLEITEM_MESSAGE":"Elimina los artículos que lo impidan de la bolsa de compras o elige otro método de entrega para recibir el pedido completo.","GLB_FIND_STORE_RADIUS_ERROR":"No hemos podido encontrar ninguna tienda cerca de esa zona. Prueba con otra ubicación.","GLB_FIND_STORE_ERROR":"Lo sentimos, algo no ha ido bien. Vuelve a probar o inténtalo de nuevo más tarde.","SEARCH_STORES_NEAR_YOU":"Buscar tiendas cercanas","FINDING_STORES_NEAR":"Buscando tiendas cercanas","SEARCH_DIFFERENT_LOCATION":"Prueba a buscar una ubicación diferente.","YOUR_LOCATION":"a tu ubicación.","NO_STORES_FOUND_NEAR":"No se ha encontrado ninguna tienda cercana","USE_MY_LOCATION":"Utilizar mi ubicación","FISSEARCHING":"Buscando...","GLB_EU_FINDING_STORES_IN":"Buscar tiendas en","GLB_EU_NEAR":"cerca","GLB_EU_NEAR_YOU":"cerca de ti","GLB_EU_NO_STORES_FOUND_IN":"No se ha encontrado ninguna tienda en","GLB_EU_SEARCH_DIFFERENT_COUNTRY":"Prueba a buscar una ubicación diferente o a cambiar el país de búsqueda.","GLB_EU_STORES_IN":"tiendas en","GLB_EU_STORE_IN":"tienda en","LOCATION_PERMISSION_DENIED":"You&#39;ve blocked geolocation services. To re-enable, clear your cache and try again.","LOCATION_UNAVAILABLE":"Geolocation failed due to a system error. Please contact your administrator for help.","LOCATION_REQUEST_TIMEOUT":"Your geolocation request has timed out. To enable, refresh your page and try again."},"pudos":{"BACK_TO_RESULTS":"Volver a resultados","BACK_TO_MAP":"Volver al mapa","CHANGE_STORE":"Cambiar de tienda","COLLECT_AS_SOON_AS":"Recoger en cuanto","COLLECTION_POINTS_NEAR":"Puntos de recogida cercanos","EDIT_SEARCH":"editar búsqueda","FIND_A_COLLECTION_PT":"Encontrar un punto de recogida","GLB_FIND_COL_PT_RADIUS_ERROR":"No se ha encontrado ningún punto de recogida. Por favor, prueba a realizar otra búsqueda.","LIST":"Lista","MAP":"Mapa","ME":"yo","NEAR_ME":"Cerca de mí","SELECT_A_COLLECTION_POINT":"seleccionar un punto de recogida","PLEASE_SELECT_A_STORE":"Por favor, selecciona una tienda","SELECT_THIS_STORE":"Seleccionar esta tienda","STORE_DETAILS":"Detalles de tienda","SUBMIT":"Enviar","TOWN_POSTCODE":"Ciudad o código postal","YOUR_COLLECTION_POINT":"Tu punto de recogida","GET_DIRECTIONS":"Cómo llegar"},"unsubscribe":{"success":"La siguiente dirección ha sido eliminada de nuestra lista de correo","GLB_UNSUBSCRIBE_FROM":"Unsubscribe From Hollister"},"saves":{"excludesTax":"No se aplica a los gastos de manejo y envío","vatIncluded":"IVA INCLUIDO"},"error":{"required":{"firstnamefield":"Por favor, introduce un nombre.","lastnamefield":"Por favor, introduce un apellido.","titlefield":"Selecciona un título.","countryfield":"","addressfield":"Por favor, introduce una dirección.","address2field":"Por favor, introduce una dirección.","address3field":"Por favor, introduce una dirección.","cityfield":"Por favor, introduce una ciudad.","zipcodefield":"Por favor, introduce un código postal.","giftbox":"Por favor, selecciona al menos un artículo para introducirlo en la caja de regalo.","cardbrandfield":"Por favor, selecciona un tipo de tarjeta de crédito.","cardnumberfield":"Por favor, introduce un número de tarjeta de crédito.","csvfield":"Por favor, introduce un código de seguridad.","csvfieldtwo":"Por favor, introduce un código de seguridad.","readtermsprivacy":"Debes aceptar los términos anteriores.","readtermsprivacycheck":"Corrige los campos destacados.","payphonefield":"Por favor, introduce un número de teléfono.","payemailfield":"Por favor, introduce una dirección de email.","invalidsigninemail":"Introduce una dirección de email válida.","loginemailfield":"Please enter an email address.","loginpasswordfield":"Please enter a valid password.","promocodefield":"Este no es un código de promoción válido. Por favor, inténtalo de nuevo.","giftcardnumberfield":"Este no es un número de tarjeta de regalo válido. Por favor, comprueba el número e inténtalo de nuevo.","cardexpmonth":"Por favor, introduce una fecha de caducidad.","cardexpyear":"Por favor, introduce una fecha de caducidad.","gbs":"Por favor, selecciona qué artículo(s) deseas envolver para regalo. ","termsandconditionscheck":"Tu pedido no puede ser enviado hasta que marques la casilla para confirmar que has leído y estás de acuerdo con los Términos de venta y la Política de privacidad. ","phoneprimary":"Por favor, introduce un número de teléfono.","phonesecondary":"Por favor, introduce un número de teléfono.","email":"Por favor, introduce una dirección de email.","ordernumber":"Por favor, introduce el número del pedido.","phoneprimaryoptionsanf":"Por favor, selecciona una opción.","phoneprimaryoptionshol":"Por favor, selecciona una opción.","phoneprimaryoptionskids":"Por favor, selecciona una opción.","phoneprimaryoptionsgh":"Por favor, selecciona una opción.","phonesecondaryoptionsanf":"Por favor, selecciona una opción.","phonesecondaryoptionshol":"Por favor, selecciona una opción.","phonesecondaryoptionskids":"Por favor, selecciona una opción.","phonesecondaryoptionsgh":"Por favor, selecciona una opción.","emailoptionsanf":"Por favor, selecciona una opción.","emailoptionshol":"Por favor, selecciona una opción.","emailoptionskids":"Por favor, selecciona una opción.","emailoptionsgh":"Por favor, selecciona una opción.","orderamount":"Por favor, introduce una cantidad.","savedpayment":"Por favor, selecciona una opción.","name":"Introduce tu nombre.","comments":"Introduce tu comentario.","nopoboxes":"Lo sentimos, pero no podemos realizar envíos a apartados de correos en el país seleccionado.","allfieldsrequired":"Todos los campos son obligatorios","passworddoesntmatchrequirenments":"La contraseña que has introducido no cumple los requisitos.","passworddoesntmatchaccount":"La contraseña que has introducido no coincide con el email proporcionado.","footer__emailsignup":"Introduce una dirección de email válida","productsizes__selectwaist":"Seleccionar cintura","productsizes__selectlength":"Seleccionar largo","productsizes__select":"Seleccionar talla","product__unavailable":"NO DISPONIBLE","product__unavailableMsg":"El producto que has elegido está agotado. Selecciona otra talla o color."},"format":{"cardnumberfield":"Este no es un número de tarjeta válido.","cardexpyear":"La fecha de caducidad que has introducido no es válida. Por favor, comprueba la fecha en tu tarjeta e inténtalo de nuevo.","csvfield":"Tu banco ha indicado que el código de seguridad que has introducido no es válido. Por favor, revisa el número de 3 o 4 dígitos que aparece en la parte posterior de tu tarjeta e inténtalo de nuevo.","csvfieldtwo":"Tu banco ha indicado que el código de seguridad que has introducido no es válido. Por favor, revisa el número de 3 o 4 dígitos que aparece en la parte posterior de tu tarjeta e inténtalo de nuevo.","ordernumber":"Por favor, introduce un número de pedido válido.","loginpasswordfield":"Please enter a valid password.","loginpasswordfieldconfirm":"Please enter a valid password.","payemailfield":"Por favor, usa un formato de email válido.","payphonefield":"Por favor, introduce un número de teléfono válido.","phoneprimary":"Por favor, introduce un número de teléfono válido.","phonesecondary":"Por favor, introduce un número de teléfono válido.","phoneprimaryconfirm":"Por favor, introduce un número de teléfono válido.","phonesecondaryconfirm":"Por favor, introduce un número de teléfono válido.","zipcodefield":"Por favor, introduce un código postal válido.","email":"Por favor, usa un formato de email válido.","emailconfirm":"Por favor, usa un formato de email válido.","footer__emailsignup":"Introduce una dirección de email válida"},"match":{"emailconfirm":"El email y la confirmación del email deben coincidir.","email":"Corrige los campos destacados.","loginpasswordfield":"The passwords must match in both password fields.","loginpasswordfieldconfirm":"The passwords must match in both password fields.","phoneprimaryconfirm":"Los campos \"Teléfono\" y \"Confirmar teléfono\" deben coincidir.","phoneprimary":"Los campos \"Teléfono\" y \"Confirmar teléfono\" deben coincidir.","phonesecondaryconfirm":"Los campos \"Teléfono\" y \"Confirmar teléfono\" deben coincidir.","phonesecondary":"Los campos \"Teléfono\" y \"Confirmar teléfono\" deben coincidir."},"REQUIRED_AMT":"Por favor, selecciona un importe.","REQUIRED_QTY":"Por favor, selecciona una cantidad.","INVALID_EMAIL":"Tu dirección de email contiene caracteres no válidos.","INVALID_PHONE":"Tu número de teléfono contiene caracteres no válidos.","INVALID_ZIP":"Lo sentimos, el código postal no se corresponde con tu estado/provincia.","INVALID_CC":"El número de la tarjeta de crédito no es válido.","KLARNA_ADDRESS_FORMAT_AT":"Nombre de la calle y número de la casa","MISMATCH_EMAIL":"Las direcciones de email introducidas no coinciden.","UNAPPLIED_PROMOCODE":"Se ha introducido un código no aplicable en el campo \"Código de promoción\". Por favor, elimina o aplica el código de promoción antes de procesar tu pedido.","MUST_ACCEPT_TERMS":"Debes aceptar los términos y condiciones antes de continuar.","WISH_LIST_EMPTY":"No hay artículos en tu lista de deseos","ERRORRETRIEVINGPURCHASES":"Error al recuperar las compras.","SAVES_LIMIT_EXCEEDED":"No se puede guardar este artículo porque has alcanzado el límite máximo de 50 artículos guardados, ¡pero puedes eliminar algún artículo de tus guardados para hacer sitio a los nuevos! &lt;a href=\"/webapp/wcs/stores/servlet/MySaves?storeId=19158&catalogId=11558&langId=-5\"&gt;Go to my saves&lt;/a&gt;","CART_TOTAL_EXCEEDED":"¡Ups! ¡No se puede añadir este artículo porque en tu bolsa solamente puede haber hasta $ 10,000 en mercancía!","GLB_GENERIC_SERVER_ERROR":"Se ha producido un error, inténtalo de nuevo.","REQUIRED":"Este campo es obligatorio.","REQUIRED_ALL":"Por favor, asegúrate de proporcionar toda la información necesaria.","REQUIRED_SIZE":"Por favor, selecciona una talla.","REQUIRED_GENERIC":"Corrige los campos destacados.","REQUIRED_GENERIC_INVALID":"Por favor, corrige los campos no válidos.","INVALID_ALPHANUMERIC_ONLY":"Por favor, introduce solo letras y números.","INVALID_CHAR":"Todas las entradas deben ser de caracteres latinos o de un solo byte. ","INVALID_EMAIL_BANNER":"Dirección de email no válida.","GENERIC_CARD_ISSUE":"No hemos podido procesar tus tarjetas. Por favor, vuelve a comprobar la información","KLARNA_GENERIC_ERROR":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido.","KLARNA_USED_ONE_ADDRESS":"Por favor, actualiza tu dirección de envío para utilizar solamente la dirección de la línea uno.","KLARNA_ADDRESS_FORMAT_DE":"Nombre de la calle y número de la casa","KLARNA_ADDRESS_FORMAT_NL":"Nombre de la calle y número de casa","ERR_CANT_USE_PAYMENT_TYPE_WITH_GIFT_CARDS":"Lo sentimos, no puedes usar esta forma de pago con tarjetas de regalo.","MISMATCH":"Los siguientes campos no coinciden:","INVALID_SHIPPING_COUNTRY":"No hacemos envíos desde este sitio web al país que has seleccionado. Por favor, selecciona de la lista uno de los países a los que se hacen envíos en el formulario de direcciones que aparece más abajo. ","PONOTAVAILABLE":"No podemos realizar envíos a apartados de correos en tu país","SAVES_ERROR_HEADER_MESSAGE":"Lo sentimos","lockedAccount":"Por tu seguridad, tu cuenta se ha bloqueado debido a varios intentos de acceso fallidos. Selecciona el enlace \"¿Has olvidado tu contraseña?\" para restablecerla","userDoesNotExist":"No hemos encontrado ninguna cuenta con esta dirección de email.","userExists":"¡Parece que ya tienes una cuenta! Puedes darle tu email o número de teléfono al empleado al registrarte.","tooManySavedInjectMsg":"Has guardado demasiados artículos.","SAVES_GENERIC":"Estamos experimentando algunos problemas con la función de guardar. Por favor, inténtalo de nuevo más tarde.","CART_LIMIT_EXCEEDED":"¡Ups! ¡No se puede añadir este artículo porque en tu bolsa solamente pueden haber 30 artículos!","CART_SKU_RESTRICT":"Lamentablemente solamente puedes comprar un máximo de 2 unidades de este estilo por transacción.","CART_SOLDOUT":"¡Desafortunadamente ese artículo está agotado!","CART_GENERIC":"Estamos experimentando problemas al actualizar tu bolsa. Por favor, inténtalo de nuevo más tarde.","WSS":{"CUSTOMER_SUPPORT":"900-941459 O&nbsp;+1-925-359-2573","ERR_CARD_DECLINED":"Tu tarjeta ha sido rechazada. Por favor, revisa la información suministrada o utiliza una tarjeta diferente.","ERR_UNABLE_PROCESS_PAYMENT":"No hemos podido procesar tu pago. Vuelve a intentarlo o contacta con ayuda al cliente: 900-941459 O&nbsp;+1-925-359-2573","ERR_SESSION_EXPIRED":"Tu sesión actual ha expirado. Por favor, inicia sesión con tu nombre de usuario y contraseña y vuelve a intentarlo.","ERR_GENERAL":"¡No hemos podido procesar tu pago! Revisa la información o contacta con ayuda al cliente: 900-941459 O&nbsp;+1-925-359-2573"}},"global":{"scrollToTopText":"Top","PROMO_DETAILS_MODAL_TITLE":"Detalles de la promoción","AJAX_MODAL_GENERIC_ERROR_PRIMARY":"Lo sentimos, no pudimos encontrar lo que buscabas. Por favor, inténtalo de nuevo más tarde.","AJAX_MODAL_GENERIC_ERROR_SECONDARY":"Actualiza la página para intentar conectarte de nuevo.","GLB_ABERCROMBIEFITCH":"Abercrombie & Fitch","GLB_ABERCROMBIEKIDS":"abercrombie kids","GLB_ANFCLUB":"??????","GLB_ALL_MARKETING_EMAILS":"todos los emails de marketing","GLB_HOLLISTERCO":"Hollister Co.","GLB_CLUBCALI":"Club Cali"},"findinstores":{"ITEM_NOT_AVAIL":"Lo sentimos, este artículo no está disponible en la ubicación que has proporcionado.","ITEM_NOT_AVAIL_ADD_TO_BAG":"Lo sentimos, este artículo no está disponible en la ubicación que has proporcionado. Puedes comprarlo online, ¿quieres COMPRAR AHORA/Añadir a la bolsa?"},"shoppingBagEdit":{"UPDATE":"Actualizar","ADD_TO_BAG":"Añadir a la bolsa","CANCEL":"Cancelar"},"giftwrap":{"MESSAGE":"Mensaje","CHOOSE_BOX":"Elegir caja","NEW_BOX":"Nueva caja","BOX":"Caja","CANNOT_WRAP":"Lo sentimos pero no podemos envolver para regalo algunos de los artículo de tu bolsa."},"gclookup":{"ERROR_01":"El número de tarjeta de 16 dígitos o el código de validación introducidos no son correctos.","ERROR_02":"La solicitud de balance no está disponible en este momento. Por favor, inténtalo de nuevo más tarde.","ERROR_03":"Este no es un número de tarjeta de regalo válido. Por favor, comprueba el número e inténtalo de nuevo.","FIND_BALANCE":"COMPRUEBA EL BALANCE DE TU TARJETA DE REGALO"},"catalog":{"itemNotAvailable":"Este artículo ya no está disponible","SHOPNOW":"COMPRAR AHORA","SHOP":"COMPRAR","GETTHISLOOK":"Obtén este look","QUICKSHOPSOLDOUT":"Agotado","AVAILABLE_IN":"Disponible en","INSTAVIEWSTITLE":"Puntuaciones y opiniones","WRITE_A_REVIEW":"??????","HOW_IT_RATES":"Ver calificación","HOW_IT_FITS":"??????","GLB_SANDHANDOTHERCHARGES":"<a class=\"shipping-link-modal\" href=\"\">Manejo y envío</a>","ITEMADDEDTOWISHLIST":"Se ha añadido este artículo a tu lista de deseos","QUICKSHOP":"Vista rápida","VIEWFULLPRODUCT":"Ver información completa del producto","JUSTFORYOU":"Solo para ti","ALLDETAILS":"Toda la información del producto","EDIT_WISHLIST":"Editar lista de deseos","BACKORDER_URGENCY_MESSAGE":"Este artículo está pendiente actualmente.","STOCK_URGENCY_MESSAGE":"Quedan menos de 5","GLB_REVIEWING":"¡Danos tu opinión!","SHOWNIN":"Se muestra en {color}","PLAYAGAIN":"Volver a reproducir","REVIEW_REQUIRED_TEXT":" - Obligatorio","genderBadge":{"KIDS_MALE":"Chicos","KIDS_FEMALE":"Chicas","ANF_MALE":"Hombre","ANF_FEMALE":"Mujer"}},"shippingAccessPoint":{"SELECT_ACCESSPT_ERROR":"SELECCIONAR UNA UBICACIÓN DE PUNTO DE ACCESO","ERR_SLNOLOCATIONSFOUND":"Lo sentimos. No se han encontrado ubicaciones.","ERR_SLSEARCHCANNOTBECOMPLETED":"Lo sentimos. No se ha podido completar tu búsqueda en este momento.","DAY":{"MON":"Lunes","TUE":"Martes","WED":"Miércoles","THU":"Jueves","FRI":"Viernes","SAT":"Sábado","SUN":"Domingo"}},"search":{"sizeChartHref":"","sizeChartText":"Tablas de tallas","search":"Buscar","searchProducts":"Buscar productos"},"cartReminder":{"reminderMessage":{"key":"GLB_CART_REMINDER_MESSAGE","value":"No olvides que todavía tienes"},"itemInBagMessage":{"key":"GLB_CART_REMINDER_ITEM_IN_BAG_MESSAGE","value":"artículo en tu bolsa."},"itemsInBagMessage":{"key":"GLB_CART_REMINDER_ITEMS_IN_BAG_MESSAGE","value":"artículos en tu bolsa."},"lowInventoryHeaderMessage":{"key":"GLB_CART_REMINDER_LOW_INVENTORY_HEADER_MESSAGE","value":"¡casi no queda!"},"lowInventoryMessage":{"key":"GLB_CART_REMINDER_LOW_INVENTORY_MESSAGE","value":"El/los artículo(s) de tu bolsa están a punto de agotarse."},"lowInventoriesMessage":{"key":"GLB_CART_REMINDER_LOW_INVENTORIES_MESSAGE","value":"artículos de tu bolsa están casi agotados."},"buttonText":{"key":"GLB_CART_REMINDER_BUTTON_TEXT","value":"Ver mi bolsa"},"noThanksMessage":{"key":"GLB_CART_REMINDER_MAYBE_LATER_MESSAGE","value":"Quizás más tarde"}},"userPreference":{"menu":{"country":{"prop":"GLB_SHIP_TO","val":"Enviar a"},"currency":{"prop":"GLB_CURRENCY","val":"Moneda"},"language":{"prop":"GLB_LANGUAGE","val":"Idioma"},"moreCurrencies":{"prop":"GLB_MORE_CURRENCY","val":"Más"}},"actions":{"CONTINUE":{"prop":"GLB_CONTINUE","val":"Continuar"},"CONTINUE_IN_CURRENCY":{"prop":"DYNAMIC_CURRENCY_CONTINUE_IN_CURRENCY","val":"Continuar en {{{text.currency}}}"},"CANCEL":{"prop":"GLB_CANCEL","val":"Cancelar"},"CHANGE_PAYMENT_TYPE":{"prop":"DYNAMIC_CURRENCY_CHANGE_PAYMENT_TYPE","val":"Cambiar forma de pago"},"PAYPAL_IN_CURRENCY":{"prop":"DYNAMIC_CURRENCY_PAYPAL_IN_CURRENCY","val":"Continuar con PayPal en {{{text.currency}}}"}},"countryCurrencyMismatch":{"title":{"prop":"DYNAMIC_CURRENCY_COUNTRY_CURRENCY_MISS_TITLE","val":"Actualiza para tramitar el pedido"},"desc":{"single":{"prop":"DYNAMIC_CURRENCY_COUNTRY_CURRENCY_MISS_SINGLE_DESC","val":"Lamentablemente {{{desc.currency}}} no está disponible en tu país seleccionado. Por favor, continúa en {{{desc.validCurrency}}} o cambia de país."},"mutiple":{"prop":"DYNAMIC_CURRENCY_COUNTRY_CURRENCY_MISS_DESC","val":"Lamentablemente {{{desc.currency}}} no está disponible en tu país seleccionado. Puedes continuar en cualquiera de las siguientes monedas o cambiar de país."}}},"paymentCurrencyMismatch":{"title":{"prop":"DYNAMIC_CURRENCY_PAYMENT_CURRENCY_MISS_TITLE","val":"Actualiza para tramitar el pedido"},"desc":{"prop":"DYNAMIC_CURRENCY_PAYMENT_CURRENCY_MISS_DESC","val":"Tu pedido no puede ser procesado en {{{desc.invalidCurrency}}} utilizando {{{desc.paymentType}}}. Puedes continuar y tu pedido será procesado utilizando {{{desc.validCurrency}}}, o puedes seleccionar un método de pago diferente."},"optionalText":{"prop":"DYNAMIC_CURRENCY_PAYMENT_CURRENCY_MISS_OPT","val":"Nota: por tu seguridad, si escoges continuar en {{{currency}}}, la página se actualizará y tendrás que volver a introducir tus datos."}},"paypalMismatch":{"title":{"prop":"DYNAMIC_CURRENCY_PAYPAL_CURRENCY_MISS_TITLE","val":"Actualiza para tramitar el pedido"},"desc":{"prop":"DYNAMIC_CURRENCY_PAYPAL_CURRENCY_MISS_DESC","val":"Tu pedido no puede ser procesado en {{{desc.invalidCurrency}}} utilizando {{{desc.paymentType}}}. Puedes continuar y tu pedido será procesado utilizando {1}, o puedes seleccionar un método de pago diferente."}},"giftCardMismatch":{"title":{"prop":"DYNAMIC_CURRENCY_PAYPAL_CURRENCY_MISS_TITLE","val":"Actualiza para tramitar el pedido"},"desc":{"prop":"DYNAMIC_CURRENCY_PAYMENT_GIFTCARD_USE_DESC","val":"Tu pedido no puede ser procesado en {{{desc.invalidCurrency}}} utilizando una tarjeta de regalo. Puedes continuar y tu pedido será procesado utilizando {{{desc.validCurrency}}}, o puedes seleccionar un método de pago diferente."}}},"gwpModal":{"tmnt":{"soldOut":{"prop":"GLB_GWP_SOLD_OUT","val":"¡Agotado!"},"free":{"prop":"GLB_GWP_FREE","val":"GRATIS"},"add":{"prop":"GLB_GWP_ADD","val":"Añadir un regalo gratis a la bolsa"},"update":{"prop":"GLB_GWP_UPDATE","val":"Actualizar"}}},"subUnsub":{"emailSubscribe":{"headerTMNT":{"default":"suscribirse a hollister","kids":"Suscribirse a abercrombie kids"}},"emailUnsubscribe":{"pageHeaderTMNT":{"default":"Cancelar suscripción de Hollister","kids":"Cancelar suscripción de Abercrombie Kids"}},"successModalLayout":{"subscribeSuccess":{"headerSectionParams":{"tmntKey":"GLB_THANKS","tmntValue":"¡Gracias!","headerClasses":""},"bodySectionParams":{"tmntKey":"GLB_SUBSCRIBESUCCESS","tmntValue":"¡Estate pendiente de las actualizaciones sobre ofertas épicas, todas las novedades y más!","bodyClasses":""},"buttonSectionParams":{"tmntKey":"GLB_CONTINUESHOPPING","tmntValue":"Continuar comprando","buttonClasses":"subscribe-success__modal-button"}},"unsubscribeSuccess":{"headerSectionParams":{"tmntKey":"GLB_THANKS","tmntValue":"¡Gracias!","headerClasses":""},"bodySectionParams":{"tmntKey":"GLB_UNSUBSCRIBESUCCESS","tmntValue":"{0} ha cancelado la suscripción de todos los emails de marketing de Hollister","bodyClasses":""},"buttonSectionParams":{"tmntKey":"GLB_CONTINUESHOPPING","tmntValue":"Continuar comprando","buttonClasses":"redirect-success__modal-button"}}}},"promotions":{"welcomeOffer":{"headerTMNT":{"default":"Club Cali","kids":"Club Cali"}},"welcomeOfferSuccess":{"headerSectionParams":{"tmntKey":"GLB_THANKSFORJOINING","tmntValue":"¡Gracias por unirte!","headerClasses":""},"bodySectionParams":{"tmntKey":"GLB_WELCOMEOFFERMODALTEXT","tmntValue":"Tu oferta de € 10 menos por € 40 o más está disponible en tu bolsa o al tramitar el pedido. ¡Y ahora corre a comprarte algo bonito!","bodyClasses":""},"buttonSectionParams":{"tmntKey":"GLB_GOTIT","tmntValue":"¡ENTENDIDO!","buttonClasses":"signup-success__modal-button"}}}};
+
+ 
+	ANF.params.storeAttributes.REWARDSEARNPOINTSRECOMMENDATIONSID = 123456789098762;
+ 
+
+ANF.params.storeAttributes.catalogV2 = {
+	"facetWidth2ColumnCeiling" : 17,
+	"facetWidth3ColumnCeiling" : 7,
+	"FASGeolocateRadius" : 50,
+	"FASMaxStores" : 15,
+	"FASRadius" : 500,
+	"HasCareInfo" : 1,
+	"HasFabricInfo" : 1,
+	"hasLISFilter": true,
+	"HasSwatchAndSizeTiles" : 0,
+	"isAWK": "true",
+	"isAWK": "true",
+	"UrgencyMessageCount" : "5",
+    "FASMaxStores" : 15,
+    "hasBazaarVoiceEnable" : false,
+    "HasCareInfo" : 1,
+    "hasDynamicGMS" : false,
+    "HasFabricInfo" : 1,
+    "maxNumFilters" : 5,
+    "UrgencyMessageCount" : "5",
+	"HasSizeChartsV2": true,
+	"defaultBrandCategoryId" : 10007,
+	"hasATBNotification" : true,
+	"HasProductVideos": 1,
+	"hasUGCAltImage": 0,
+	"HCoAltImgTestXSegValue": "YY",
+	"hasHCoAltImgTest": "1",
+	"ProductVideoXsegValue": "p=L-0",
+	"hasEGifter": true,
+	"hasShopYourLocalStore": true,
+	"hasProductRecommendationsBaseline": 0,
+	"ShowMoreFiltersThreshold": 4,
+	"HasMobileSwatchTest": 1,
+	"HasGridMixer": true,
+	"HasSizeFilterClarity": true,
+	"hasGridImageSplitTest": false
+};
+
+ANF.params.urls.catalogV2 = {
+	"privacyPolicyUrl": "/webapp/wcs/stores/servlet/CustomerService?pageName=privacy&storeId=19158&textKey=HELP_PRIVACYPOLICY&catalogId=11558&langId=-5"
+};
+
+ANF.messaging.catalogV2 = {"defaultStoreAvailability":"Comprobar disponibilidad en tienda","risPlaceReservation":"Hacer reserva","risReserving":"Reservando...","risReserved":"Reservado","risGeneralError":"Lo sentimos, algo ha fallado y no hemos podido reservar tu artículo. Por favor, inténtalo de nuevo.","shownInLabel":"Mostrar en","today":"Hoy","RECOMMENDED_TEXT":{"YES":"Sí","NO":"No"},"REVIEWS":{"REVIEW_MONTH_JAN":"Ene.","REVIEW_MONTH_FEB":"Feb.","REVIEW_MONTH_MAR":"Mar.","REVIEW_MONTH_APR":"Abr.","REVIEW_MONTH_MAY":"Mayo","REVIEW_MONTH_JUN":"Jun.","REVIEW_MONTH_JUL":"Jul.","REVIEW_MONTH_AUG":"Ago.","REVIEW_MONTH_SEP":"Sep.","REVIEW_MONTH_OCT":"Oct.","REVIEW_MONTH_NOV":"Nov.","REVIEW_MONTH_DEC":"Dic.","GLB_SIZE_FIT_VERY_SMALL":"muy pequeño","GLB_SIZE_FIT_SMALL":"small","GLB_SIZE_FIT_SOMEWHAT_SMALL":"algo pequeño pero no es necesario pedir más talla","GLB_SIZE_FIT_TRUE_TO_SIZE":"se ajusta al tallaje real","GLB_SIZE_FIT_SOMEWHAT_LARGE":"talla algo grande, pero no es necesario pedir una talla menos","GLB_SIZE_FIT_LARGE":"grande","GLB_SIZE_FIT_VERY_LARGE":"muy grande","GLB_SIZE_FIT_SIZE_UP_TWO":"talla muy pequeño, se recomienda pedir 2 tallas más.","GLB_SIZE_FIT_SIZE_UP_ONE":"talla pequeño, se recomienda pedir 1 talla más.","GLB_SIZE_FIT_SIZE_DOWN_TWO":"talla muy grande, se recomienda pedir 2 tallas menos.","GLB_SIZE_FIT_SIZE_DOWN_ONE":"talla grande, se recomienda pedir 1 talla menos.","GLB_WOULD_NOT_SIZE_UP":"talla algo pequeño, pero no es necesario pedir una talla más.","GLB_WOULD_NOT_SIZE_DOWN":"talla algo grande, pero no es necesario pedir una talla menos.","GLB_FITS_TRUE_TO_SIZE":"se ajusta al tallaje real.","GLB_SIZE_FIT_REVIEW_SIZE_UP_TWO":"2 tallas más.","GLB_SIZE_FIT_REVIEW_SIZE_UP_ONE":"talla hasta la 1.","GLB_SIZE_FIT_REVIEW_SIZE_DOWN_TWO":"2 tallas menos.","GLB_SIZE_FIT_REVIEW_SIZE_DOWN_ONE":"1 talla menos.","GLB_REVIEW_SORT":"Ordenar","GLB_SIZE_FIT_POST":"Recomendaría"}};
+
+ANF.params.reviews = {
+	"BVAPIVersion":  "5.4",
+	"BVSubmitAction": "Submit",
+	"BVLocale": "es_ES",
+	"BVPassKey": "caSpPY97KIWAGyBuAOaJQ3VGqjuiVVujgELHFafbOjUjY",
+	"BVURL": "https://api.bazaarvoice.com/data/submitreview.json",
+	"BVReviewDataURL": "https://api.bazaarvoice.com/data/reviews.json"
+};
+
+ANF.params.pageType = null;
+ 
+	ANF.params.storeAttributes.checkoutV2 = {
+		"enabled" : true,
+		"shippingMethod" : {
+			"enabled" : true
+		},
+		"billingAddress" : {
+			"enabled" : true
+		},
+		"shippingAddress" : {
+			"countriesWithAutocomplete": "".split(","),
+			"countriesWithNumberLast": "MX,DE,IT,NL,BE,CH,AT,SE,NO,PL,FI,DK".split(","),
+			"ignoreKeyPressesForRecommendationCheck": "9,13,16,37,38,39,40".split(","),
+			"autocompleteTimeToWaitBeforeError": 1000,
+			"enabled" : true,
+			"guestUser": {
+				"enabled": true
+			},
+			"loggedInUser": {
+				"enabled": false
+			},
+			"addressBook" : {
+				"enabled": false
+			}
+		},
+		"restyle": {
+			"enabled": true
+		},
+		"popins": {
+			"phase2B": false
+		},
+		"pxp": {
+			"merchantID": "ANF",
+			"encryptRetries": 5
+		},
+		"bag": {
+			"bagOFPEnabled": false,
+			"visaCheckoutButtonSrc": "https://secure.checkout.visa.com/wallet-services-web/xo/button.png",
+			"visaCheckoutMobileButtonParams": "?height=34&width=290",
+			"visaCheckoutScriptSrc": "https://assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js",
+			"hasCartCardExpanded": false,
+			"hasCopyFunctionality": false,
+			"hasShareToWin": false
+		},
+		"recaptcha": {
+			hasGiftCardCaptchaEnabled: true,
+			recaptchaKey: "6LeCayQUAAAAADdql4OGHyuIF3mDRJIIVt7dFEdQ"
+		},
+		"nativeOrderConfirmation" : {
+			"enabled" : true
+		},
+		"displayStickyCheckoutSecondaryContainer": true,
+		"hasExpandedRewardsInBag": false
+	};
+
+	ANF.params.storeAttributes.checkoutV3 = {
+		"enabled" : true,
+		"submitOrderRetryAttempts": 8,
+		"defaultShipTab": "HOME",
+		"phoneNumberByCountry": "900-941459",
+		"phoneNumberByLanguage": "+1-925-359-2573",
+		"urls": {
+			"forgotPassword": "/webapp/wcs/stores/servlet/ResetPasswordForm?storeId=19158&catalogId=11558&langId=-5"
+		},
+		"hasClickToChat": true,
+		"promotions": {
+			"enabled": true
+		},
+		"klarnaConsentLegalLink": "",
+		"klarnaInvoiceLegalLink": "",
+		"klarnaAccountLegalLink": "",
+		"joinModalEnabled": true,
+		"hasSignIn": true,
+		"hasCreateAccount": true,
+		"hasPayPalExpressOnPhoenixCheckout": true,
+		"buildAddressObjectOnClentSide": true,
+		"hasSoastaCheckoutLogging": false,
+		"hasPopinsOnExpressLane": true,
+		"hasPudosOnExpressLane": true,
+		"recordPageStateDelay": 400,
+		"phoenixMultipleCreditCardEnabled": true,
+		"phoenixDisplayGuestShippingMethodsAlways": "0",
+		"phoenixEGiftCardsOnlyEnabled": "1",
+		"phoenixCheckoutSegmentCookieValue": "FF",
+		"klarnaMinimumAge": "18",
+		"nativeOrderConfirmation": true,
+		"allowLessThanTenDigits": true,
+		"isSFSFeatureEnabled": "true",
+		"checkoutSegmentCookieValue": "HH",
+		"hasPaymentIcons": false,
+		"addressVerificationEnabled": "1",
+		"addressyAPIKey": "XJ49-BA39-MT79-UF56",
+		"has403RedirectInCheckout": true,
+		"hasStickyRightRail": false
+	};
+
+	ANF.messaging.checkout = {"TMNT":{"FREE":{"key":"GLB_FREE","value":"Gratis"},"EST_DELIVERY":{"key":"GLB_EST_DELIVERY_SHORT","value":"Entrega estimada:"},"CHANGE":{"key":"GLB_CHANGE","value":"Modificar"},"GLB_PROMOREMOVED":{"key":"GLB_PROMOREMOVED","value":"Se eliminó el código de promoción {0}. El total de tus artículos de tu mercancía se ha cambiado a su precio original."},"GLB_PROMOINVALIDFORSHIPCOUNTRY":{"key":"GLB_PROMOINVALIDFORSHIPCOUNTRY","value":"Lo sentimos, el siguiente código de promoción no es válido para el país al que quieres enviarlo."},"GLB_PROMOINVALIDFORSHIPCOUNTRYEXPLAINED":{"key":"GLB_PROMOINVALIDFORSHIPCOUNTRYEXPLAINED","value":"Algunos códigos no son válidos para compras que se envíen fuera de EE. UU. o Canadá. Puedes eliminar el código de promoción y hacer tu pedido o probar con una dirección de otro país."},"GLB_REPUDIATIONIMPORTTOCOUNTRY":{"key":"GLB_REPUDIATIONIMPORTTOCOUNTRY","value":"Lo sentimos, los siguientes productos no se pueden enviar al país o estado que seleccionaste. Puedes eliminar los artículos y realizar tu pedido, o intentar con una dirección en otro país o estado."},"GLB_REPUDIATIONIMPORTTOCOUNTRYEXPLAINED":{"key":"GLB_REPUDIATIONIMPORTTOCOUNTRYEXPLAINED","value":"Debido a restricciones de importación no podemos enviar los siguientes artículos al país o estado  solicitado. Puedes eliminar los artículos y realizar tu pedido, o intentar con una dirección en otro país o estado."},"GLB_REPUDIATIONCLEARANCETOCOUNTRY":{"key":"GLB_REPUDIATIONCLEARANCETOCOUNTRY","value":"Lo sentimos, el siguiente producto no puede enviarse al país que elegiste."},"GLB_REPUDIATIONCLEARANCETOCOUNTRYEXPLAINED":{"key":"GLB_REPUDIATIONCLEARANCETOCOUNTRYEXPLAINED","value":"No podemos enviar artículos en liquidación fuera de EE. UU. y Canadá. Puedes eliminar el artículo y hacer tu pedido, o volver y tramitar el pedido con una dirección en EE. UU. o Canadá."},"GLB_ORDERCANNOTBEEXPEDITED":{"key":"GLB_ORDERCANNOTBEEXPEDITED","value":"Tu pedido contiene productos que tienen restricciones de envío y solo se pueden enviar a través del servicio de entrega estándar por carretera."},"REMOVEITEM":{"key":"GLB_REMOVEITEM","value":"Eliminar artículo"},"REMOVEITEMS":{"key":"GLB_REMOVEITEMS","value":"Eliminar artículos"},"REMOVEPROMO":{"key":"GLB_REMOVEPROMOCODE","value":"Eliminar código de promoción"},"CHANGESHIPCOUNTRY":{"key":"ERR_REPUDIATION_CHANGESHIPCOUNTRY","value":"CAMBIAR FORMA DE ENVÍO"},"chooseAnotherCheckoutMethod":{"key":"CHK_CHOOSE_ANOTHER_CHECKOUT_METHOD","value":"Elegir otro método de tramitación de pedido"},"ITEM":{"key":"GLB_ITEM","value":"artículo"},"ITEMS":{"key":"GLB_ITEMS","value":"Artículos"},"PRODUCT_DISCOUNT":{"key":"GLB_PROMODISCOUNT","value":"Descuentos por promociones"},"SHIPPING":{"key":"CHK_SHIPPING_HANDLING","value":"Manejo y envío"},"EST_TAX":{"key":"GLB_ESTIMATEDTAX","value":"Impuestos estimados"},"ORDER_TOTAL":{"key":"CHK_ORDERTOTAL","value":"Pedido total"},"NOT_AVAILABLE_FOR_YOUR_SHIPPING_ADDRESS":{"key":"CHK_NOT_AVAILABLE_FOR_YOUR_SHIPPING_ADDRESS","value":"*no está disponible para todos los artículos en tu bolsa"},"SALES_TERMS":{"key":"CHK_SALES_TERMS_LINK_TXT","value":"Términos de la oferta"},"RETURNS_AND_EXCHANGES":{"key":"CHK_RETURNS_AND_EXCHANGES_LINK_TXT","value":"Cambios y devoluciones"},"genericPaymentError":{"key":"CHK_GENERIC_PAYMENT_ERROR","value":"Lo sentimos, ocurrió un error y no pudimos procesar tu pago. Inténtalo nuevamente o vuelve y elige un método diferente de tramitación de pedido."},"PAYMENT_ERROR_MESSAGE":{"key":"PAYMENT_ERROR_MESSAGE","value":"El pago no ha podido ser procesado por tu banco. Por favor, prueba con otra forma de pago y vuelve a enviar tu pedido. CH{0}"},"AUTH_MESSAGE2005":{"key":"AUTH_MESSAGE2005","value":"La tarjeta de regalo que intentas usar no es válida. Verifica que el número de la tarjeta tenga 16 dígitos (incluyendo el PIN) o ingresa una tarjeta de crédito para completar la transacción."},"AUTH_MESSAGE5":{"key":"AUTH_MESSAGE5","value":"El pago no ha podido ser procesado por tu banco. Por favor, prueba con otra forma de pago y vuelve a enviar tu pedido."},"unableToProcessCard":{"key":"EC_UNABLE_TO_PROCESS_CARD","value":"No es posible procesar la tarjeta. Revisa los detalles de la tarjeta o prueba con una tarjeta distinta."},"buttonSubmitOrder":{"key":"CHK_PLACE_MY_ORDER","value":"Enviar pedido<span class=&#39;secondary-text&#39;> Con obligación de pagar</span>"},"buttonProcessing":{"key":"GLB_ADDTOBAG_PROCESSING","value":"Tramitando..."},"buttonRetryOrder":{"key":"CHK_TRY_PLACING_ORDER_AGAIN","value":"Intentar realizar mi pedido nuevamente"},"SITE_USE":{"key":"GLB_SITEUSE","value":"Términos de uso del sitio web"},"PRIVACY_POLICY":{"key":"CHK_LGL_PRIVACY_POLICY","value":"Aviso de privacidad"},"emailAddress":{"key":"GLB_EMAILADDRESS","value":"Dirección de email"},"ORDER_CONTACT":{"key":"GLB_ORDERCONTACT","value":"Contacto del pedido"},"cityStateZipCode":{"key":"CHK_CITY_STATE_ZIP_CODE","value":"Ciudad o código postal"},"continueAsGuest":{"key":"CHK_CONTINUE_AS_GUEST","value":"Continuar como invitado"},"continue":{"key":"GLB_CONTINUE","value":"Continuar"},"homeDelivery":{"key":"SHIPTYPE_HOME","value":"Entrega a domicilio"},"pickupInStore":{"key":"CHK_PICKUP_IN_STORE","value":"Recogida gratis en tienda"},"pickupInStoreStores":{"key":"GLB_SEE_STORES","value":"Tiendas"},"emailSignup":{"key":"GLB_IWANTEMAILS","value":"Acepto que AFH Fulfillment NL B.V. pueda emplear mis datos personales para enviarme comunicaciones comerciales personalizadas por email sobre sus productos y servicios. Sé que puedo darme de baja en cualquier momento a través de las instrucciones de aparecen en la comunicación por email que se me envía."},"phoneNumber":{"key":"GLB_PhoneNumber","value":"Número de teléfono"},"pickupStore":{"key":"CHK_PICKUP_STORE","value":"Tienda de recogida"},"submit":{"key":"GLB_SUBMIT","value":"Enviar"},"toOldCheckout":{"key":"GLB_CONTINUE_TO_OLD_CHECKOUT","value":"Correcto, continuar"},"cancel":{"key":"GLB_CANCEL","value":"Cancelar"},"useMyLocation":{"key":"GLB_FISUSEMYLOCATION","value":"Utilizar mi ubicación"},"address":{"key":"CHK_ADDRESS","value":"Dirección"},"addressPoBox":{"key":"CHK_ADDRESS_OR_POBOX","value":"Dirección (o apartado de correo)"},"address2Optional":{"key":"CHK_ADDRESS_LINE_TWO_OPTIONAL","value":"Dep., piso, etc. (opcional)"},"city":{"key":"CHK_CITY","value":"Ciudad"},"state":{"key":"CHK_STATE","value":"Estado"},"postalCode":{"key":"CHK_POSTAL_CODE","value":"Código postal"},"addressyManualEntry":{"key":"ADDRESSY_MANUAL_ENTRY","value":"Introducir dirección manualmente"},"summaryErrorMessage":{"key":"EC_SORRY_PLEASE_CORRECT_HIGHLIGHTED_FIELDS","value":"Lo sentimos, algunas cosas deben corregirse. Por favor, corrige los campos no válidos."},"emailErrorMessage":{"key":"EC_ENTER_VALID_EMAIL","value":"Ingresar una dirección de email válida."},"createPasswordErrorMessage":{"key":"EC_ENTER_VALID_PASSWORD","value":"Ingresa una contraseña válida."},"phoneErrorMessage":{"key":"EC_ENTER_VALID_PHONE","value":"Ingresar un número de teléfono válido."},"signInEmailErrorMessage":{"key":"ERR_INVALID_SIGN_IN_EMAIL","value":"Introduce una dirección de email válida."},"noStoreSelectedError":{"key":"GLB_SEARCH_AND_SELECT_STORE","value":"Busca una tienda para recoger tu pedido."},"genericOrderSubmitError":{"key":"ERR_ORDER_SUBMIT_GENERIC","value":"Error al enviar el pedido. Por favor, inténtalo de nuevo más tarde o llama a atención al cliente"},"unableToProcessTheCard":{"key":"EC_UNABLE_TO_PROCESS_CARD","value":"No es posible procesar la tarjeta. Revisa los detalles de la tarjeta o prueba con una tarjeta distinta."},"firstName":{"key":"CHK_FIRST_NAME","value":"Nombre"},"lastName":{"key":"CHK_LAST_NAME","value":"Apellidos"},"firstNameMissing":{"key":"ERR_FIRSTNAME_MISSING","value":"Por favor, introduce un nombre."},"lastNameMissing":{"key":"ERR_LASTNAME_MISSING","value":"Por favor, introduce un apellido."},"cityMissing":{"key":"ERR_CITY_MISSING","value":"Por favor, introduce una ciudad."},"phoneFmt":{"key":"GLB_PHONENUMBER_FMT","value":"Número de teléfono"},"billingAddressSameAsShipping":{"key":"CHK_BILLING_ADDRESS_SAME_AS_SHIPPING","value":"La dirección de facturación es igual a la de entrega"},"billToShippingAddress":{"key":"CHK_BILL_TO_SHIPPING_ADDRESS","value":"Facturar a la dirección de envío"},"store":{"key":"GLB_STORE","value":"Tienda"},"yourStore":{"key":"YOUR_STORE","value":"Tu tienda"},"findAPickupStore":{"key":"FIND_A_PICKUP_STORE","value":"Encuentra una tienda de recogida"},"pickupStoreLocation":{"key":"GLB_PICKUP_STORE_LOCATION","value":"Ubicación de tienda de recogida"},"expiryDateFmt":{"key":"GLB_EXPIRATIONDATEFMT","value":"Fecha de vencimiento ( MM/ AA )"},"cardNumber":{"key":"GLB_CARDNUMBER","value":"Número de tarjeta"},"cvv":{"key":"CHK_SECURITY_CODE","value":"Código de seguridad"},"shippingTo":{"key":"CHK_SHIPPING_TO","value":"Envío a"},"billingTo":{"key":"GLB_BILLING_TO","value":"Facturación a"},"freePickupInStore":{"key":"GLB_POPINS_OFFERED","value":"Recogida gratis en tienda"},"estimatedOrderPickup":{"key":"GLB_ENTIREORDER","value":"Fecha estimada para la recogida del pedido:"},"estimatedPickup":{"key":"CHK_ESTIMATED_PICKUP","value":"Fecha de recogida estimada:"},"monday":{"key":"GLB_MONDAY","value":"Lunes"},"tuesday":{"key":"GLB_TUESDAY","value":"Martes"},"wednesday":{"key":"GLB_WEDNESDAY","value":"Miércoles"},"thursday":{"key":"GLB_THURSDAY","value":"Jueves"},"friday":{"key":"GLB_FRIDAY","value":"Viernes"},"saturday":{"key":"GLB_SATURDAY","value":"Sábado"},"sunday":{"key":"GLB_SUNDAY","value":"Domingo"},"day":{"key":"GLB_DAY","value":"Día"},"month":{"key":"GLB_MONTH","value":"Mes"},"year":{"key":"GLB_YEAR","value":"Año"},"birthday":{"key":"GLB_BIRTHDAY","value":"Cumpleaños"},"title":{"key":"CHK_SHIPPING_PERSONAL_TITLE","value":"Título"},"mr":{"key":"ACT_GENDER_MR","value":"Sr."},"ms":{"key":"ACT_GENDER_MS","value":"Sra."},"whoIsPickingUp":{"key":"GLB_PICKUP_INFO_SECONDARY","value":"¿Quién recogerá el pedido?"},"howItWorks":{"key":"GBL_HOWITWORKS","value":"Cómo funciona"},"pickupInfoLegal":{"key":"CHK_PICKUP_INFO_LEGAL","value":"Las fechas de recogida varían según la disponibilidad en tienda. Te avisaremos cuando tu pedido esté listo y lo tendrás disponible durante 10 días."},"legalOrderImportMessaging":{"key":"CHK_LEGAL_ORDER_IMPORT_MESSAGING","value":"Acepto que el destinatario del pedido será responsable de todos los derechos de improtación, impuestos y/o tarifas aduaneras, que serán cobrados por la empresa de mensajería al realizar la entrega."},"securePayment":{"key":"GLB_SECUREPAYMENT","value":"Pago seguro"},"creditCard":{"key":"GLB_CREDITCARD","value":"Tarjeta de crédito"},"creditDebitCard":{"key":"CHK_CREDIT_DEBIT","value":"Tarjeta de crédito / débito"},"anfCard":{"key":"","value":""},"paypal":{"key":"GLB_PAYPAL","value":"PayPal"},"redirectToPaypal":{"key":"CHK_REDIRECT_YOU_TO_PAYPAL","value":"Te redirigiremos a PayPal cuando envíes tu pedido."},"looksGoodPaypal":{"key":"CHK_LOOKS_GOOD_TAKE_ME_TO_PAYPAL","value":"Todo bien, llévame a PayPal"},"chatHelp":{"key":"GLB_CHATHELP","value":"¿Necesitas ayuda?"},"customerService":{"key":"GLB_CUSTOMERSERVICE","value":"Atención al cliente"},"orderNumber":{"key":"GLB_ORDERNUMBERSYMBOL","value":"Núm. del pedido"},"or":{"key":"GLB_OR","value":"O"},"shippingOutsideUS":{"key":"GLB_SHIPPING_OUTSIDE_US","value":"Para opciones de envío fuera de EE. UU., debes usar una forma de tramitación de pedido alternativa."},"country":{"key":"CHK_COUNTRY","value":"País"},"viewStoreHours":{"key":"CHK_VIEW_STORE_HOURS","value":"Ver horarios de tienda"},"province":{"key":"GLB_PROVINCE","value":"Provincia"},"prefecture":{"key":"GLB_PREFECTURE","value":"Prefectura"},"zipCode":{"key":"CHK_ZIP_CODE","value":"Código postal"},"address2OptionalNonUS":{"key":"CHK_ADDRESS_LINE_TWO_OPTIONAL_NON_US","value":"Dep., edificio, otro (opcional)"},"apofpo":{"key":"GLB_APOFPO","value":"APO/FPO"},"multiplePaymentsUnavailable":{"key":"GLB_MULTIPLE_PAYMENTS_UNAVAILABLE","value":"Ahora te redirigiremos a un método alternativo de tramitación de pedido"},"usingMoreThanOne":{"key":"GLB_USING_MORE_THAN_ONE_CARD","value":"¿Usarás más de una tarjeta de crédito o tarjeta de regalo?"},"switchToAlternateCheckout":{"key":"GLB_ALTERNATE_CHECKOUT","value":"Cambiar a método alternativo para tramitar pedido"},"dontGoRightAway":{"key":"CHK_DONT_GO_RIGHT_AWAY","value":"¡No vayas a la tienda ya!"},"readyForPickupDetails":{"key":"CHK_READY_FOR_PICKUP_DETAILS","value":"Busca un email \"listo para recoger\" con instrucciones sobre cómo recoger tus artículos."},"nearMe":{"key":"GLB_NEAR_ME","value":"Cerca de mí"},"you":{"key":"CK_YOU","value":"tu"},"useYourLocation":{"key":"CK_USE_YOUR_LOCATION","value":"Cerca de mí"},"locationsNear":{"key":"CHK_LOCATIONS_NEAR","value":"lugares cerca"},"selectStore":{"key":"GLB_STORE_SELECTION_LINK","value":"Seleccionar tienda"},"selectedStore":{"key":"CHK_SELECTED_STORE","value":"Tienda seleccionada"},"findingStoresNear":{"key":"CHK_FINDING_STORES_NEAR","value":"Buscando tiendas cercanas"},"giftCardAccountNumber":{"key":"CHK_GIFT_CARD_ACCOUNT_NUMBER","value":"Número de cuenta de la tarjeta de regalo"},"amountUsed":{"key":"CHK_AMOUNT_USED","value":"Cantidad usada:"},"remove":{"key":"GLB_REMOVE","value":"Eliminar"},"addGiftCard":{"key":"CHK_ADD_GIFT_CARD","value":"Añadir tarjeta de regalo"},"giftCardServiceDown":{"key":"CHK_GIFT_CARD_SERVICE_DOWN","value":"El servicio de tarjeta de regalo no funciona / no se puede tomar el valor"},"giftCardInvalid":{"key":"CHK_GIFT_CARD_INVALID","value":"Este no es un número de tarjeta de regalo válido. Verifica e intenta nuevamente."},"giftCardApplying":{"key":"CHK_GIFT_CARD_APPLYING","value":"Aplicar tarjeta de regalo"},"giftCardApplied":{"key":"CHK_GIFT_CARD_APPLIED","value":"Tarjeta de regalo aplicada"},"giftCardCovered":{"key":"CHK_GIFT_CARD_COVERED","value":"¡Felicitaciones! Esta tarjeta de regalo cubre el saldo total de tu pedido."},"pinNotRequiredEGC":{"key":"CHK_PIN_NOT_REQUIRED_EGC","value":"PIN (no es necesario en el caso de las tarjetas de regalo electrónicas)"},"checkCardBalance":{"key":"CHK_CHECK_CARD_BALANCE","value":"Comprobar saldo de tarjeta"},"checkingBalance":{"key":"CHK_CHECKING_BALANCE","value":"Comprobando balance..."},"cardBalance":{"key":"CHK_CARD_BALANCE","value":"Balance de la tarjeta"},"available":{"key":"CHK_AVAILABLE","value":"disponible"},"applyGiftCardToOrder":{"key":"CHK_APPLY_GIFT_CARD_TO_ORDER","value":"Aplicar la tarjeta de regalo al pedido"},"noStoresFoundNear":{"key":"ERR_NO_STORES_FOUND_NEAR","value":"No se ha encontrado ninguna tienda cercana"},"pleaseTryDifferentLocation":{"key":"ERR_PLEASE_TRY_DIFFERENT_LOCATION","value":"Prueba a buscar una ubicación diferente."},"createPassword":{"key":"ACT_CREATE_PASSWORD","value":"Crear contraseña"},"password":{"key":"GLB_PASSWORD","value":"Contraseña"},"forgotPasswordQ":{"key":"GLB_FORGOTPASSWORDQ","value":"¿Has olvidado tu contraseña?"},"passwordRequirements":{"key":"CHK_PASSWORD_CHARACTER_LENGTH","value":"Debe tener entre 8-25 caracteres e incluir letras y números"},"createAccount":{"key":"ACT_CREATE_ACCOUNT","value":"Únete al Club Cali"},"creatingAccount":{"key":"ACT_CREATING_ACCOUNT","value":"Creando una cuenta..."},"createYourAccount":{"key":"ACT_CREATE_YOUR_ACCOUNT","value":"¡Crea tu cuenta!"},"almostDone":{"key":"CHK_ALMOST_DONE","value":"¡Ya casi está!"},"username":{"key":"GLB_USERNAME","value":"Nombre de usuario"},"accountCreated":{"key":"ACT_ACCOUNT_CREATED","value":"¡Se creó la cuenta!"},"youAreNowAMember":{"key":"ACT_YOU_ARE_NOW_A_MEMBER","value":"Ahora eres miembro del Club A&F. Puedes visitar tu cuenta más abajo."},"youAreNowALoyaltyMember":{"key":"ACT_YOU_ARE_NOW_A_LOYALTY_MEMBER","value":"Ahora eres miembro del Club Cali. Podrías ganar puntos una vez que se procese el pedido."},"youAreNowALoyaltyMemberPoints":{"key":"ACT_YOU_ARE_NOW_A_LOYALTY_MEMBER_POINTS","value":"Ahora eres miembro del Club Cali. Puedes ganar hasta {0} puntos cuando se procese este pedido."},"goToYourAccount":{"key":"ACT_GO_TO_YOUR_ACCOUNT","value":"Ir a tu cuenta"},"goToYourCaliAccount":{"key":"ACT_GO_TO_YOUR_CALI_ACCOUNT","value":"Visita el Club Cali"},"productAvailabilityandPromotionsLegal":{"key":"GLB_FISLEGALLINE","value":"La disponibilidad de los productos está sujeta a cambios. Las promociones y los precios pueden variar en tienda."},"loadMore":{"key":"CHK_LOAD_MORE","value":"Cargar más"},"mapAndHours":{"key":"GLB_MAP_HOURS_LINK","value":"Mapa y horario"},"orderNotAvailableAtThisStore":{"key":"GLB_CLICKCOLLECT_OUTOFSTOCK","value":"??????"},"processing":{"key":"CHK_PROCESSING","value":"Procesando"},"freeOrderPickup":{"key":"CHK_FREE_ORDER_PICKUP","value":"Recogida del pedido gratis"},"orderNotAvailableForPickupAtThisLocation":{"key":"CHK_ORDER_NOT_AVAILABLE_FOR_PICKUP","value":"Pedido no disponible para su recogida en esta ubicación"},"me":{"key":"CHK_ME","value":"yo"},"USER_SIGNIN":{"key":"GLB_SIGNIN","value":"Conectarse"},"USER_SIGNOUT":{"key":"GLB_SIGNOUT","value":"Desconectarse"},"ANF_MEMBER":{"key":"GLB_ANF_MEMBER","value":"¿Eres miembro de A&F?"},"anfMemberSignIn":{"key":"CHK_MEMBER_SIGN_IN","value":"Conectarse a Club Cali"},"GLB_ORDERCANNOTSHIPSTANDARD":{"key":"GLB_ORDERCANNOTSHIPSTANDARD","value":"Lo sentimos, los siguientes productos no se pueden enviar al país o estado que seleccionaste. Puedes eliminar los artículos y realizar tu pedido, o intentar con una dirección en otro país o estado."},"GLB_ORDERCANNOTSHIPSTANDARDEXPLAINED":{"key":"GLB_ORDERCANNOTSHIPSTANDARDEXPLAINED","value":"Debido a restricciones de importación no podemos enviar los siguientes artículos al país o estado  solicitado. Puedes eliminar los artículos y realizar tu pedido, o intentar con una dirección en otro país o estado."},"productPlusShipping":{"key":"GLB_PRODUCTANDSHIPPINGISSSUE","value":"Emisión de producto + envío."},"viewDetails":{"key":"GLB_VIEWDETAILS","value":"Ver detalles"},"_ERR_STATE_ZIP_INVALID.taxGeoCode":{"key":"_ERR_STATE_ZIP_INVALID.taxGeoCode","value":"Tu código postal no coincide con tu estado/provincia."},"_ERR_COUNTRY_ZIP_INVALID":{"key":"_ERR_COUNTRY_ZIP_INVALID","value":"Introduce un código postal válido en el campo Código postal."},"signIn":{"key":"GLB_SIGNIN","value":"Conectarse"},"signingIn":{"key":"CHK_SIGNING_IN","value":"Iniciando sesión..."},"popinsShippingAndHandling":{"key":"GLB_PICKUP_IN_STORE_SHIPPING_AND_HANDLING","value":"Recoger en tienda (S&H)"},"shippingAndHandling":{"key":"GLB_SHIPPINGANDHANDLING","value":"Manejo y envío"},"success":{"key":"CHK_SUCCESS","value":"Proceso exitoso"},"legalModalLinks":{"key":"CHK_LEGAL_MODAL_LINKS","value":"Acepto los <a href=\"#modal-club-terms\">Términos del Club Cali</a>, los <a href=\"#modal-site-use\">Términos de uso del sitio web</a>&nbsp;y la <a href=\"#modal-privacy-policy\">Política de privacidad</a>"},"infoProvidedError":{"key":"ERR_INFO_PROVIDED","value":"La información que proporcionaste no coincide con nuestros registros. Por favor, inténtalo de nuevo."},"searching":{"key":"GLB_FISSEARCHING","value":"Buscando..."},"updated":{"key":"UPDATED","value":"Actualizado"},"saveAddressForFutureUse":{"key":"SAVE_ADDRESS_FOR_FUTURE_USE","value":"Guardar la dirección"},"saveCardForFutureUse":{"key":"SAVE_CARD_FOR_FUTURE_USE","value":"Guardar la tarjeta para uso posterior"},"cardBalanceWithAvailable":{"key":"CHK_CARD_BALANCE_WITH_AVAILABLE","value":"Saldo de la tarjeta: {0} disponible."},"giftCardCoveredWithBalanceLeft":{"key":"CHK_GIFT_CARD_COVERED_BAL_LEFT_ON_YOUR_CARD","value":"¡Felicitaciones! Esta tarjeta de regalo cubre todo el saldo de tu pedido (quedan {0} en tu tarjeta)."},"giftCardBalanceLeftPleasePayBelow":{"key":"CHK_BAL_LEFT_ON_YOUR_ORDER_PLEASE_PAY_BELOW","value":"Queda {0} en tu pedido. Paga más abajo."},"GLB_REPUDIATIONMAXCARTRESTRICT":{"key":"GLB_REPUDIATIONMAXCARTRESTRICT","value":"Tu pedido supera la cantidad máxima de unidades que se pueden comprar. Elimina los siguientes artículos para continuar."},"passwordErrorMessage":{"key":".2030","value":"Contraseña incorrecta. Por favor, inténtalo de nuevo."},"exp":{"key":"GLB_EXP","value":"Venc."},"amount":{"key":"GLB_AMOUNT","value":"Importe"},"addNewAddress":{"key":"ACT_ADD_NEW_ADDRESS","value":"AÑADIR NUEVA DIRECCIÓN"},"savedAddresses":{"key":"ACT_SAVED_ADDRESSES","value":"DIRECCIONES GUARDADAS"},"savedPayments":{"key":"GLB_SAVED_PAYMENTS","value":"Pagos guardados"},"newPayment":{"key":"CHK_NEW_PAYMENT","value":"Nuevo pago"},"selectedAddress":{"key":"CHK_SELECTED_ADDRESS","value":"Dirección seleccionada"},"useThisAddress":{"key":"CHK_USE_THIS_ADDRESS","value":"Usar esta dirección"},"newAddress":{"key":"CHK_NEW_ADDRESS","value":"Nueva dirección"},"processingOrder":{"key":"CHK_PROCESSING_ORDER","value":"Procesando el pedido..."},"payPalFailed":{"key":"CHK_PAYPAL_FAILED","value":"Error"},"seeDetails":{"key":"GLB_SEEDETAILS","value":"Ver detalles"},"youHavePoints":{"key":"GLB_YOU_HAVE_X_POINTS","value":"Tienes {0} puntos"},"earnPoints":{"key":"GLB_EARN_POINTS","value":"¡Gana puntos cuando se envíe este pedido!"},"earnXPoints":{"key":"GLB_EARN_X_POINTS","value":"¡Gana hasta {0} cuando se envíe este pedido!"},"welcomeToClubCali":{"key":"GLB_WELCOME_TO_CLUB_CALI","value":"Bienvenido al Club Cali"},"earnXPointsWithOrder":{"key":"GLB_EARN_X_POINTS_WITH_THIS_ORDER","value":"¡Puedes ganar {0} puntos con este pedido!"},"earnPointsExplained":{"key":"GLB_EARN_POINTS_EXPLAINED","value":"¡Parece que tienes una cuenta! Recibe puntos por esta compra si inicias sesión e ingresas tu número de pedido en la pestaña \"Historial\". Asegúrate de que la cuenta esté relacionada con el país desde el cual hiciste esta compra a fin de ganar puntos."},"estimatedPointsExplained":{"key":"GLB_ESTIMATED_POINTS_EXPLAINED","value":"¡Únete ahora y guardaremos el nombre, la dirección, el número de teléfono y la dirección de email que ingresaste para este pedido, a fin de agilizar los pedidos y contar con beneficios exclusivos para miembros!"},"expires":{"key":"CHK_EXPIRATION_DATE","value":"Caducidad:"},"applied":{"key":"GLB_APPLIED","value":"Aplicado"},"apply":{"key":"GLB_APPLY","value":"Aplicar"},"undo":{"key":"GLB_UNDO","value":"Deshacer"},"newCreditCard":{"key":"CHK_NEW_CREDIT_CARD","value":"Nueva tarjeta de crédito"},"GLB_REPUDIATIONMAXSKURESTRICT":{"key":"GLB_REPUDIATIONMAXSKURESTRICT","value":"Tu pedido ha excedido la cantidad máxima de unidades que se pueden comprar. Elimínalos para continuar."},"GLB_REPUDIATIONACCPSSPOINTRESTRICTIONSMSG":{"key":"GLB_REPUDIATIONACCPSSPOINTRESTRICTIONSMSG","value":"Lo sentimos, los siguientes productos no se pueden enviar a un Punto de recogida."},"GLB_REPUDIATIONACCPSSPOINTRESTRICTIONSMSGEXPLAINED":{"key":"GLB_REPUDIATIONACCPSSPOINTRESTRICTIONSMSGEXPLAINED","value":"Puedes eliminar los artículos, o intentar con un método diferente de entrega."},"checkErrorSoldout":{"key":"CHK_ERR_SOLDOUT","value":"LOS SIGUIENTES ARTÍCULOS ESTÁN AGOTADOS"},"CHK_ERR_SOLDOUT":{"key":"CHK_ERR_SOLDOUT","value":"LOS SIGUIENTES ARTÍCULOS ESTÁN AGOTADOS"},"gcNonUSNotAllowed":{"key":"CHK_GCNONUSDNOTALLOWED","value":"Los siguientes artículos se eliminarán de tu bolsa a menos que compres en {0}"},"genericApplyRewardError":{"key":"GENERIC_APPLY_REWARD_ERROR","value":"No es posible aplicar la recompensa. Vuelve a intentarlo."},"useTwoCards":{"key":"CHK_USETWOCARDS","value":"Utiliza dos tarjetas"},"checkoutHeading":{"key":"CHK_CHECKOUT","value":"Tramitar pedido"},"join":{"key":"GLB_JOIN","value":"ÚNETE"},"associateXPointsWithAuthenticatedUser":{"key":"GLB_ASSOCIATE_X_WITH_AUTHENTICATED_USER","value":"Puedes ganar hasta {0} puntos con este pedido. Recibirás estos puntos tan pronto como este pedido se procese."},"associatePointsWithAuthenticatedUser":{"key":"GLB_ASSOCIATE_WITH_AUTHENTICATED_USER","value":"Puedes ganar puntos con este pedido. Recibirás estos puntos tan pronto como este pedido se procese."},"promoCode":{"key":"GLB_PROMOCODE","value":"Código de promoción"},"promotions":{"key":"GLB_PROMOTIONS","value":"Promociones"},"genericError":{"key":"ERR_PLEASECORRECTTHEHIGHLIGHTEDFIELDS","value":"Corrige los campos destacados."},"emailSubscribeLegal":{"key":"GLB_EmailSubscribeMessage","value":"<h2>¡Suscríbete a los emails promocionales!</h2> ¡Suscríbete a los emails para conocer nuestras últimas ofertas y tendencias! Déjanos personalizar tus visitas y comunicaciones así como compartir y analizar los datos que facilitas a Hollister Co. con nuestras otras marcas (Abercrombie & Fitch y abercrombie kids)."},"GLB_PROMOCODEDIDNOTMEETPRICETHRESHOLD":{"key":"GLB_PROMOCODEDIDNOTMEETPRICETHRESHOLD","value":"Lo sentimos, o bien la mercancía que has seleccionado no entra en esta promoción o el total de la mercancía no llega a la cantidad obligatoria para la promoción. Por favor, consulta los detalles de la promoción. Las compras de tarjeta de regalo y envolver para regalo, impuestos y manejo y envío no son aplicables."},"vatDetails":{"key":"GLB_SUBTOTALINCLVAT","value":"Subtotal (incluye IVA)"},"pickupPoint":{"key":"CHK_PICKUP_POINT","value":"Recoger"},"dynamicPickupPoint":{"key":"DynamicAccessPointLabels","value":"Lugar de recogida"},"orderNotAvailableForPickupInStoreAtThisLocation":{"key":"GLB_CLICKCOLLECT_NOTAVAILABLE","value":"La recogida en tienda no está disponible en esta ubicación"},"choosePickupPoint":{"key":"GLB_CHOOSE_PICKUP_POINT","value":"Elegir opción de recogida"},"pickupPointOption":{"key":"GLB_PICKUP_POINT_OPTION","value":"Punto de recogida"},"anfAbercrombieKidsStore":{"key":"GLB_ANF_ABERCROMBIE_KIDS_STORE","value":"Tienda de A&F o abercrombie kids"},"hollisterStore":{"key":"GLB_HOLLISTER_STORE","value":"Tiendas Hollister"},"upsOrRoyalMail":{"key":"GLB_UPS_OR_ROYAL_MAIL","value":"Ubicación de UPS o Royal Mail"},"findPickupPoint":{"key":"GLB_FIND_PICKUP_POINT","value":"Encuentra una tienda de recogida"},"collectingYourItems":{"key":"GLB_COLLECTING_YOUR_ITEMS","value":"Recogida de tus artículos"},"whoIsPickingUpOrder":{"key":"GLB_WHO_IS_PICKING_UP_ORDER","value":"¿Quién recogerá el pedido?"},"clickAndCollect":{"key":"GLB_CLICK_AND_COLLECT","value":"Recogida del pedido en tienda"},"storeHours":{"key":"STOREHOURS","value":"Horarios de tienda"},"findPickupStore":{"key":"CHK_FIND_PICKUP_STORE","value":"Buscar una tienda de recogida"},"yourPickupStore":{"key":"CHK_YOUR_PICKUP_STORE","value":"Tu tienda de recogida"},"findPickupLocation":{"key":"CHK_FIND_PICKUP_LOCATION","value":"Buscar lugar de recogida"},"selectPickupLocation":{"key":"CHK_SELECT_PICKUP_LOCATION","value":"Seleccionar lugar de recogida"},"yourPickupLocation":{"key":"CHK_YOUR_PICKUP_LOCATION","value":"Tu lugar de recogida"},"pudosChangeStore":{"key":"CHK_PUDOS_CHANGE_STORE","value":"Cambiar dirección de recogida"},"rightToCancel":{"key":"CHK_RIGHT_TO_CANCEL","value":"You have a right to withdraw within 14 days of receipt of merchandise."},"moreInformation":{"key":"CHK_MORE_INFO","value":"Más información"},"confirmAndAgree":{"key":"CHK_TICK_CONFIRMANDAGREE","value":"Confirmo que tengo al menos 16 años y que he acepto los <a mpdisurl class=\"open-modal-link\" href=\"{2}\">Términos de uso del sitio web</a> y <a mpdisurl class=\"open-modal-link\" href=\"{0}\">Términos de venta</a>."},"privacyNotice":{"key":"ACT_PRIVACY_NOTICE","value":"Para obtener más información sobre cómo AFH Fulfillment NL B.V. procesa los datos personales, consulte nuestro <a mpdisurl class=\"open-modal-link\" href=\"{0}\">Aviso sobre privacidad</a>."},"today":{"key":"GLB_TODAY","value":"Hoy"},"tomorrow":{"key":"GLB_TOMORROW","value":"Mañana"},"closed":{"key":"GLB_CLOSED","value":"Cerrado"},"accountWebSiteTermsOfUsePrivacyPolicyText":{"key":"ACT_WEBSITETERMSOFUSEPRIVACY_NOTICK","value":"Para obtener más información sobre cómo AFH Fulfillment NL B.V. procesa los datos personales, consulte nuestro <a mpdisurl href=\"{1}\" class=\"open-modal-link\">Aviso sobre privacidad</a>.<br><br>Confirmo que tengo al menos 16 años y que he leído y acepto los <a mpdisurl href=\"{2}\" class=\"open-modal-link\">Términos del Club Cali</a> y <a mpdisurl href=\"{0}\" class=\"open-modal-link\">Términos de uso del sitio web</a>."},"accountTermsPrivacyDuoText":{"key":"ACT_TERMSPRIVACY_DUO","value":"<a mpdisurl href=\"{0}\" class=\"site-use-link\">Términos de uso del sitio web</a>  <a mpdisurl href=\"{1}\" class=\"privacy-policy-link\">Política de privacidad</a>"},"accountWebSiteTermsOfUsePrivacyPolicyAwkText":{"key":"ACT_WEBSITETERMSOFUSEPRIVACY_AWK","value":"<a mpdisurl href=\"{0}\">Términos de uso del sitio web</a> <a mpdisurl href=\"{1}\">Política de privacidad</a>"},"accountWebSiteTermsOfUseAndPrivacyPolicyDefaultText":{"key":"ACT_WEBSITETERMSOFUSEPRIVACY","value":"Confirmo que tengo al menos 16 años y que he leído y acepto los <a mpdisurl href=\"{2}\" class=\"open-modal-link\">Términos del Club Cali</a> y <a mpdisurl href=\"{0}\" class=\"open-modal-link\">Términos de uso del sitio web</a>."},"accountWebSiteTermsOfUsePrivacyPolicyAgeConsentText":{"key":"ACT_WEBSITETERMSOFUSEPRIVACY_AGE_NOTICK","value":"Para obtener más información sobre cómo AFH Fulfillment NL B.V. procesa los datos personales, consulte nuestro <a mpdisurl href=\"{1}\" class=\"open-modal-link\">Aviso sobre privacidad</a>.<br><br>Confirmo que tengo al menos 16 años y que he leído y acepto los <a mpdisurl href=\"{2}\" class=\"open-modal-link\">Términos del Club Cali</a> y <a mpdisurl href=\"{0}\" class=\"open-modal-link\">Términos de uso del sitio web</a>."},"accountClubTermsPrivacyPolicyText":{"key":"ACT_CLUBTERMSPRIVACY_NOTICK","value":"??????"},"list":{"key":"SHIPTYPE_SEEUPSACPRESULTLIST","value":"Lista"},"map":{"key":"SHIPTYPE_SEEUPSACPMAP","value":"Mapa"},"pudosInstructions":{"key":"GLB_COLLECTION_POINT_BODY_ES","value":"Tendrás que presentar una identificación oficial con fotografía (DNI, carné de conducir, pasaporte) para poder recoger tu paquete. Si no recoges tu paquete en un plazo de 14 días laborables, será devuelto automáticamente."},"GLB_PROMO_DISTRIBUTION_MSG":{"key":"GLB_PROMO_DISTRIBUTION_MSG","value":"El código que ingresaste se aplicó pero tu pedido no es elegible para esta promoción. Sigue comprando para ver tu descuento."},"GLB_PROMO_PATTERN_MSG":{"key":"GLB_PROMO_PATTERN_MSG","value":"El código que ingresaste se aplicó pero tu pedido no es elegible para esta promoción. Sigue comprando para ver tu descuento."},"GLB_PROMO_TARGETING_CONDITION_MSG":{"key":"GLB_PROMO_TARGETING_CONDITION_MSG","value":"Conéctate para usar este código."},"GLB_PROMO_UNSTACKABLE_MSG":{"key":"GLB_PROMO_UNSTACKABLE_MSG","value":"Lo sentimos, el código ingresado no se puede usar junto con las promociones aplicadas ahora."},"GLB_PROMO_GENERIC_UNQUALIFIED_PROMO_MSG":{"key":"GLB_PROMO_GENERIC_UNQUALIFIED_PROMO_MSG","value":"Lo sentimos, es posible que la mercancía seleccionada no sea elegible para esta promoción, debes iniciar sesión para canjear esta promoción, o que el total de las mercancías no alcance la cantidad obligatoria para la promoción. Por favor, consulta los detalles de la promoción."},"_ERR_PROMOCODE_DUPLICATE_PROMO":{"key":"_ERR_PROMOCODE_DUPLICATE_PROMO","value":"Este código de promoción ya se ha aplicado a tu pedido."},"ERR_PROMOTION_NOT_AVAILABLE_AT_THIS_TIME":{"key":"ERR_PROMOTION_NOT_AVAILABLE_AT_THIS_TIME","value":"Esta promoción no es válida en este momento."},"ERR_PROMOTION_NOT_AVAILABLE_AT_THIS_TIME.-2200":{"key":"ERR_PROMOTION_NOT_AVAILABLE_AT_THIS_TIME.-2200","value":"El código de promoción que has introducido no es válido. Es posible que solo tenga validez ciertos días o podría ser válido únicamente en tiendas."},"_ERR_PROMOCODE_PROMOTION_SYS_UNAVAILABLE":{"key":"_ERR_PROMOCODE_PROMOTION_SYS_UNAVAILABLE","value":"Vaya... el código de promoción que has introducido no es válido. Es posible que solo funcione determinados días, en tiendas o no se pueda combinar con otras promociones."},"ERR_PROMO_INVALID_MSG":{"key":"ERR_PROMO_INVALID_MSG","value":"Este código no es válido. Asegúrate de ingresarlo correctamente."},"ERR_PROMOTION_UNKNOWN_ERR.-2600":{"key":"ERR_PROMOTION_UNKNOWN_ERR.-2600","value":"El código de promoción que has introducido no es válido. Es posible que solo tenga validez ciertos días o podría ser válido únicamente en tiendas."},"ERR_PROMOTION_SYSTEM_ERR.-2700":{"key":"ERR_PROMOTION_SYSTEM_ERR.-2700","value":"El código de promoción que has introducido no es válido. Es posible que solo tenga validez ciertos días o podría ser válido únicamente en tiendas."},"yourLocation":{"key":"GLB_YOUR_LOCATION","value":"a tu ubicación."},"cannotProcessRequestTryAgainLater":{"key":"ERR_CANNOT_PROCESS_TRY_AGAIN","value":"En este momento, no podemos procesar tu solicitud. Por favor, inténtalo de nuevo más tarde. "},"pickupPointShippingAndHandling":{"key":"GLB_PICKUP_POINT_SHIPPING_AND_HANDLING","value":"Punto de recogida (S&H)"},"BAG_SKU":{"key":"BAG_SKU","value":"SKU: "},"GLB_SENDTO":{"key":"GLB_SENDTO","value":"Enviar a"},"GLB_SENDON":{"key":"GLB_SENDON","value":"Enviar el"},"_ERR_MISSING_PARMS":{"key":"_ERR_MISSING_PARMS","value":"Parámetro faltante: {0}"},"ERR_PROMOTION_CODE_INVALID.-1200":{"key":"ERR_PROMOTION_CODE_INVALID.-1200","value":"El código de promoción que has introducido no es válido. Por favor, verifica el código e inténtalo de nuevo."},"_ERR_PROMOCODE_NONCOMBINABLE_PROMO":{"key":"_ERR_PROMOCODE_NONCOMBINABLE_PROMO","value":"Esta promoción no se puede combinar con otras promociones."},"_ERR_PROMOCODE_PROMOTION_EXCEEDS_MAXNUMBER":{"key":"_ERR_PROMOCODE_PROMOTION_EXCEEDS_MAXNUMBER","value":"Has alcanzado el número máximo de promociones permitidas"},"ERR_PROMOTION_CODE_INVALID":{"key":"ERR_PROMOTION_CODE_INVALID","value":"Esta promoción no es válida"},"_ERR_PROMOCODE_PROMOTION_CANCELLED":{"key":"_ERR_PROMOCODE_PROMOTION_CANCELLED","value":"Lo sentimos, se ha cancelado este código de promoción."},"_ERR_PROMOCODE_INELIGIBLE_COUNTRY":{"key":"_ERR_PROMOCODE_INELIGIBLE_COUNTRY","value":"Los códigos de promoción no se pueden usar para el país de envío que has seleccionado."},"_ERR_PROMOCODE_UNIQUE_CODE_ALREADY_APPLIED":{"key":"_ERR_PROMOCODE_UNIQUE_CODE_ALREADY_APPLIED","value":"El código de promoción introducido ya ha sido canjeado."},"_ERR_PROMOCODE_CODE_NOT_FOUND":{"key":"_ERR_PROMOCODE_CODE_NOT_FOUND","value":"El código de promoción enviado no se reconoció. Por favor, inténtalo de nuevo."},"_ERR_PROMOCODE_PROMOTION_EXPIRED":{"key":"_ERR_PROMOCODE_PROMOTION_EXPIRED","value":"Esta promoción no es válida en este momento."},"_ERR_FORMAT_PROMOCODES_NOT_CORRECT.-2820":{"key":"_ERR_FORMAT_PROMOCODES_NOT_CORRECT.-2820","value":"El código de promoción que has introducido no es válido. Es posible que solo tenga validez ciertos días o podría ser válido únicamente en tiendas."},"altPaymentNextStepHelp":{"key":"CHK_WE_WILL_DIRECT_TO_PAYPAL_NEXT_STEP_ALT_PAYMENT","value":"Te dirigiremos a {0} en el siguiente paso."},"altPaymentExplained":{"key":"CHK_ALT_PAYMENT_EXPLAINED","value":"Tu pedido no será enviado hasta que completes la transacción en el sitio web de {0} y puedas ver la página de recepción del pedido de Hollister Co. Te estamos redireccionando. Esto puede llevar hasta 30 segundos. Por favor, no cierres tu navegador hasta que no veas la página de recibo de pago de Hollister Co."},"addACreditCard":{"key":"CHK_ADDACREDITCARD","value":"Añadir una tarjeta de crédito"},"applyUpToNumGiftCardsPerOrder":{"key":"CHK_APPLYUPTONUMGIFTCARDSPERORDER","value":"Aplicar hasta {0} tarjetas de regalo por pedido"},"appliedGiftCards":{"key":"CHK_APPLIEDGIFTCARDS","value":"Tarjetas de regalo que aplican"},"orderBalance":{"key":"CHK_ORDERBALANCE","value":"Saldo del pedido"},"klarnaInvoiceBenefits":{"key":"CHK_KLARNA_INVOICE_BENEFIT_MESSAGE","value":"Compra ahora, paga en 14 días."},"personalId":{"key":"CHK_PERSONAL_ID","value":"ID personal"},"klarnainvoice":{"key":"CHK_KLARNA_INVOICE","value":"Facturas de Klarna"},"klarnaaccount":{"key":"CHK_KLARNA_ACCOUNT","value":"Cuenta Klarna"},"AUTH_MESSAGEK-1":{"key":"AUTH_MESSAGEK-1","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK-2":{"key":"AUTH_MESSAGEK-2","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK-3":{"key":"AUTH_MESSAGEK-3","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK-4":{"key":"AUTH_MESSAGEK-4","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK-5":{"key":"AUTH_MESSAGEK-5","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK-99":{"key":"AUTH_MESSAGEK-99","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK1103":{"key":"AUTH_MESSAGEK1103","value":"Klarna no puede aceptar tu compra porque supera el límite permitido. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK1104":{"key":"AUTH_MESSAGEK1104","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK1999":{"key":"AUTH_MESSAGEK1999","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2101":{"key":"AUTH_MESSAGEK2101","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2102":{"key":"AUTH_MESSAGEK2102","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2103":{"key":"AUTH_MESSAGEK2103","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2104":{"key":"AUTH_MESSAGEK2104","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2105":{"key":"AUTH_MESSAGEK2105","value":"Klarna no puede procesar tu compra por problemas con las facturas. Soluciona el problema con estas facturas para continuar con el proceso de compra con Klarna o usa otra forma de pago y vuelve a hacer el pedido."},"AUTH_MESSAGEK2106":{"key":"AUTH_MESSAGEK2106","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2107":{"key":"AUTH_MESSAGEK2107","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2108":{"key":"AUTH_MESSAGEK2108","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2109":{"key":"AUTH_MESSAGEK2109","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2110":{"key":"AUTH_MESSAGEK2110","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2201":{"key":"AUTH_MESSAGEK2201","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2202":{"key":"AUTH_MESSAGEK2202","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2203":{"key":"AUTH_MESSAGEK2203","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2204":{"key":"AUTH_MESSAGEK2204","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2205":{"key":"AUTH_MESSAGEK2205","value":"Lo sentimos, pero tienes que tener al menos 18 años para utilizar esta opción de pago. Por favor, elige otro método de pago para completar tu pedido."},"AUTH_MESSAGEK2206":{"key":"AUTH_MESSAGEK2206","value":"Lo sentimos, pero tienes que tener al menos 18 años para utilizar esta opción de pago. Por favor, elige otro método de pago para completar tu pedido."},"AUTH_MESSAGEK2301":{"key":"AUTH_MESSAGEK2301","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2302":{"key":"AUTH_MESSAGEK2302","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2303":{"key":"AUTH_MESSAGEK2303","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2304":{"key":"AUTH_MESSAGEK2304","value":"El número de identificación personal que has introducido no fue aceptado. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2305":{"key":"AUTH_MESSAGEK2305","value":"La contraseña que has introducido no fue aceptada."},"AUTH_MESSAGEK2401":{"key":"AUTH_MESSAGEK2401","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2402":{"key":"AUTH_MESSAGEK2402","value":"Lo sentimos, ¡el código de PIN era incorrecto!"},"AUTH_MESSAGEK2403":{"key":"AUTH_MESSAGEK2403","value":"Lo sentimos, ¡el código de PIN era incorrecto!"},"AUTH_MESSAGEK2404":{"key":"AUTH_MESSAGEK2404","value":"¡No se solicitó un código de PIN!"},"AUTH_MESSAGEK2405":{"key":"AUTH_MESSAGEK2405","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2406":{"key":"AUTH_MESSAGEK2406","value":"No podemos encontrar una dirección registrada públicamente asociada con el número de teléfono que proporcionaste. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK2501":{"key":"AUTH_MESSAGEK2501","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2502":{"key":"AUTH_MESSAGEK2502","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2503":{"key":"AUTH_MESSAGEK2503","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK2999":{"key":"AUTH_MESSAGEK2999","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3101":{"key":"AUTH_MESSAGEK3101","value":"No podemos encontrar una dirección registrada públicamente asociada con el número de teléfono que proporcionaste. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3102":{"key":"AUTH_MESSAGEK3102","value":"No podemos encontrar una dirección registrada públicamente asociada con el número de teléfono que proporcionaste. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3103":{"key":"AUTH_MESSAGEK3103","value":"No podemos encontrar una dirección registrada públicamente asociada con el número de teléfono que proporcionaste. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3104":{"key":"AUTH_MESSAGEK3104","value":"El código postal que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3105":{"key":"AUTH_MESSAGEK3105","value":"El código postal que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3106":{"key":"AUTH_MESSAGEK3106","value":"Lamentablemente, no podemos identificar el nombre que has introducido. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3107":{"key":"AUTH_MESSAGEK3107","value":"Desafortunadamente, no podemos identificar la dirección que has introducido. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3108":{"key":"AUTH_MESSAGEK3108","value":"No podemos encontrar una dirección registrada. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3109":{"key":"AUTH_MESSAGEK3109","value":"Klarna no puede aprobar esta compra. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3110":{"key":"AUTH_MESSAGEK3110","value":"Desafortunadamente, no podemos identificar la dirección que has introducido. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3111":{"key":"AUTH_MESSAGEK3111","value":"El código postal que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3201":{"key":"AUTH_MESSAGEK3201","value":"El número de teléfono móvil que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3202":{"key":"AUTH_MESSAGEK3202","value":"El número de teléfono que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3203":{"key":"AUTH_MESSAGEK3203","value":"La dirección de email que brindaste es incorrecta. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3204":{"key":"AUTH_MESSAGEK3204","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3205":{"key":"AUTH_MESSAGEK3205","value":"La ciudad que has introducido no es válida. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3206":{"key":"AUTH_MESSAGEK3206","value":"El código postal que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3207":{"key":"AUTH_MESSAGEK3207","value":"La dirección que brindaste no coincide con la dirección que registraste. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3208":{"key":"AUTH_MESSAGEK3208","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3209":{"key":"AUTH_MESSAGEK3209","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3210":{"key":"AUTH_MESSAGEK3210","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3211":{"key":"AUTH_MESSAGEK3211","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3212":{"key":"AUTH_MESSAGEK3212","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3213":{"key":"AUTH_MESSAGEK3213","value":"El idioma que has introducido no es admitido por Klarna."},"AUTH_MESSAGEK3214":{"key":"AUTH_MESSAGEK3214","value":"Por favor, selecciona tu sexo e inténtalo de nuevo."},"AUTH_MESSAGEK3215":{"key":"AUTH_MESSAGEK3215","value":"La fecha de nacimiento que has introducido no coincide con el formato estándar. Por favor, vuelve a introducirla con el siguiente formato DD-MM-YYYY. Si sigues recibiendo este mensaje, elige otra opción de pago para completar tu pedido."},"AUTH_MESSAGEK3216":{"key":"AUTH_MESSAGEK3216","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3217":{"key":"AUTH_MESSAGEK3217","value":"No podemos encontrar una dirección registrada. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3218":{"key":"AUTH_MESSAGEK3218","value":"El número de casa que has introducido es incorrecto. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3219":{"key":"AUTH_MESSAGEK3219","value":"El número de teléfono que has introducido no coincide con el formato estándar. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3220":{"key":"AUTH_MESSAGEK3220","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3221":{"key":"AUTH_MESSAGEK3221","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3222":{"key":"AUTH_MESSAGEK3222","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3223":{"key":"AUTH_MESSAGEK3223","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3301":{"key":"AUTH_MESSAGEK3301","value":"El nombre y la dirección que has introducido no coinciden con la dirección que registraste. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3302":{"key":"AUTH_MESSAGEK3302","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3303":{"key":"AUTH_MESSAGEK3303","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3304":{"key":"AUTH_MESSAGEK3304","value":"El nombre que has introducido no coincide con la dirección registrada. Por favor, comprueba si hay errores e inténtalo de nuevo, o elige otra opción de pago."},"AUTH_MESSAGEK3305":{"key":"AUTH_MESSAGEK3305","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK3999":{"key":"AUTH_MESSAGEK3999","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6101":{"key":"AUTH_MESSAGEK6101","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6102":{"key":"AUTH_MESSAGEK6102","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6103":{"key":"AUTH_MESSAGEK6103","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6104":{"key":"AUTH_MESSAGEK6104","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6105":{"key":"AUTH_MESSAGEK6105","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6106":{"key":"AUTH_MESSAGEK6106","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK6999":{"key":"AUTH_MESSAGEK6999","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK7101":{"key":"AUTH_MESSAGEK7101","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK7102":{"key":"AUTH_MESSAGEK7102","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK7103":{"key":"AUTH_MESSAGEK7103","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK7104":{"key":"AUTH_MESSAGEK7104","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK7105":{"key":"AUTH_MESSAGEK7105","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK7999":{"key":"AUTH_MESSAGEK7999","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8101":{"key":"AUTH_MESSAGEK8101","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8102":{"key":"AUTH_MESSAGEK8102","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8103":{"key":"AUTH_MESSAGEK8103","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8104":{"key":"AUTH_MESSAGEK8104","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8105":{"key":"AUTH_MESSAGEK8105","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8106":{"key":"AUTH_MESSAGEK8106","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8107":{"key":"AUTH_MESSAGEK8107","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8108":{"key":"AUTH_MESSAGEK8108","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8109":{"key":"AUTH_MESSAGEK8109","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8110":{"key":"AUTH_MESSAGEK8110","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8111":{"key":"AUTH_MESSAGEK8111","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8112":{"key":"AUTH_MESSAGEK8112","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8113":{"key":"AUTH_MESSAGEK8113","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8114":{"key":"AUTH_MESSAGEK8114","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK8999":{"key":"AUTH_MESSAGEK8999","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9101":{"key":"AUTH_MESSAGEK9101","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9102":{"key":"AUTH_MESSAGEK9102","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9103":{"key":"AUTH_MESSAGEK9103","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9104":{"key":"AUTH_MESSAGEK9104","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9105":{"key":"AUTH_MESSAGEK9105","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9106":{"key":"AUTH_MESSAGEK9106","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9107":{"key":"AUTH_MESSAGEK9107","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9108":{"key":"AUTH_MESSAGEK9108","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9109":{"key":"AUTH_MESSAGEK9109","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9110":{"key":"AUTH_MESSAGEK9110","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9111":{"key":"AUTH_MESSAGEK9111","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9112":{"key":"AUTH_MESSAGEK9112","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9113":{"key":"AUTH_MESSAGEK9113","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9114":{"key":"AUTH_MESSAGEK9114","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9115":{"key":"AUTH_MESSAGEK9115","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9116":{"key":"AUTH_MESSAGEK9116","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9117":{"key":"AUTH_MESSAGEK9117","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9118":{"key":"AUTH_MESSAGEK9118","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9119":{"key":"AUTH_MESSAGEK9119","value":"Klarna no puede procesar este pago en este momento. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9120":{"key":"AUTH_MESSAGEK9120","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9121":{"key":"AUTH_MESSAGEK9121","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9124":{"key":"AUTH_MESSAGEK9124","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9125":{"key":"AUTH_MESSAGEK9125","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9126":{"key":"AUTH_MESSAGEK9126","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9127":{"key":"AUTH_MESSAGEK9127","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9128":{"key":"AUTH_MESSAGEK9128","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9129":{"key":"AUTH_MESSAGEK9129","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9130":{"key":"AUTH_MESSAGEK9130","value":"Este pedido se está verificando manualmente."},"AUTH_MESSAGEK9131":{"key":"AUTH_MESSAGEK9131","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9190":{"key":"AUTH_MESSAGEK9190","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9191":{"key":"AUTH_MESSAGEK9191","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9201":{"key":"AUTH_MESSAGEK9201","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9202":{"key":"AUTH_MESSAGEK9202","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9203":{"key":"AUTH_MESSAGEK9203","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9204":{"key":"AUTH_MESSAGEK9204","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9205":{"key":"AUTH_MESSAGEK9205","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9206":{"key":"AUTH_MESSAGEK9206","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9207":{"key":"AUTH_MESSAGEK9207","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9208":{"key":"AUTH_MESSAGEK9208","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9209":{"key":"AUTH_MESSAGEK9209","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9210":{"key":"AUTH_MESSAGEK9210","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9211":{"key":"AUTH_MESSAGEK9211","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9212":{"key":"AUTH_MESSAGEK9212","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9213":{"key":"AUTH_MESSAGEK9213","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9215":{"key":"AUTH_MESSAGEK9215","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9216":{"key":"AUTH_MESSAGEK9216","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9217":{"key":"AUTH_MESSAGEK9217","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9219":{"key":"AUTH_MESSAGEK9219","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9220":{"key":"AUTH_MESSAGEK9220","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9221":{"key":"AUTH_MESSAGEK9221","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9222":{"key":"AUTH_MESSAGEK9222","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9223":{"key":"AUTH_MESSAGEK9223","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9224":{"key":"AUTH_MESSAGEK9224","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9225":{"key":"AUTH_MESSAGEK9225","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9226":{"key":"AUTH_MESSAGEK9226","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9227":{"key":"AUTH_MESSAGEK9227","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9228":{"key":"AUTH_MESSAGEK9228","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9229":{"key":"AUTH_MESSAGEK9229","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9230":{"key":"AUTH_MESSAGEK9230","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9231":{"key":"AUTH_MESSAGEK9231","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9232":{"key":"AUTH_MESSAGEK9232","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9233":{"key":"AUTH_MESSAGEK9233","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9234":{"key":"AUTH_MESSAGEK9234","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9235":{"key":"AUTH_MESSAGEK9235","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9236":{"key":"AUTH_MESSAGEK9236","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9237":{"key":"AUTH_MESSAGEK9237","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9238":{"key":"AUTH_MESSAGEK9238","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9239":{"key":"AUTH_MESSAGEK9239","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9240":{"key":"AUTH_MESSAGEK9240","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"AUTH_MESSAGEK9241":{"key":"AUTH_MESSAGEK9241","value":"El pago no ha podido ser procesado por Klarna. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"_ERR_REWARDS_EXCEEDS_MAXNUMBER":{"key":"_ERR_REWARDS_EXCEEDS_MAXNUMBER","value":"No es posible aplicar la recompensa. Alcanzaste la cantidad máxima de recompensas permitidas por pedido."},"_ERR_AMOUNT_EXCEED_SINGLE_TRANSACTION":{"key":"_ERR_AMOUNT_EXCEED_SINGLE_TRANSACTION","value":"Paypal ha indicado que el total de tu pedido supera el importe máximo para una única transacción. Por favor, elige otra forma de pago."},"_ERR_CREDITCARD_OR_BILLINGAGREEMENT_REQUIRED":{"key":"_ERR_CREDITCARD_OR_BILLINGAGREEMENT_REQUIRED","value":"La transacción falló porque PayPal ha indicado que tu cuenta no está asociada a un origen de fondos aceptable. Por favor, elige otra forma de pago."},"_ERR_CUSTOMER_MUST_RETURN_TO_PAYPAL":{"key":"_ERR_CUSTOMER_MUST_RETURN_TO_PAYPAL","value":"PayPal requiere un nuevo origen de fondos. Elige otra forma de pago o actualiza el origen de los fondos en PayPal."},"ERR_PAYPALNOFUNDS":{"key":"ERR_PAYPALNOFUNDS","value":"PayPal ha rechazado esta transacción debido a fondos insuficientes. Por favor, utiliza otra forma de pago y vuelve a enviar tu pedido."},"_ERR_AMOUNT_LIMIT_EXCEEDED":{"key":"_ERR_AMOUNT_LIMIT_EXCEEDED","value":"Paypal ha indicado que el total de tu pedido supera el límite permisible. Por favor, elige otra forma de pago."},"_ERR_FUNDING_SOURCE_MISSING":{"key":"_ERR_FUNDING_SOURCE_MISSING","value":"PayPal ha indicado que no hay un origen de fondos asociado a tu cuenta de PayPal. Vuelve a seleccionar PayPal como forma de pago y selecciona un origen de fondos u otra forma de pago."},"_ERR_PAYPAL_PAYMENT_PROCESSING":{"key":"_ERR_PAYPAL_PAYMENT_PROCESSING","value":"PayPal no ha podido procesar tu pago. Por favor, elige otra forma de pago."},"_ERR_UNMATCHING_SHIPPING_COUNTRY_CODE":{"key":"_ERR_UNMATCHING_SHIPPING_COUNTRY_CODE","value":"En el caso de transacciones con PayPal, el país de la dirección de envío debe ser el mismo que el país de residencia del titular de la cuenta de PayPal. Revisa la dirección de envío y realiza los cambios oportunos."},"_ERR_SHIPPING_ADDRESS_INVALID":{"key":"_ERR_SHIPPING_ADDRESS_INVALID","value":"PayPal ha indicado que la dirección de envío que has facilitado no es válida. Revisa la dirección de envío facilitada y realiza los cambios oportunos."},"ERR_PAYPALSESSIONEXPIRED":{"key":"ERR_PAYPALSESSIONEXPIRED","value":"Tu sesión para tramitar pedidos exprés ha caducado. Por favor, inténtalo de nuevo o usa una forma de pago diferente y vuelve a hacer el pedido."},"_ERR_TRANSACTION_EXCEEDS_MONTHLY":{"key":"_ERR_TRANSACTION_EXCEEDS_MONTHLY","value":"PayPal indica que esta transacción te haría superar el importe máximo mensual. Por favor, elige otra forma de pago."},"ERR_GIFTCARDPAYPALCANNOTBECOMBINED":{"key":"ERR_GIFTCARDPAYPALCANNOTBECOMBINED","value":"No se pueden utilizar en el mismo pedido tarjetas de regalo y PayPal. Utiliza una tarjeta de crédito u otra tarjeta de regalo para pagar el importe de tu pedido o puedes pagar el importe completo utilizando tu cuenta de PayPal."},"_ERR_CANNOT_SHIP_OUT_OF_ZONE":{"key":"_ERR_CANNOT_SHIP_OUT_OF_ZONE","value":"No hacemos envíos desde este sitio web al país que has seleccionado. Por favor, selecciona de la lista uno de los países a los que se hacen envíos en el formulario de direcciones que aparece más abajo."},"ERR_PAYPALGENERAL":{"key":"ERR_PAYPALGENERAL","value":"El pago no ha podido ser procesado por Paypal. Por favor, inténtalo de nuevo o usa una forma de pago diferente y vuelve a hacer el pedido."},"ERR_PAYPALTRYAGAIN":{"key":"ERR_PAYPALTRYAGAIN","value":"Paypal ha indicado que tu dirección de envío está incompleta. Asegúrate de que la dirección de envío es correcta e inténtalo de nuevo. Puedes usar una tarjeta o forma de pago diferente y volver a hacer el pedido."},"ERR_PAYPALSHIPPINGINCOMPLETE":{"key":"ERR_PAYPALSHIPPINGINCOMPLETE","value":"Paypal ha indicado que tu dirección de envío está incompleta. Asegúrate de que la dirección de envío es correcta e inténtalo de nuevo. Puedes usar una tarjeta o forma de pago diferente y volver a hacer el pedido."},"ERR_PAYPALSHIPPINGINVALID":{"key":"ERR_PAYPALSHIPPINGINVALID","value":"Paypal ha indicado que tu dirección de envío no es válida. Asegúrate de que la dirección de envío es correcta e inténtalo de nuevo. Puedes usar una tarjeta o forma de pago diferente y volver a hacer el pedido."},"SHIP_TO_COUNTRY_CURRENCY_MISMATCH":{"key":"SHIP_TO_COUNTRY_CURRENCY_MISMATCH","value":"Lo sentimos, pero la divisa que se está utilizando tendrá que cambiarse para realizar el envío al país que has seleccionado."},"_ERR_PROCESSING_PAYPAL_PAYMENT":{"key":"_ERR_PROCESSING_PAYPAL_PAYMENT","value":"Lo sentimos, actualmente no podemos procesar PayPal como forma de pago. Por favor, elige otra forma de pago."},"giftCardAlreadyApplied":{"key":"ERR_GIFT_CARD_ALREADY_APPLIED_USE_ANOTHER","value":"Tarjeta de regalo ya se aplicó {0}. Usa otra tarjeta de regalo."},"giftCardHasZeroBalance":{"key":"ERR_GIFTCARDHASZEROBALANCE","value":"No hay saldo en esta tarjeta de regalo"},"apmSubmitButton":{"key":"CHK_APM_SUBMIT_BUTTON","value":"Enviar pedido con obligación de pagar"},"klarnaLegal":{"key":"CHK_KLARNA_LEGAL","value":"Acepto que al enviar mis datos doy el consentimiento para que Klarna procese los datos enviados con fines de identificación y evaluación del crédito y finalizar la compra. Puedo revocar mi <a mpdisurl href=\"{0}\" target=\"_blank\">CONSENTIMIENTO</a> con respecto al procesamiento de mis datos para todos los fines posibles, de acuerdo con la ley. El <a mpdisurl href=\"{1}\" target=\"_blank\">términos y condiciones generales de Klarna</a> aplicar."},"klarnaLegalNoConsent":{"key":"CHK_KLARNA_LEGAL_NO_CONSENT","value":"Al seleccionar Klarna como opción de pago, enviar tus datos y hacer clic en el botón \"ENVIAR PEDIDO CON OBLIGACIÓN DE PAGAR\" que aparece a continuación aceptas que Klarna procese los datos enviados con fines de identificación y evaluación del crédito y finalizar la compra. Puedes revocar tu consentimiento para el procesamiento de datos con los fines para los que es posible hacerlo tal conforme a la ley. También aceptas los <a mpdisurl href=\"{0}\" target=\"_blank\">términos y condiciones generales de Klarna</a> que se aplican."},"userDoesNotExistError":{"key":"._ERR_USER_DOES_NOT_EXIST","value":"No hemos encontrado ninguna cuenta con esta dirección de email."},"creditCardExpirationError":{"key":"AUTH_MESSAGE1006","value":"La fecha de caducidad que has introducido no es válida. Por favor, comprueba la fecha en tu tarjeta e inténtalo de nuevo."},"deliveryDatesAreEstimated":{"key":"CHK_DELIVERYDATESAREESTIMATED","value":"Las fechas de entrega son estimadas"},"shippingToBrazil":{"key":"CHK_SHIPPING_TO_BRAZIL_LEGAL","value":"As informações relativas ao processamento e envio de pedidos para a sua região foram atualizadas. Verifique nossa <a href=\"#modal-shipping-and-handling\">PÁGINA DE ENVIO E MANUSEIO</a> para obter mais detalhes."},"CHK_ERR_SFS_SOLDOUT":{"key":"CHK_ERR_SFS_SOLDOUT","value":"Lo sentimos, pero actualmente no se pueden enviar los siguientes productos al país que has seleccionado."},"CHK_ERR_SFS_SOLDOUTEXPLAINED":{"key":"SFS_SOLDOUT_ASSISTANCE","value":"Puedes eliminar los artículos o solicitar un envío a una dirección de {0}."},"SFSShipToCountry":{"key":"SFS_SHIP_TO_COUNTRY","value":"Enviar a {0}"},"helpShippingAndHandlingUsLeftTab":{"key":"HELP_SHIPPINGANDHANDLING_US_LEFTTAB","value":"<table class=\"shippingAndHandling__rate-table\">\r\n<!--     <tr>\r\n        <td colspan=\"2\">\r\n            <p style=\"background-color: red;width: 100%;color: #fff;padding: 20px;text-align: left;font-weight: bolder;\">Due to inclement weather in the Northeast US, some orders may experience a delay in delivery.</p>\r\n        </td>\r\n\r\n    </tr> -->\r\n    <tr>\r\n        <td>\r\n            <h5 class=\"shippingAndHandling__rate-table-header\">Estándar</h5>\r\n            <span>Para la mayoría de los pedido, espera de 4 a 9 días laborables para su entrega. La entrega a algunas zonas puede tardar hasta 14 días.</span> </br>\r\n            <span class=\"shippingAndHandling__rate-table-giftCardInfo\">Los pedidos realizados únicamente con tarjeta de regalo tienen envío gratis</span>\r\n        </td>\r\n        <td>$7</td>\r\n    </tr>\r\n    <tr>\r\n        <td>\r\n            <h5 class=\"shippingAndHandling__rate-table-header\">Dos días</h5>\r\n            <span>El pedido deberá hacerse antes de las 2:00 pm </br>EST de lunes a viernes</span> </br>\r\n            <span class=\"shippingAndHandling__rate-table-giftCardInfo\">$7 para pedidos realizados únicamente con tarjeta de regalo</span>\r\n        </td>\r\n        <td>$15</td>\r\n    </tr>\r\n    <tr>\r\n        <td>\r\n            <h5 class=\"shippingAndHandling__rate-table-header\">Día siguiente</h5>\r\n            <span>El pedido deberá hacerse antes de las 2:00 pm </br>EST de lunes a viernes</span> </br>\r\n            <span class=\"shippingAndHandling__rate-table-giftCardInfo\">$10 para pedidos realizados únicamente con tarjeta de regalo</span>\r\n        </td>\r\n        <td>$22</td>\r\n    </tr>\r\n</table>\r\n<div class=\"shippingAndHandling__rate-table-tab-helpText\">\r\n    <p>El servicio urgente no está disponible para: apartados de correos, direcciones APO/FPO, fuera de EE. UU., territorios de los EE. UU. y algunas zonas rurales. Las entregas a Alaska y Hawái pueden tardar un día laborable más.</p>\r\n</div>"},"helpShippingAndHandlingUSFooter":{"key":"HELP_SHIPPINGANDHANDLING_US_FOOTER","value":"<p>Las entregas a Alaska o Hawái pueden tardar entre 10-15 días laborables. Las entregas a territorios de los EE. UU. y a direcciones APO/FPO pueden tardar hasta tres semanas. Las tarjetas de regalo se envían por separado de la mercancía.</p>"},"helpShippingAndHandlingUKLeftTab":{"key":"HELP_SHIPPINGANDHANDLING_UK_LEFTTAB","value":"<table class=\"shippingAndHandling__rate-table\">\r\n  <tr>\r\n    <td>\r\n      <h5 class=\"shippingAndHandling__rate-table-header\">Estándar</h5>\r\n      <span>La entrega puede tardar entre 5 y 7 días laborables</span> </br>\r\n\r\n    </td>\r\n    <td>£5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>\r\n      <h5 class=\"shippingAndHandling__rate-table-header\">Día siguiente</h5>\r\n      <span>El pedido deberá enviarse antes de las 12:00 pm (CET)</br>de lunes a viernes para recibirlo al siguiente día (laborable)</span> </br>\r\n\r\n    </td>\r\n    <td>£10</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n        <h5 class=\"shippingAndHandling__rate-table-header\">Punto de acceso</h5>\r\n        <span>La entrega puede tardar de 5 a 7 días (laborables). Los pedidos se deben recoger en un plazo de 10 días desde su entrega en el punto de acceso. Tendrás que presentar una identificación oficial con fotografía (carné de conducir, pasaporte, tarjeta de identificación de extranjero o identificación militar) para poder recoger tu paquete. Si no se recoge el paquete antes del plazo indicado, el pedido se enviará automáticamente a nuestro almacén para procesar su devolución.</span> </br>\r\n\r\n      </td>\r\n      <td>£5</td>\r\n  </tr>\r\n</table>\r\n<div class=\"shippingAndHandling__rate-table-tab-helpText\">\r\n  <p>Las tarjetas de regalo se envían por separado de la mercancía.</p>\r\n</div>"},"helpShippingAndHandlingUKRightTab":{"key":"HELP_SHIPPINGANDHANDLING_UK_RIGHTTAB","value":"\r\n\r\n<h5 class=\"shippingAndHandling__additional-info-tab-header\"> Información adicional sobre manejo y envío </h5>\r\n<div class=\"shippingAndHandling__additional-info-tab-content\">\r\n    <p>Los pedidos que solo incluyan tarjetas de regalo disfrutarán de un envío estándar GRATUITO. Las tarjetas de regalo se envían por separado de la mercancía y no se pueden entregar en apartados de correos.</p>\r\n</div>"},"helpShippingAndHandlingUKFooter":{"key":"HELP_SHIPPINGANDHANDLING_UK_FOOTER","value":"<p>Las entregas a Alaska o Hawái pueden tardar entre 10-15 días laborables. Las entregas a territorios de los EE. UU. y a direcciones APO/FPO pueden tardar hasta tres semanas.</p>"},"helpShippingAndHandlingEULeftTab":{"key":"HELP_SHIPPINGANDHANDLING_EU_LEFTTAB","value":"<style type=\"text/css\">\r\n\r\n  .contactus-alert p {\r\n    font-size: 1.3rem;\r\n    padding: .5em;\r\n    color: #fff;\r\n    background: red;\r\n  }\r\n</style>\r\n<!--<div class=\"contactus-alert\">\r\n  <p>Customers shipping to Norway are required to pay VAT and any applicable duties to the carrier.</p>\r\n</div>-->\r\n\r\n<table class=\"shippingAndHandling__rate-table\">\r\n  <tr>\r\n    <td><h5 class=\"shippingAndHandling__rate-table-header\">País</h5></td>\r\n    <td><h5 class=\"shippingAndHandling__rate-table-header\">Estándar</h5></td>\r\n    <td><h5 class=\"shippingAndHandling__rate-table-header\">Avión día siguiente</h5></td>\r\n    <td><h5 class=\"shippingAndHandling__rate-table-header\">Punto de acceso</h5></td>\r\n  </tr>\r\n\r\n  <tr>\r\n    <td>Austria</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Bélgica</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Bulgaria</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Croacia</td>\r\n    <td>€5</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Chipre</td>\r\n    <td>No disponible</td>\r\n    <td>€20</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>República Checa</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Dinamarca</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Estonia</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Finlandia</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n    <td>€10</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Francia</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Alemania</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Grecia</td>\r\n    <td>No disponible</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Hungría</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Irlanda</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Italia</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Letonia</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Lituania</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Luxemburgo</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Malta</td>\r\n    <td>No disponible</td>\r\n    <td>€20</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Mónaco</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Países Bajos</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Noruega</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n    <td>€15</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Polonia</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Portugal</td>\r\n    <td>€10</td>\r\n    <td>€20</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Rumanía</td>\r\n    <td>€10</td>\r\n    <td>€20</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Eslovaquia</td>\r\n    <td>€5</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Eslovenia</td>\r\n    <td>€5</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>España</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Suecia</td>\r\n    <td>€10</td>\r\n    <td>€20</td>\r\n    <td>€10</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Suiza</td>\r\n    <td>€5</td>\r\n    <td>No disponible</td>\r\n    <td>No disponible</td>\r\n  </tr>\r\n  <tr>\r\n    <td>Reino Unido</td>\r\n    <td>€5</td>\r\n    <td>€10</td>\r\n    <td>€5</td>\r\n  </tr>\r\n</table>"},"helpShippingAndHandlingEURightTab":{"key":"HELP_SHIPPINGANDHANDLING_EU_RIGHTTAB","value":"<h5 class=\"shippingAndHandling__additional-info-tab-header\"> Información adicional sobre manejo y envío </h5>\r\n<div class=\"shippingAndHandling__additional-info-tab-content\">\r\n  <p>Los envíos de clientes a Noruega tendrán que pagar IVA y todos los impuestos aplicables a la empresa de mensajería.</p>\r\n<p>Las fragancias no se pueden enviar mediante envío urgente.</p>\r\n  <p>Estándar</p>\r\n    <p>La entrega puede tardar de 5 a 7 días (laborables).</p>\r\n\r\n  <p>Por avión - día siguiente</p>\r\n    <p>La entrega puede tardar un día (laborable). El pedido debe realizarse antes de las 12:00 PM CET de lunes a viernes para recibirlo al siguiente día (laborable).</p>\r\n\r\n  <p>Punto de acceso</p>\r\n    <p>La entrega puede tardar de 5 a 7 días (laborables). Los pedidos se deben recoger en un plazo de 10 días desde su entrega en el punto de acceso. Tendrás que presentar una identificación oficial con fotografía (carné de conducir, pasaporte, tarjeta de identificación de extranjero o identificación militar) para poder recoger tu paquete. Si no se recoge el paquete antes del plazo indicado, el pedido se enviará automáticamente a nuestro almacén para procesar su devolución.</p>\r\n</div>"},"helpShippingAndHandlingEUFooter":{"key":"HELP_SHIPPINGANDHANDLING_EU_FOOTER","value":""},"helpShippingAndHandlingCALeftTab":{"key":"HELP_SHIPPINGANDHANDLING_CA_LEFTTAB","value":"<table class=\"shippingAndHandling__rate-table\">\r\n  <tr>\r\n      <td><h5 class=\"shippingAndHandling__rate-table-header\">Total de mercancía</h5></td>\r\n      <td><h5 class=\"shippingAndHandling__rate-table-header\">Estándar</h5></td>\r\n      <td><h5 class=\"shippingAndHandling__rate-table-header\">Express Air</h5></td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$0 - $100</span> </br>\r\n      </td>\r\n      <td>$15</td>\r\n      <td>$20</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n      <span>$101 - $300</span> </br>\r\n      </td>\r\n      <td>$25</td>\r\n      <td>$30</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$301 - $500</span> </br>\r\n      </td>\r\n      <td>$30</td>\r\n      <td>$35</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>Más de $ 500</span> </br>\r\n      </td>\r\n      <td>$35</td>\r\n      <td>$40</td>\r\n  </tr>\r\n</table>\r\n<div class=\"shippingAndHandling__rate-table-tab-helpText\">\r\n  <h5 class=\"shippingAndHandling__rate-table-tab-helpText-header\">Estándar</h5>\r\n  <div class=\"shippingAndHandling__rate-table-tab-helpText-content\">\r\n      <p>La entrega puede tardar entre 5 y 7 días laborables</p>\r\n  </div>\r\n  <h5 class=\"shippingAndHandling__rate-table-tab-helpText-header\">Express Air</h5>\r\n  <div class=\"shippingAndHandling__rate-table-tab-helpText-content\">\r\n      <p>La entrega puede tardar de 3 a 5 días laborables. El pedido deberá enviarse antes de las 2:00 pm (EST) de lunes a viernes. Este servicio no está disponible para todas las ubicaciones ni para los apartados de correos.</p>\r\n  </div>\r\n</div>"},"helpShippingAndHandlingCARightTab":{"key":"HELP_SHIPPINGANDHANDLING_CA_RIGHTTAB","value":"<h5 class=\"shippingAndHandling__additional-info-tab-header\"> Información adicional sobre manejo y envío </h5>\r\n<div class=\"shippingAndHandling__additional-info-tab-content\">\r\n    <p>Los pedidos que solo incluyan tarjetas de regalo disfrutarán de un envío estándar GRATUITO. Las tarjetas de regalo se envían por separado de la mercancía y no se pueden entregar en apartados de correos.</p>\r\n\r\n    <p>Determinadas fragancias y productos para el cuidado del cuerpo no se pueden enviar fuera de EE. UU.</p>\r\n\r\n    <h5 class=\"shippingAndHandling__additional-info-tab-content-header\">Cargos e impuestos en Canadá</h5>\r\n\r\n    <p><strong>Importante</strong>: el destinatario del pedido será responsable de cualquier impuesto o tasa de importación adicional en el país de destino y de las tasas relativas al servicio de mensajería. Nuestra empresa de mensajería cobrará estos cargos adicionales al destinatario en el momento de la entrega.</p>\r\n</div>"},"helpShippingAndHandlingCAFooter":{"key":"HELP_SHIPPINGANDHANDLING_CA_FOOTER","value":"<ol>\r\n    <li><p>Los clientes canadienses (y no Abercrombie & Fitch) serán los importadores nominales y serán responsables del pago de todos los impuestos de aduana, incluyendo cualquier impuesto, tasa o gravamen que se aplique a los productos importados conforme a la Ley de aduanas, el arancel de aduanas, la Ley de impuestos especiales, la Ley de medidas especiales de importación, la Ley de permisos de importación y exportación o cualquier otra ley de ámbito aduanero, así como sanciones, intereses o multas aplicadas conforme a cualquiera de los estatutos mencionados anteriormente (los \"impuestos de aduana\").</p></li>\r\n    <li><p>Los clientes canadienses (y no Abercrombie & Fitch) serán los importadores nominales y serán responsables del pago de todos los impuestos federales y provinciales aplicables, incluyendo el impuesto sobre bienes y servicios (\"GST\", por sus siglas en inglés), el impuesto de ventas provincial (\"PST\") y el impuesto armonizado a la compraventa (\"HST\") (los \"impuestos\").</p></li>\r\n    <li><p>Cuando realizas un pedido en www.abercrombie.com, autorizas a nuestro agente de aduanas a actuar como tu agente en la aduana de Canadá (CCRA) para pasar la mercancía y pagar todos los cargos e impuestos, de los cuales serás enteramente responsable en calidad de importador nominal.</p></li>\r\n    <li><p>Cuando realizas un pedido en www.abercrombie.com, autorizas a nuestro agente de aduanas a actuar como tu agente en la aduana de Canadá (CCRA) para pasar la mercancía y pagar todos los cargos e impuestos, de los cuales serás enteramente responsable en calidad de importador nominal.</p></li>\r\n    <li><p>En caso de devolución, solo tienes que colocar la etiqueta de devolución despegable en el paquete y devolvérnoslo a través de la empresa de mensajería que prefieras. Asegúrate de efectuar el pago de los gastos de manejo y envío por adelantado. No se aceptan entregas contra reembolso. Cuando utilizas dicha etiqueta, autorizas a nuestro agente de aduanas a actuar como tu agente en la aduana de Canadá (CCRA) para pasar la mercancía y pagar todos los impuestos de devolución.</p></li>\r\n    <li><p>En el caso de mercancía que los clientes canadienses devuelvan a Abercrombie & Fitch, los clientes canadienses acuerdan que la aduana de Canadá enviará cualquier devolución de impuesto de aduana que se haya pagado por la mercancía devuelta al agente de aduanas, y que Abercrombie & Fitch lo devolverá directamente a los clientes canadienses. Los clientes canadienses autorizan por la presente al agente de aduanas a endosar en su nombre los cheques que contengan la devolución de la aduana de Canadá en favor a Abercrombie & Fitch.</p></li>\r\n    <li><p>Los clientes canadienses serán responsables de todos los gastos de transporte, almacenamiento y seguro (las \"tasas de manejo y envío\") y comprarán los artículos en fábrica (\"EXW\") o libres a bordo (\"FOB\") a Abercrombie & Fitch, New Albany, Ohio, lo que implica que la propiedad y el riesgo de pérdida o desperfectos de los bienes pasará a los clientes canadienses cuando Abercrombie & Fitch ponga a disposición de o entregue los productos al servicio de mensajería.</p></li>\r\n    <li><p>En caso de pérdida, los clientes canadienses autorizan por la presente a Abercrombie & Fitch a presentar una reclamación al servicio de mensajería en su nombre.</p></li>\r\n    <li><p>El precio que los clientes canadienses pagan a Abercrombie & Fitch incluye los impuestos de aduana y las tasas de manejo y envío.</p></li>\r\n    <li><p>Al realizar un pedido a Abercrombie & Fitch, autorizo por la presente a un agente autorizado de la aduana canadiense designado por Abercrombie & Fitch para actuar como mi agente y realizar trámites en la Agencia de Servicios Fronterizos de Canadá (CBSA) para que pase la mercancía y pague todos los cargos e impuestos, devuelva mercancía a Abercrombie & Fitch y prepare y presente solicitudes de devolución en mi nombre para cualquier mercancía que yo devuelva. Entiendo que la CBSA enviará cualquier devolución de impuestos que se haya pagado por la mercancía devuelta al agente y que Abercrombie & Fitch me lo devolverá directamente. A ese respecto, también autorizo al agente de aduanas a endosar en mi nombre los cheques que contengan la devolución de la aduana de Canadá, de modo que se pueda proceder al reembolso de Abercrombie & Fitch.</p></li>\r\n</ol>"},"helpShippingAndHandlingWDLeftTab":{"key":"HELP_SHIPPINGANDHANDLING_WD_LEFTTAB","value":"<table class=\"shippingAndHandling__rate-table\">\r\n  <tr>\r\n      <td><h5 class=\"shippingAndHandling__rate-table-header\">Total de mercancía</h5></td>\r\n      <td><h5 class=\"shippingAndHandling__rate-table-header\">Estándar</h5></td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$0 - $50</span> </br>\r\n      </td>\r\n      <td>$40</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n      <span>$50 - $100</span> </br>\r\n      </td>\r\n      <td>$45</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$100 - $150</span> </br>\r\n      </td>\r\n      <td>$50</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$150 - $200</span> </br>\r\n      </td>\r\n      <td>$55</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$200 - $300</span> </br>\r\n      </td>\r\n      <td>$60</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$300 - $500</span> </br>\r\n      </td>\r\n      <td>$75</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$500 - $700</span> </br>\r\n      </td>\r\n      <td>$90</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>$700 - $1000</span> </br>\r\n      </td>\r\n      <td>$100</td>\r\n  </tr>\r\n  <tr>\r\n      <td>\r\n          <span>Más de $ 1000</span> </br>\r\n      </td>\r\n      <td>$120</td>\r\n  </tr>\r\n</table>\r\n\r\n<div class=\"shippingAndHandling__rate-table-tab-helpText\">\r\n    <p>Las tarifas se basan en el importe total de la mercancía antes de aplicar los impuestos.</p>\r\n    <p>El servicio solo está disponible para apartados de correos en países seleccionados.</p>\r\n\r\n  <h5 class=\"shippingAndHandling__rate-table-tab-helpText-header\">Estándar</h5>\r\n  <div class=\"shippingAndHandling__rate-table-tab-helpText-content\">\r\n      <p>La entrega puede tardar de 9 a 10 días laborables.</p>\r\n  </div>\r\n\r\n\r\n  <h5 class=\"shippingAndHandling__rate-table-tab-helpText-header\">Envío de pedidos a Rusia</h5>\r\n  <div class=\"shippingAndHandling__rate-table-tab-helpText-content\">\r\n    <p>Hemos hecho algunos cambios en el procesamiento y envío de los pedidos.</p>\r\n    <p>Cuando se envíe tu pedido, nuestro servicio de mensajería, eShopWorld, contactará contigo por email para facilitarte la siguiente información para la aduana. Se te pedirá que facilites esta información a través del sitio web de eShopWorld antes de que tu pedido salga de Estados Unidos.</p>\r\n        <p>Nombre y apellidos que aparecen en el pasaporte</p>\r\n        <p>Número de pasaporte</p>\r\n        <p>Fecha de emisión</p>\r\n    <p>Tienes 10 días para facilitar la información anteriormente indicada a eShopWorld. Transcurridos 10 días, eShopWorld puede devolvernos el pedido, haciendo que tu pedido se cancele y se emita un reembolso.</p>\r\n    <p>Tu pedido puede verse afectado por aranceles e impuestos. Si este fuera el caso, eShopWorld se pondrá en contacto contigo para arreglar los detalles del pago antes de que se entregue tu paquete. Todos los pagos de aranceles e impuestos se harán directamente a eShopWorld a través de su sitio web.</p>\r\n    <p>eShopWorld será responsable de liberar de cargas tu pedido en las aduanas locales, pagando aranceles e impuestos en tu nombre a la autoridad aduanera que corresponda, así como de entregártelo. Visita http://www.eshopworld.com/contact-us/ si necesitas ayuda con el envío.</p>\r\n\r\n  </div>\r\n  <h5 class=\"shippingAndHandling__rate-table-tab-helpText-header\">Envío de pedidos a Brasil</h5>\r\n  <div class=\"shippingAndHandling__rate-table-tab-helpText-content\">\r\n    <p>Cuando se envíe tu pedido, nuestro servicio de mensajería, eShopWorld, contactará contigo por email para facilitarte la siguiente información para la aduana. Se te pedirá que facilites esta información a través del sitio web de eShopWorld antes de que tu pedido salga de Estados Unidos.</p>\r\n        <p>Cadastro de Pessoas Fisicas (CPF).</p>\r\n        <p>Pago de aranceles e impuestos</p>\r\n    <p>Tienes 14 días para facilitar la información anteriormente indica y hacer el pago de aranceles e impuestos a eShopWorld. Transcurridos 14 días, eShopWorld puede devolvernos el pedido, haciendo que tu pedido se cancele y se emita un reembolso.</p>\r\n    <p>eShopWorld será responsable de liberar de cargas tu pedido en las aduanas locales, pagando aranceles e impuestos en tu nombre a la autoridad aduanera que corresponda, así como de entregártelo.</p>\r\n    <p>Visita http://www.eshopworld.com/contact-us/ si necesitas ayuda con el envío.</p>\r\n\r\n\r\n  </div>\r\n\r\n</div>"},"helpShippingAndHandlingWDRightTab":{"key":"HELP_SHIPPINGANDHANDLING_WD_RIGHTTAB","value":"<h5 class=\"shippingAndHandling__additional-info-tab-header\">Información adicional sobre manejo y envío</h5>\r\n<div class=\"shippingAndHandling__additional-info-tab-content\">\r\n   <p>En los pedidos que incluyan solo tarjetas de regalo, el envío estándar tendrá un coste de $ 20. Las tarjetas de regalo se envían por separado de la mercancía y no se pueden entregar en apartados de correos.</p>\r\n<p>Los pedidos con todos los artículos en stock que se envíen a Rusia tardarán de 10 a 14 días laborables.</p>\r\n   <p>Las fragancias y determinados productos para el cuidado del cuerpo no se pueden enviar fuera de EE. UU.</p>\r\n   <p><strong>Importante</strong>: el destinatario del pedido será responsable de cualquier impuesto o tasa de importación adicional en el país de destino y de las tasas relativas al servicio de mensajería. Nuestra empresa de mensajería cobrará estos cargos adicionales al destinatario en el momento de la entrega.</p>\r\n</div>"},"helpShippingAndHandlingWDFooter":{"key":"HELP_SHIPPINGANDHANDLING_WD_FOOTER","value":""},"changePaymentType":{"key":"DYNAMIC_CURRENCY_CHANGE_PAYMENT_TYPE","value":"Cambiar forma de pago"},"continueInCurrency":{"key":"DYNAMIC_CURRENCY_CONTINUE_IN_CURRENCY","value":"Continuar en {0}"},"GLB_REPUDIATION_CURRENCY_GIFTCARD_RESTRICT":{"key":"GLB_REPUDIATION_CURRENCY_GIFTCARD_RESTRICT","value":"Tu pedido no se puede procesar en {0} utilizando una tarjeta de regalo."},"GLB_REPUDIATION_CURRENCY_GIFTCARD_RESTRICT_EXPLAINED":{"key":"GLB_REPUDIATION_CURRENCY_GIFTCARD_RESTRICT_EXPLAINED","value":"??????"},"GLB_REPUDIATION_CURRENCY_COUNTRY_RESTRICT":{"key":"GLB_REPUDIATION_CURRENCY_COUNTRY_RESTRICT","value":"El pago en {0} no está disponible para {1}"},"GLB_REPUDIATION_CURRENCY_COUNTRY_RESTRICT_EXPLAINED":{"key":"GLB_REPUDIATION_CURRENCY_COUNTRY_RESTRICT_EXPLAINED","value":"??????"},"GLB_REPUDIATION_PAYMENT_COMBINATION_RESTRICT":{"key":"GLB_REPUDIATION_PAYMENT_COMBINATION_RESTRICT","value":"No puedes utilizar {0} en combinación con {1}."},"GLB_REPUDIATION_PAYMENT_COMBINATION_RESTRICT_EXPLAINED":{"key":"GLB_REPUDIATION_PAYMENT_COMBINATION_RESTRICT_EXPLAINED","value":"??????"},"GLB_REPUDIATION_GIFTCARD_ORDERITEM_RESTRICT":{"key":"GLB_REPUDIATION_GIFTCARD_ORDERITEM_RESTRICT","value":"Tu pedido no se puede procesar con tarjetas de regalo en él. Puedes continuar si actualizas la divisa de tu pedido a USD o si eliminas la(s) tarjeta(s) de regalo."},"GLB_REPUDIATION_CURRENCY_PAYMENTMETHOD_RESTRICT":{"key":"GLB_REPUDIATION_CURRENCY_PAYMENTMETHOD_RESTRICT","value":"Tu pedido no se puede procesar en {0} utilizando {1}."},"GLB_REPUDIATION_CURRENCY_PAYMENTMETHOD_RESTRICT_EXPLAINED":{"key":"GLB_REPUDIATION_CURRENCY_PAYMENTMETHOD_RESTRICT_EXPLAINED","value":"??????"},"continueWithoutGiftCard":{"key":"GLB_CONTINUE_WITHOUT_GIFTCARD","value":"??????"},"changeShippingAddressCountry":{"key":"GLB_CHANGE_SHIPPING_ADDRESS_COUNTRY","value":"??????"},"exclusionsApply":{"key":"GLB_EXCLUSIONS_APPLY","value":"*Se aplican exclusiones"},"cardOne":{"key":"CHK_CARD_ONE","value":"Tarjeta uno"},"cardTwo":{"key":"CHK_CARD_TWO","value":"Tarjeta dos"},"multiCreditCardsUnavailable":{"key":"CHK_MULTI_CREDIT_CARDS_UNAVAIABLE_MESSAGE","value":"* No está disponible la opción de tramitar un pedido con varias tarjetas con esta forma de pago."}},"eSpots":{"estimatedPoints":" <div class='genericESpot genericESpot--empty' data-espotname='Checkout_OrderConfirmationEstimatedPoints'> </div>","shippingMessagePhoenix":""}};

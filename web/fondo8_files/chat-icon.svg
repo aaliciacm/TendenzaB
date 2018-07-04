@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="17px" height="14px" viewBox="0 0 17 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Chat Icond</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="New-Chat-Header" transform="translate(-20.000000, -19.000000)" stroke-width="1.5" stroke="#FFFFFF">
+            <g id="Group-17">
+                <g id="chat-icon" transform="translate(20.000000, 19.000000)">
+                    <path d="M9.95037212,12.6398693 C10.25541,12.338874 10.7103943,11.8899193 11.5544645,11.0570352 L13.1134025,9.51875711 L13.3324496,9.30261287 L14.9998938,9.30261287 C15.6937108,9.30261287 16.25,8.74584181 16.25,8.05452099 L16.25,1.99809187 C16.25,1.30748344 15.6914769,0.75 14.9998938,0.75 L2.00010618,0.75 C1.3062892,0.75 0.75,1.30677106 0.75,1.99809187 L0.75,8.05452099 C0.75,8.74512943 1.30852311,9.30261287 2.00010618,9.30261287 L8.67381237,9.30261287 L8.86470849,9.76797137 C9.01052934,10.1234473 9.18370566,10.5688039 9.37894059,11.0874408 C9.42420989,11.2078746 9.42420989,11.2078746 9.46932951,11.328574 C9.6261133,11.7485285 9.78849025,12.1917965 9.9503721,12.6398693 Z" id="Combined-Shape-Copy-2"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

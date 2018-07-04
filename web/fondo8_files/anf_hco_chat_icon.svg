@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="17px" height="14px" viewBox="0 0 17 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>ANF_HCO_D_M_Chat-Icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M13.6401833,10.0526129 L14.9998938,10.0526129 C16.1099416,10.0526129 17,9.15803666 17,8.05452099 L17,1.99809187 C17,0.892102331 16.104522,-4.08562073e-14 14.9998938,-4.08562073e-14 L2.00010618,-4.08562073e-14 C0.890058413,-4.08562073e-14 0,0.894576202 0,1.99809187 L0,8.05452099 C0,9.16051053 0.895478039,10.0526129 2.00010618,10.0526129 L8.17082145,10.0526129 C8.74023283,11.4406999 9.63978068,14 9.63978068,14 C9.63978068,14 12.2334536,11.4406998 13.6401834,10.0526128 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="17" height="14" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Page-5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ANF_HCO_D_M_Chat-Icon" stroke-width="3" stroke="#FFFFFF">
+            <g id="Group-5">
+                <use id="Combined-Shape" mask="url(#mask-2)" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

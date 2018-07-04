@@ -1,0 +1,163 @@
+var trackRuleOfferred;
+(function() {
+	var trackHistoricalRuleRan = false;
+	var ruleIdToObj = function(id) {
+		return id && ATGSvcs.rules.rulehash[id];
+	}
+	var pageNameForChat = document.title;
+  
+
+	var eeHandlers = {
+	    eeRuleRan: function(data) {
+		    if (data.rule) {
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				
+				if(data.rule.name.indexOf("Proactive") > -1)
+					var chatType = "ProActiveChat";
+				else
+					var chatType = "ReActiveChat";
+					
+				
+				//xxxconsole.logxxx('Analytics Tracking - Rule Run: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);
+				//cmCreatePageElementTag ('RuleRun', ruleName, "-_-"+pageNameForChat);
+			}
+	    },
+	    eeOffered: function(data) {
+	      	if (data.rule) {
+				trackRuleOfferred = true;
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				
+				if(data.rule.name.indexOf("Proactive") > -1)
+					var chatType = "ProActiveChat";
+				else
+					var chatType = "ReActiveChat";
+					
+				
+				//xxxconsole.logxxx('Analytics Tracking - Rule Run: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);		        				//omniture.triggerChatEvent(chatType);
+					//cmCreatePageElementTag ('RuleTriggered', ruleName, "-_-"+pageNameForChat); 
+					//cmCreatePageElementTag ('Offered', ruleName + ' OFFER', "-_-"+pageNameForChat); 
+	      	}
+	    },
+	    eeAccepted: function(data) {
+	      	if (data.rule) {
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				if(data.rule.name.indexOf("Proactive") > -1) {
+					var chatType = "ProActiveChat";
+					var now = new Date();
+					var expires = new Date(now.setTime(now.getTime() + 60 * 60 * 1000)); //Expire in one hour
+					document.cookie = 'rn_ChatDeclined_'+shortRuleName+'=1;path=/;expires='+expires.toGMTString()+';';
+
+				}
+				else
+					var chatType = "ReActiveChat";
+					
+				
+				
+				//xxxconsole.logxxx('Analytics Tracking - Invite Accepted: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);		        				//omniture.triggerChatEvent(chatType);
+					
+	      	}
+	    },
+	    eeDeclined: function(data) {
+	      if (data.rule) {
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				if(data.rule.name.indexOf("Proactive") > -1) {
+					var chatType = "ProActiveChat";
+					var now = new Date();
+					var expires = new Date(now.setTime(now.getTime() + 60 * 60 * 1000)); //Expire in one hour
+					document.cookie = 'rn_ChatDeclined_'+shortRuleName+'=1;path=/;expires='+expires.toGMTString()+';';
+
+				}
+				else
+					var chatType = "ReActiveChat";
+					
+				
+				
+				//xxxconsole.logxxx('Analytics Tracking - Invite Declined: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);		        				//omniture.triggerChatEvent(chatType);
+					
+	      	}
+	    },
+	    eeClosed: function(data) {
+	      if (data.rule) {
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				if(data.rule.name.indexOf("Proactive") > -1) {
+					var chatType = "ProActiveChat";
+					var now = new Date();
+					var expires = new Date(now.setTime(now.getTime() + 60 * 60 * 1000)); //Expire in one hour
+					document.cookie = 'rn_ChatDeclined_'+shortRuleName+'=1;path=/;expires='+expires.toGMTString()+';';
+				}
+				else
+					var chatType = "ReActiveChat";
+					
+				
+				
+				//xxxconsole.logxxx('Analytics Tracking - Invite Closed: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);		        				//omniture.triggerChatEvent(chatType);
+					
+	      	}
+	    },
+	    eeHidden: function(data) {
+	      if (data.rule) {
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				
+				if(data.rule.name.indexOf("Proactive") > -1)
+					var chatType = "ProActiveChat";
+				else
+					var chatType = "ReActiveChat";
+					
+				
+				
+				//xxxconsole.logxxx('Analytics Tracking - Invite Hidden: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);		        				//omniture.triggerChatEvent(chatType);
+					
+	      	}
+	    },
+	    eeSuppressed: function(data) {
+	      if (data.rule) {
+				var ruleName = data.rule.name;
+				var shortRuleName = ruleName.replace(/\s/g, '');
+				
+				if(data.rule.name.indexOf("Proactive") > -1)
+					var chatType = "ProActiveChat";
+				else
+					var chatType = "ReActiveChat";
+					
+								
+				//xxxconsole.logxxx('Analytics Tracking - Invite Suppressed: ' + ruleName + ' RULERUN - pagename=' + pageNameForChat + ' CHAT TYPE ' + chatType);		        				//omniture.triggerChatEvent(chatType);
+					
+	      	}
+	    }
+	    /*,
+    var historicalLog = ATGSvcs.rules.eventLog.slice();
+	if (trackHistoricalRuleRan) {
+    historicalLog = historicalLog.concat(ATGSvcs.rules.ruleLog);
+    historicalLog.sort(function(a, b) { return (a['ts'] - b['ts']); });
+  	}
+	  for (var i=0; i < historicalLog.length; i++) {
+	    var logEntry = historicalLog[i];
+	    if (logEntry.event) {
+	      var handler = eeHandlers[logEntry.event.replace('-', '')];
+	      if (handler) { handler(logEntry.data); }
+	    } else if (trackHistoricalRuleRan && logEntry.id) {
+	      var rule = ruleIdToObj(logEntry.id);
+	      if (rule) {
+	        var handler = eeHandlers['eeRuleRan'];
+	        if (handler) { handler(rule); }
+	      }
+	    } */
+	}	
+  ATGSvcs.eventSubscribe ({
+    'eeRuleRan': function(e, data) {eeHandlers.eeRuleRan(data); },
+    'eeOffered': function(e, data) { eeHandlers.eeOffered(data); },
+    'eeAccepted': function(e, data) { eeHandlers.eeAccepted(data); },
+    'eeDeclined': function(e, data) { eeHandlers.eeDeclined(data); },
+    'eeClosed': function(e, data) { eeHandlers.eeClosed(data); },
+    'eeHidden': function(e, data) { eeHandlers.eeHidden(data); },
+    'eeSuppressed': function(e, data) { eeHandlers.eeSuppressed(data); }
+  });
+  //xxxconsole.logxxx('End: Rules / Events from Logs');
+})();
